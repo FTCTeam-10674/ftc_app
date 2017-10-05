@@ -60,6 +60,9 @@ public class BasicOpModeTest extends LinearOpMode {
     private DcMotor rightDrive = null;
     boolean hiJulian = true;
     boolean byeJulian = false;
+
+    int something;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
