@@ -58,7 +58,7 @@ public class BasicOpModeTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
-
+    boolean hiJulian = true;
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
