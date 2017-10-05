@@ -60,6 +60,7 @@ public class BasicOpModeTest extends LinearOpMode {
     private DcMotor rightDrive = null;
 
     int something;
+    int commitSomething;
 
     @Override
     public void runOpMode() {
