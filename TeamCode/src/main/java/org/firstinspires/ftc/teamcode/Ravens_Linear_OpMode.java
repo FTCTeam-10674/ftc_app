@@ -50,9 +50,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="FunBoy", group="Linear Opmode")
-@Disabled
-public class FunBoy extends LinearOpMode {
+@TeleOp(name="Ravens Linear OpMode", group="Test")
+//@Disabled
+public class Ravens_Linear_OpMode extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
