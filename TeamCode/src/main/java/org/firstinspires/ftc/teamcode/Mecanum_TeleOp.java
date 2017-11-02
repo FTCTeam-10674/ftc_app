@@ -68,10 +68,10 @@ public class Mecanum_TeleOp extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backLeftDrive  = hardwareMap.get(DcMotor.class, "back_left_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left");
+        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right");
+        backLeftDrive  = hardwareMap.get(DcMotor.class, "back_left");
+        backRightDrive = hardwareMap.get(DcMotor.class, "back_right");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -99,8 +99,8 @@ public class Mecanum_TeleOp extends LinearOpMode {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
-            double rotate  =  gamepad1.left_stick_x;
-            double strafe = gamepad1.right_stick_x;
+            double rotate  =  -gamepad1.left_stick_x;
+            double strafe = -gamepad1.right_stick_x;
 
             frontLeftPower   = Range.clip(drive + rotate - strafe, -1.0, 1.0);
             frontRightPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
@@ -116,7 +116,7 @@ public class Mecanum_TeleOp extends LinearOpMode {
             frontLeftDrive.setPower(frontLeftPower);
             frontRightDrive.setPower(frontRightPower);
             backLeftDrive.setPower(backLeftPower);
-            frontRightDrive.setPower(backRightPower);
+            backRightDrive.setPower(backRightPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -66,6 +66,7 @@ public class Lift_TeleOp extends LinearOpMode {
     private DcMotor liftMotor;
     private Servo leftGrabber;
     private Servo rightGrabber;
+    //boolean grabberOpen = true;
 
     @Override
     public void runOpMode() {
@@ -99,6 +100,9 @@ public class Lift_TeleOp extends LinearOpMode {
         leftGrabber.setPosition(0.0);
         rightGrabber.setPosition(1.0);
 
+        double leftGrabberPosition = 0.0;
+        double rightGrabberPosition = 1.0;
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -111,9 +115,8 @@ public class Lift_TeleOp extends LinearOpMode {
             double frontRightPower;
             double backLeftPower;
             double backRightPower;
-            double leftGrabberPosition = 0.0;
-            double rightGrabberPosition = 1.0;
-            boolean grabberOpen = true;
+
+
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -125,16 +128,16 @@ public class Lift_TeleOp extends LinearOpMode {
             double strafe = gamepad1.right_stick_x;
             double lift = -gamepad2.left_stick_y;
 
-            if (gamepad2.right_bumper && !grabberOpen){
+            if (gamepad2.right_bumper /*&& !grabberOpen*/){
                 leftGrabberPosition = 0.0;
                 rightGrabberPosition = 1.0;
-                grabberOpen = true;
+                //grabberOpen = true;
             }
 
-            if (gamepad2.right_bumper && grabberOpen){
+            else if (gamepad2.left_bumper /*&& grabberOpen*/){
                 leftGrabberPosition = 0.5;
                 rightGrabberPosition = 0.5;
-                grabberOpen = false;
+                //grabberOpen = false;
             }
 
 
@@ -167,7 +170,7 @@ public class Lift_TeleOp extends LinearOpMode {
                     "back_right (%.2f)", frontLeftPower, frontRightPower, backLeftPower, backRightPower);
             telemetry.addData("Servos", "left_grabber_arm (%.2f), right_grabber_arm (%.2f)", leftGrabberPosition, rightGrabberPosition);
             telemetry.addData("Lift", "lift_motor (%.2f)", lift);
-            telemetry.addData("Grabber state", "grabberOpen", grabberOpen);
+            //telemetry.addData("Grabber state", "grabberOpen (%b)", grabberOpen);
             telemetry.update();
         }
     }
