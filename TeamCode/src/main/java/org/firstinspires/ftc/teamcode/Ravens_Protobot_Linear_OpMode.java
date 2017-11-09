@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Ravens Protobot Linear OpMode", group="Test")
-//@Disabled
+@Disabled
 public class Ravens_Protobot_Linear_OpMode extends LinearOpMode {
 
     // Declare OpMode members.
