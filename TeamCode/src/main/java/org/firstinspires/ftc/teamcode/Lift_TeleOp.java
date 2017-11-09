@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -167,7 +166,7 @@ public class Lift_TeleOp extends LinearOpMode {
                     "back_right (%.2f)", frontLeftPower, frontRightPower, backLeftPower, backRightPower);
             telemetry.addData("Servos", "left_grabber_arm (%.2f), right_grabber_arm (%.2f)", leftGrabberPosition, rightGrabberPosition);
             telemetry.addData("Lift", "lift_motor (%.2f)", lift);
-            telemetry.addData("Grabber state", "grabberOpen", grabberOpen);
+            telemetry.addData("Grabber state", "grabberOpen (%b)", grabberOpen);
             telemetry.update();
         }
     }
