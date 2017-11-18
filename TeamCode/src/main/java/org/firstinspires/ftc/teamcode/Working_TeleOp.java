@@ -87,12 +87,13 @@ public class Working_TeleOp extends LinearOpMode {
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
 
+        /*
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("Path0",  "Starting at %7d",
-                liftMotor.getCurrentPosition());
+        telemetry.addData("Path0",  "Starting at %7d", liftMotor.getCurrentPosition());
         telemetry.update();
+        */
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -110,10 +111,6 @@ public class Working_TeleOp extends LinearOpMode {
         double leftGrabberPosition = 0.0;
         double rightGrabberPosition = 1.0;
 
-        int floor0 = 0;
-        int floor1 = 105;
-        int floor2 = floor1 * 2;
-        int floor3 = floor1 * 3;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -182,6 +179,7 @@ public class Working_TeleOp extends LinearOpMode {
                     "back_right (%.2f)", frontLeftPower, frontRightPower, backLeftPower, backRightPower);
             telemetry.addData("Servos", "left_grabber_arm (%.2f), right_grabber_arm (%.2f)", leftGrabberPosition, rightGrabberPosition);
             telemetry.addData("Lift", "lift_motor (%.2f)", lift);
+            //telemetry.addData("Lift encoder", "lift encoder (%.7d)", liftMotor.getCurrentPosition());
             //telemetry.addData("Grabber state", "grabberOpen (%b)", grabberOpen);
             telemetry.update();
         }
