@@ -29,11 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -52,9 +50,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Working TeleOp", group="Meets")
-@Disabled
-public class Working_TeleOp extends LinearOpMode {
+@TeleOp(name="Working TeleOp 75%", group="Meets")
+//@Disabled
+public class Working_TeleOp_SLOW75 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -107,8 +105,8 @@ public class Working_TeleOp extends LinearOpMode {
 
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        double leftGrabberPosition = 0.0;
-        double rightGrabberPosition = 1.0;
+        double leftGrabberPosition = 1.0;
+        double rightGrabberPosition = 0.0;
 
         leftGrabber.setPosition(leftGrabberPosition);
         rightGrabber.setPosition(rightGrabberPosition);
@@ -136,26 +134,26 @@ public class Working_TeleOp extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = gamepad1.left_stick_y;
             double rotate  = -gamepad1.left_stick_x;
-            double strafe = -gamepad1.right_stick_x;
+            double strafe = gamepad1.right_stick_x;
             double lift = -gamepad2.left_stick_y;
 
 
             if (gamepad2.right_bumper){
-                leftGrabberPosition = 0.0;
-                rightGrabberPosition = 1.0;
+                leftGrabberPosition = 0.7;
+                rightGrabberPosition = 0.3 - 0.15;
                 //grabberOpen = true;
             }
 
             else if (gamepad2.left_bumper){
                 leftGrabberPosition = 0.5;
-                rightGrabberPosition = 0.5;
+                rightGrabberPosition = 0.5 - 0.15;
             }
 
 
-            frontLeftPower   = Range.clip(drive + rotate - strafe, -1.0, 1.0);
-            frontRightPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
-            backLeftPower    = Range.clip(drive + rotate + strafe, -1.0, 1.0);
-            backRightPower   = Range.clip(drive - rotate + strafe, -1.0, 1.0);
+            frontLeftPower   = Range.clip(drive + rotate - strafe, -0.75, 0.75);
+            frontRightPower  = Range.clip(drive - rotate + strafe, -0.75, 0.75);
+            backLeftPower    = Range.clip(drive + rotate + strafe, -0.75, 0.75);
+            backRightPower   = Range.clip(drive - rotate - strafe, -0.75, 0.75);
 
 
             // Tank Mode uses one stick to control each wheel.
