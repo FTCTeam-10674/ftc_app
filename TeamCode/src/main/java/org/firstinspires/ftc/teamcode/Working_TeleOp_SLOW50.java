@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,9 +51,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Working TeleOp", group="Meets")
-@Disabled
-public class Working_TeleOp extends LinearOpMode {
+@TeleOp(name="Working TeleOp 50%", group="Meets")
+//@Disabled
+public class Working_TeleOp_SLOW50 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -100,15 +99,15 @@ public class Working_TeleOp extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
 
 
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        double leftGrabberPosition = 0.0;
-        double rightGrabberPosition = 1.0;
+        double leftGrabberPosition = 1.0;
+        double rightGrabberPosition = 0.0;
 
         leftGrabber.setPosition(leftGrabberPosition);
         rightGrabber.setPosition(rightGrabberPosition);
@@ -134,15 +133,16 @@ public class Working_TeleOp extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            double rotate  = -gamepad1.left_stick_x;
+            double drive = -gamepad1.left_stick_y;
+            double rotate  = gamepad1.left_stick_x;
             double strafe = -gamepad1.right_stick_x;
-            double lift = -gamepad2.left_stick_y;
+            double lift = gamepad2.left_stick_y;
 
 
             if (gamepad2.right_bumper){
-                leftGrabberPosition = 0.0;
-                rightGrabberPosition = 1.0;
+                leftGrabberPosition = 0.7;
+                rightGrabberPosition = 0.3;
+                //grabberOpen = true;
             }
 
             else if (gamepad2.left_bumper){
@@ -151,10 +151,10 @@ public class Working_TeleOp extends LinearOpMode {
             }
 
 
-            frontLeftPower   = Range.clip(drive + rotate - strafe, -1.0, 1.0);
-            frontRightPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
-            backLeftPower    = Range.clip(drive + rotate + strafe, -1.0, 1.0);
-            backRightPower   = Range.clip(drive - rotate + strafe, -1.0, 1.0);
+            frontLeftPower   = Range.clip(drive + rotate - strafe, -0.5, 0.5);
+            frontRightPower  = Range.clip(drive - rotate + strafe, -0.5, 0.5);
+            backLeftPower    = Range.clip(drive + rotate + strafe, -0.5, 0.5);
+            backRightPower   = Range.clip(drive - rotate - strafe, -0.5, 0.5);
 
 
             // Tank Mode uses one stick to control each wheel.
