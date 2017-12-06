@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -51,9 +52,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Experimental TeleOp", group="Meets")
+@TeleOp(name="Working TeleOp", group="Meets")
 @Disabled
-public class Experimental_TeleOp extends LinearOpMode {
+public class OLDWorking_TeleOp extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -87,12 +88,13 @@ public class Experimental_TeleOp extends LinearOpMode {
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
 
+        /*
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("Path0",  "Starting at %7d",
-                liftMotor.getCurrentPosition());
+        telemetry.addData("Path0",  "Starting at %7d", liftMotor.getCurrentPosition());
         telemetry.update();
+        */
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -104,16 +106,15 @@ public class Experimental_TeleOp extends LinearOpMode {
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftGrabber.setPosition(0.0);
-        rightGrabber.setPosition(1.0);
 
         double leftGrabberPosition = 0.0;
         double rightGrabberPosition = 1.0;
 
-        int floor0 = 0;
-        int floor1 = 105;
-        int floor2 = floor1 * 2;
-        int floor3 = floor1 * 3;
+        leftGrabber.setPosition(leftGrabberPosition);
+        rightGrabber.setPosition(rightGrabberPosition);
+
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -133,22 +134,20 @@ public class Experimental_TeleOp extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
+            double drive = gamepad1.left_stick_y;
             double rotate  = -gamepad1.left_stick_x;
             double strafe = -gamepad1.right_stick_x;
+            double lift = -gamepad2.left_stick_y;
 
 
-
-            if (gamepad2.right_bumper /*&& !grabberOpen*/){
+            if (gamepad2.right_bumper){
                 leftGrabberPosition = 0.0;
                 rightGrabberPosition = 1.0;
-                //grabberOpen = true;
             }
 
-            else if (gamepad2.left_bumper /*&& grabberOpen*/){
+            else if (gamepad2.left_bumper){
                 leftGrabberPosition = 0.5;
                 rightGrabberPosition = 0.5;
-                //grabberOpen = false;
             }
 
 
@@ -157,13 +156,7 @@ public class Experimental_TeleOp extends LinearOpMode {
             backLeftPower    = Range.clip(drive + rotate + strafe, -1.0, 1.0);
             backRightPower   = Range.clip(drive - rotate + strafe, -1.0, 1.0);
 
-            /*
-            if (gamepad2.dpad_up){
-                liftMotor.setTargetPosition(floor3);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(.5);
-            }
-            */
+
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
             // leftPower  = -gamepad1.left_stick_y ;
@@ -176,7 +169,7 @@ public class Experimental_TeleOp extends LinearOpMode {
             backLeftDrive.setPower(backLeftPower);
             backRightDrive.setPower(backRightPower);
 
-            //liftMotor.setPower(lift);
+            liftMotor.setPower(lift);
             leftGrabber.setPosition(leftGrabberPosition);
             rightGrabber.setPosition(rightGrabberPosition);
 
@@ -187,7 +180,8 @@ public class Experimental_TeleOp extends LinearOpMode {
             telemetry.addData("Motors", "front_left (%.2f), front_right (%.2f), back_left (%.2f), " +
                     "back_right (%.2f)", frontLeftPower, frontRightPower, backLeftPower, backRightPower);
             telemetry.addData("Servos", "left_grabber_arm (%.2f), right_grabber_arm (%.2f)", leftGrabberPosition, rightGrabberPosition);
-            telemetry.addData("Lift", "lift_motor (%.2f)", 0 /*lift*/); //<--FIX THIS AT SOME POINT!!!
+            telemetry.addData("Lift", "lift_motor (%.2f)", lift);
+            //telemetry.addData("Lift encoder", "lift encoder (%.7d)", liftMotor.getCurrentPosition());
             //telemetry.addData("Grabber state", "grabberOpen (%b)", grabberOpen);
             telemetry.update();
         }
