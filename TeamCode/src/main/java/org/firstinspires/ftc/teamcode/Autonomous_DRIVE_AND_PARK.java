@@ -66,9 +66,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="BLUE Auto DriveToZone", group="Just Drive")
+@Autonomous(name="Auto DriveAndPark", group="Just Drive")
 //@Disabled
-public class AutonomousDriveBLUE extends LinearOpMode {
+public class Autonomous_DRIVE_AND_PARK extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
