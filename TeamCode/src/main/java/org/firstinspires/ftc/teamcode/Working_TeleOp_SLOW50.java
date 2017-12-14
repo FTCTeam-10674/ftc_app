@@ -135,7 +135,7 @@ public class Working_TeleOp_SLOW50 extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
             double rotate  = gamepad1.left_stick_x;
-            double strafe = -gamepad1.right_stick_x;
+            double strafe = gamepad1.right_stick_x;
             double lift = gamepad2.left_stick_y;
 
 

@@ -74,6 +74,8 @@ public class Autonomous_Color_Test extends LinearOpMode {
 
     ColorSensor sensorColor;
 
+    float hsvResult;
+
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -91,9 +93,11 @@ public class Autonomous_Color_Test extends LinearOpMode {
         waitForStart();
         //Lower sensor arm
         elbowL.setPosition(0.5);
-        sleep(2000);
+        sleep(1000);
         //If the color is blue, knock the other one over
-        if (opModeIsActive() && senseColor(5) > 100 && senseColor(0.5) < 250) {
+        hsvResult = senseColor(1);
+        sleep(1000);
+        if (opModeIsActive() && hsvResult > 100 && hsvResult < 250) {
             sleep(3000);
             wristL.setPosition(0.0);
         } else {
