@@ -143,6 +143,10 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
             //push servo code here
         }
 
+        else {
+            //push servo code here
+        }
+
 
 
         leftGrabber.setPosition(0.5);
