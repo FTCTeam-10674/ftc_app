@@ -92,7 +92,7 @@ public class Autonomous_Color_Blue extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //Lower sensor arm
-        elbowL.setPosition(0.47);
+        elbowL.setPosition(0.5);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);

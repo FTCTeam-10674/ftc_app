@@ -151,7 +151,7 @@ public class Autonomous_DRIVE_Backfield_Blue extends LinearOpMode {
         waitForStart();
 
         //Lower sensor arm
-        elbowL.setPosition(0.47);
+        elbowL.setPosition(0.5);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
