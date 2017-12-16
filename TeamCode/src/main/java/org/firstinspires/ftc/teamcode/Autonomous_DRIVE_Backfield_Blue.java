@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -65,9 +66,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto DriveAndColor", group="Test")
+@Autonomous(name="Auto DriveBackfield Blue", group="Worksish")
 //@Disabled
-public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
+public class Autonomous_DRIVE_Backfield_Blue extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -78,7 +79,12 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
+    Servo elbowL;
+    Servo wristL;
+
     ColorSensor sensorColor;
+
+    float hsvResult;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -104,6 +110,9 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
 
+        elbowL = hardwareMap.get(Servo.class, "elbowL");
+        wristL = hardwareMap.get(Servo.class, "wristL");
+
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
 
 
@@ -127,6 +136,9 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.4);
+
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                           frontLeftDrive.getCurrentPosition(),
@@ -138,13 +150,25 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //INSERT SERVO ARM MOVING HERE
-        if(senseColor(0.5) > 100 && senseColor(0.5) < 250){
-            //push servo code here
+        //Lower sensor arm
+        elbowL.setPosition(0.47);
+        sleep(1000);
+        //If the color is blue, knock the other one over
+        hsvResult = senseColor(7);
+        sleep(1000);
+        if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
+            wristL.setPosition(0.0);
+            sleep(1000);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
+            sleep(2000);
         }
-
         else {
-            //push servo code here
+            wristL.setPosition(1.0);
+            sleep(1000);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
+            sleep(2000);
         }
 
 
@@ -159,8 +183,6 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   0, 0, 0);  // S2: Turn Right 0 Inches with 0 Sec timeout
         //encoderDrive(DRIVE_SPEED, 0, 0, 0);  // S3: Reverse 0 Inches with 0 Sec timeout
-        leftGrabber.setPosition(1.0);
-        rightGrabber.setPosition(0.0);
 
         // pause for servos to move
 
@@ -210,21 +232,23 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newFrontLeftTarget;
+        int newFrontRightTarget;
+        int newBackLeftTarget;
+        int newBackRightTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = frontLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = frontRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newLeftTarget = backLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            frontLeftDrive.setTargetPosition(newLeftTarget);
-            frontRightDrive.setTargetPosition(newRightTarget);
-            backLeftDrive.setTargetPosition(newLeftTarget);
-            backRightDrive.setTargetPosition(newRightTarget);
+            newFrontLeftTarget = frontLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newFrontRightTarget = frontRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newBackLeftTarget = backLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newBackRightTarget = backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            frontLeftDrive.setTargetPosition(newFrontLeftTarget);
+            frontRightDrive.setTargetPosition(newFrontRightTarget);
+            backLeftDrive.setTargetPosition(newBackLeftTarget);
+            backRightDrive.setTargetPosition(newBackRightTarget);
 
             // Turn On RUN_TO_POSITION
             frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -250,7 +274,7 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
                    (frontLeftDrive.isBusy() && frontRightDrive.isBusy() && backLeftDrive.isBusy() && backRightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path1",  "Running to %7d :%7d", newFrontLeftTarget,  newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                                             frontLeftDrive.getCurrentPosition(),
                                             frontRightDrive.getCurrentPosition(),
@@ -272,7 +296,8 @@ public class Autonomous_DRIVE_AND_COLOR extends LinearOpMode {
             backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
+
+              sleep(250);   // optional pause after each move
         }
     }
 }

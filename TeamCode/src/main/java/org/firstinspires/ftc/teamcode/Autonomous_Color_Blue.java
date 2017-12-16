@@ -65,9 +65,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Color", group="Test")
+@Autonomous(name="Auto Color Blue", group="Test")
 //@Disabled
-public class Autonomous_Color_Test extends LinearOpMode {
+public class Autonomous_Color_Blue extends LinearOpMode {
 
     Servo elbowL;
     Servo wristL;
@@ -85,28 +85,33 @@ public class Autonomous_Color_Test extends LinearOpMode {
         elbowL = hardwareMap.get(Servo.class, "elbowL");
         wristL = hardwareMap.get(Servo.class, "wristL");
 
-        elbowL.setPosition(1.0);
-        wristL.setPosition(0.5);
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.4);
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //Lower sensor arm
-        elbowL.setPosition(0.5);
+        elbowL.setPosition(0.47);
         sleep(1000);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(1);
+        hsvResult = senseColor(7);
         sleep(1000);
-        if (opModeIsActive() && hsvResult > 100 && hsvResult < 250) {
-            sleep(3000);
+        if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
             wristL.setPosition(0.0);
-        } else {
-            sleep(3000);
-            wristL.setPosition(1.0);
+            sleep(1000);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
+            sleep(2000);
         }
-        sleep(2000);
-        elbowL.setPosition(1.0);
-        wristL.setPosition(0.5);
+        else {
+            wristL.setPosition(1.0);
+            sleep(1000);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
+            sleep(2000);
+        }
+
     }
 
 
