@@ -34,7 +34,6 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -65,9 +64,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Color Blue", group="Test")
+@Autonomous(name="Auto Color Red", group="Test")
 //@Disabled
-public class Autonomous_Color_Blue extends LinearOpMode {
+public class Autonomous_Color_Red extends LinearOpMode {
 
     Servo elbowL;
     Servo wristL;
@@ -98,14 +97,14 @@ public class Autonomous_Color_Blue extends LinearOpMode {
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(0.0);
+            wristL.setPosition(1.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristL.setPosition(1.0);
+            wristL.setPosition(0.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
