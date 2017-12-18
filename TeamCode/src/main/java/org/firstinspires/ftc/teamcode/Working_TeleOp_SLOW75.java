@@ -135,7 +135,7 @@ public class Working_TeleOp_SLOW75 extends LinearOpMode {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
-            double rotate  = -gamepad1.left_stick_x;
+            double rotate  = gamepad1.left_stick_x;
             double strafe = gamepad1.right_stick_x;
             double lift = -gamepad2.left_stick_y;
 
