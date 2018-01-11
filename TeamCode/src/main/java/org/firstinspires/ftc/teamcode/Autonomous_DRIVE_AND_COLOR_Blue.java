@@ -118,7 +118,7 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
 
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");    
         telemetry.update();
 
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
