@@ -67,7 +67,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto Color Blue", group="Test")
 //@Disabled
-public class Autonomous_Color_Blue extends LinearOpMode {
+public class Autonomous_COLOR_Blue extends LinearOpMode {
 
     Servo elbowL;
     Servo wristL;

@@ -52,9 +52,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Working TeleOp 75%", group="Meets")
+@TeleOp(name="Working TeleOp", group="Meets")
 //@Disabled
-public class Working_TeleOp_SLOW75 extends LinearOpMode {
+public class Working_TeleOp extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -152,10 +152,10 @@ public class Working_TeleOp_SLOW75 extends LinearOpMode {
             }
 
 
-            frontLeftPower   = Range.clip(drive + rotate - strafe, -0.75, 0.75);
-            frontRightPower  = Range.clip(drive - rotate + strafe, -0.75, 0.75);
-            backLeftPower    = Range.clip(drive + rotate + strafe, -0.75, 0.75);
-            backRightPower   = Range.clip(drive - rotate - strafe, -0.75, 0.75);
+            frontLeftPower   = Range.clip(drive + rotate - strafe, -1, 1);
+            frontRightPower  = Range.clip(drive - rotate + strafe, -1, 1);
+            backLeftPower    = Range.clip(drive + rotate + strafe, -1, 1);
+            backRightPower   = Range.clip(drive - rotate - strafe, -1, 1);
 
 
             // Tank Mode uses one stick to control each wheel.
