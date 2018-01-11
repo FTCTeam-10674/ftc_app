@@ -66,9 +66,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto DriveBackfield Blue", group="Worksish")
+@Autonomous(name="Auto Drive Color Red", group="Worksish")
 //@Disabled
-public class Autonomous_DRIVE_Backfield_Blue extends LinearOpMode {
+public class Autonomous_DRIVE_Red extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -121,10 +121,10 @@ public class Autonomous_DRIVE_Backfield_Blue extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -157,14 +157,14 @@ public class Autonomous_DRIVE_Backfield_Blue extends LinearOpMode {
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(0.0);
+            wristL.setPosition(1.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristL.setPosition(1.0);
+            wristL.setPosition(0.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
