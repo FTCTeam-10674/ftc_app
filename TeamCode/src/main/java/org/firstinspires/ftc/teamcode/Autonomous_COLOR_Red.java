@@ -66,12 +66,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto Color Red", group="Test")
 //@Disabled
-public class Autonomous_Color_Red extends LinearOpMode {
+public class Autonomous_COLOR_Red extends LinearOpMode {
 
-    Servo elbowL;
-    Servo wristL;
+    Servo elbowR;
+    Servo wristR;
 
-    ColorSensor sensorColor;
+    ColorSensor sensorColorR;
 
     float hsvResult;
 
@@ -80,34 +80,34 @@ public class Autonomous_Color_Red extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
-        elbowL = hardwareMap.get(Servo.class, "elbowL");
-        wristL = hardwareMap.get(Servo.class, "wristL");
+        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color_r");
+        elbowR = hardwareMap.get(Servo.class, "elbowR");
+        wristR = hardwareMap.get(Servo.class, "wristR");
 
-        elbowL.setPosition(0.0);
-        wristL.setPosition(0.4);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.4);
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //Lower sensor arm
-        elbowL.setPosition(0.55);
+        elbowR.setPosition(0.55);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(1.0);
+            wristR.setPosition(1.0);
             sleep(1000);
-            wristL.setPosition(0.4);
-            elbowL.setPosition(0.0);
+            wristR.setPosition(0.4);
+            elbowR.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristL.setPosition(0.0);
+            wristR.setPosition(0.0);
             sleep(1000);
-            wristL.setPosition(0.4);
-            elbowL.setPosition(0.0);
+            wristR.setPosition(0.4);
+            elbowR.setPosition(0.0);
             sleep(2000);
         }
 
@@ -132,18 +132,18 @@ public class Autonomous_Color_Red extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (sensorColorR.red() * SCALE_FACTOR),
+                    (int) (sensorColorR.green() * SCALE_FACTOR),
+                    (int) (sensorColorR.blue() * SCALE_FACTOR),
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
             //telemetry.addData("Distance (cm)",
             //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Alpha", sensorColorR.alpha());
+            telemetry.addData("Red  ", sensorColorR.red());
+            telemetry.addData("Green", sensorColorR.green());
+            telemetry.addData("Blue ", sensorColorR.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.

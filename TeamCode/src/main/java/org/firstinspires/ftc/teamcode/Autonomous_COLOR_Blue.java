@@ -72,7 +72,7 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
     Servo elbowL;
     Servo wristL;
 
-    ColorSensor sensorColor;
+    ColorSensor sensorColorL;
 
     float hsvResult;
 
@@ -81,7 +81,7 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
         elbowL = hardwareMap.get(Servo.class, "elbowL");
         wristL = hardwareMap.get(Servo.class, "wristL");
 
@@ -133,18 +133,18 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (sensorColorL.red() * SCALE_FACTOR),
+                    (int) (sensorColorL.green() * SCALE_FACTOR),
+                    (int) (sensorColorL.blue() * SCALE_FACTOR),
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
             //telemetry.addData("Distance (cm)",
             //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Alpha", sensorColorL.alpha());
+            telemetry.addData("Red  ", sensorColorL.red());
+            telemetry.addData("Green", sensorColorL.green());
+            telemetry.addData("Blue ", sensorColorL.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.

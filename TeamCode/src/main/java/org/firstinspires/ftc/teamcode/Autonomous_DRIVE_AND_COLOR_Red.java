@@ -66,9 +66,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Drive Color Blue", group="Worksish")
+@Autonomous(name="Auto Drive Color Red", group="Worksish")
 //@Disabled
-public class Autonomous_DRIVE_Blue extends LinearOpMode {
+public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -79,22 +79,22 @@ public class Autonomous_DRIVE_Blue extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
-    Servo elbowL;
-    Servo wristL;
+    Servo elbowR;
+    Servo wristR;
 
-    ColorSensor sensorColor;
+    ColorSensor sensorColorR;
 
     float hsvResult;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: AndyMark Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.5  ;    // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0  ;    // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     DRIVE_SPEED             = 1.0;
+    static final double     TURN_SPEED              = 0.7;
 
     @Override
     public void runOpMode() {
@@ -110,10 +110,10 @@ public class Autonomous_DRIVE_Blue extends LinearOpMode {
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
 
-        elbowL = hardwareMap.get(Servo.class, "elbowL");
-        wristL = hardwareMap.get(Servo.class, "wristL");
+        elbowR = hardwareMap.get(Servo.class, "elbowL");
+        wristR = hardwareMap.get(Servo.class, "wristL");
 
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color");
 
 
 
@@ -121,10 +121,10 @@ public class Autonomous_DRIVE_Blue extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -136,8 +136,8 @@ public class Autonomous_DRIVE_Blue extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        elbowL.setPosition(0.0);
-        wristL.setPosition(0.4);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.4);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -151,23 +151,23 @@ public class Autonomous_DRIVE_Blue extends LinearOpMode {
         waitForStart();
 
         //Lower sensor arm
-        elbowL.setPosition(0.5);
+        elbowR.setPosition(0.5);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(0.0);
+            wristR.setPosition(1.0);
             sleep(1000);
-            wristL.setPosition(0.4);
-            elbowL.setPosition(0.0);
+            wristR.setPosition(0.4);
+            elbowR.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristL.setPosition(1.0);
+            wristR.setPosition(0.0);
             sleep(1000);
-            wristL.setPosition(0.4);
-            elbowL.setPosition(0.0);
+            wristR.setPosition(0.4);
+            elbowR.setPosition(0.0);
             sleep(2000);
         }
 
@@ -207,18 +207,18 @@ public class Autonomous_DRIVE_Blue extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (sensorColorR.red() * SCALE_FACTOR),
+                    (int) (sensorColorR.green() * SCALE_FACTOR),
+                    (int) (sensorColorR.blue() * SCALE_FACTOR),
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
             //telemetry.addData("Distance (cm)",
             //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Alpha", sensorColorR.alpha());
+            telemetry.addData("Red  ", sensorColorR.red());
+            telemetry.addData("Green", sensorColorR.green());
+            telemetry.addData("Blue ", sensorColorR.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.
