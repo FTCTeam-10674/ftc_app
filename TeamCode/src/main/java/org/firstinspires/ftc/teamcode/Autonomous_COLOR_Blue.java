@@ -89,7 +89,7 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
         wristL.setPosition(0.45);
 
 
-        // Wait for the game to start (driver presses PLAY)
+        // Wait for the game to start (driver presses PLAY).
         waitForStart();
         //Lower sensor arm
         elbowL.setPosition(0.55);
