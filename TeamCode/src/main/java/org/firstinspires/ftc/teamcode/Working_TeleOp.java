@@ -153,9 +153,9 @@ public class Working_TeleOp extends LinearOpMode {
 
 
             frontLeftPower   = Range.clip(drive + rotate - strafe, -1, 1);
-            frontRightPower  = Range.clip(drive - rotate + strafe, -1, 1);
+            frontRightPower  = Range.clip(drive - rotate - strafe, -1, 1);
             backLeftPower    = Range.clip(drive + rotate + strafe, -1, 1);
-            backRightPower   = Range.clip(drive - rotate - strafe, -1, 1);
+            backRightPower   = Range.clip(drive - rotate + strafe, -1, 1);
 
 
             // Tank Mode uses one stick to control each wheel.
