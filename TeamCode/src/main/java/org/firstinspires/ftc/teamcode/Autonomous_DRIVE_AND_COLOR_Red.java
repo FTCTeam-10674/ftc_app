@@ -151,7 +151,7 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         waitForStart();
 
         //Lower sensor arm
-        elbowR.setPosition(0.5);
+        elbowR.setPosition(0.55);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
