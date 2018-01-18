@@ -113,7 +113,7 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
         elbowL = hardwareMap.get(Servo.class, "elbowL");
         wristL = hardwareMap.get(Servo.class, "wristL");
 
-        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color");
+        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
 
 
 
@@ -151,20 +151,20 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
         waitForStart();
 
         //Lower sensor arm
-        elbowL.setPosition(0.5);
+        elbowL.setPosition(0.55);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(0.0);
+            wristL.setPosition(1.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristL.setPosition(1.0);
+            wristL.setPosition(0.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);

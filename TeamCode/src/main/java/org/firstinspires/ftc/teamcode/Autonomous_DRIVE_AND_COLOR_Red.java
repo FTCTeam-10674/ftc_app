@@ -113,7 +113,7 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         elbowR = hardwareMap.get(Servo.class, "elbowL");
         wristR = hardwareMap.get(Servo.class, "wristL");
 
-        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color");
+        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color_r");
 
 
 
