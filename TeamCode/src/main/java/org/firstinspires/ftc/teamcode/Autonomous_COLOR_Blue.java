@@ -71,6 +71,8 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
 
     Servo elbowL;
     Servo wristL;
+    Servo elbowR;
+    Servo wristR;
 
     ColorSensor sensorColorL;
 
@@ -84,9 +86,14 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
         sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
         elbowL = hardwareMap.get(Servo.class, "elbowL");
         wristL = hardwareMap.get(Servo.class, "wristL");
+        elbowR = hardwareMap.get(Servo.class, "elbowR");
+        wristR = hardwareMap.get(Servo.class, "wristR");
 
         elbowL.setPosition(0.0);
         wristL.setPosition(0.45);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.45);
+
 
 
         // Wait for the game to start (driver presses PLAY).
@@ -98,14 +105,14 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(1.0);
+            wristL.setPosition(0.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristL.setPosition(0.0);
+            wristL.setPosition(1.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);

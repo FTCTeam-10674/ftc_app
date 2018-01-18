@@ -79,6 +79,8 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
+    Servo elbowL;
+    Servo wristL;
     Servo elbowR;
     Servo wristR;
 
@@ -110,8 +112,10 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
 
-        elbowR = hardwareMap.get(Servo.class, "elbowL");
-        wristR = hardwareMap.get(Servo.class, "wristL");
+        elbowL = hardwareMap.get(Servo.class, "elbowL");
+        wristL = hardwareMap.get(Servo.class, "wristL");
+        elbowR = hardwareMap.get(Servo.class, "elbowR");
+        wristR = hardwareMap.get(Servo.class, "wristR");
 
         sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color_r");
 
@@ -121,10 +125,10 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -136,8 +140,10 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.45);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.4);
+        wristR.setPosition(0.45);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -157,14 +163,14 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristR.setPosition(1.0);
+            wristR.setPosition(0.0);
             sleep(1000);
             wristR.setPosition(0.4);
             elbowR.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristR.setPosition(0.0);
+            wristR.setPosition(1.0);
             sleep(1000);
             wristR.setPosition(0.4);
             elbowR.setPosition(0.0);

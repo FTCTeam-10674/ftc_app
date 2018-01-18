@@ -69,6 +69,11 @@ public class Working_TeleOp extends LinearOpMode {
     private Servo rightGrabber;
     //boolean grabberOpen = true;
 
+    Servo elbowL;
+    Servo wristL;
+    Servo elbowR;
+    Servo wristR; 
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -87,6 +92,11 @@ public class Working_TeleOp extends LinearOpMode {
         liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
+
+        elbowL = hardwareMap.get(Servo.class, "elbowL");
+        wristL = hardwareMap.get(Servo.class, "wristL");
+        elbowR = hardwareMap.get(Servo.class, "elbowR");
+        wristR = hardwareMap.get(Servo.class, "wristR");
 
         /*
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -112,6 +122,11 @@ public class Working_TeleOp extends LinearOpMode {
 
         leftGrabber.setPosition(leftGrabberPosition);
         rightGrabber.setPosition(rightGrabberPosition);
+
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.45);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.45);
 
 
 

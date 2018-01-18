@@ -81,6 +81,8 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
 
     Servo elbowL;
     Servo wristL;
+    Servo elbowR;
+    Servo wristR;
 
     ColorSensor sensorColorL;
 
@@ -112,6 +114,8 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
 
         elbowL = hardwareMap.get(Servo.class, "elbowL");
         wristL = hardwareMap.get(Servo.class, "wristL");
+        elbowR = hardwareMap.get(Servo.class, "elbowR");
+        wristR = hardwareMap.get(Servo.class, "wristR");
 
         sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
 
@@ -137,7 +141,9 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.4);
+        wristL.setPosition(0.45);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.45);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -157,14 +163,14 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(1.0);
+            wristL.setPosition(0.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristL.setPosition(0.0);
+            wristL.setPosition(1.0);
             sleep(1000);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);

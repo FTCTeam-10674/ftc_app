@@ -68,6 +68,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class Autonomous_COLOR_Red extends LinearOpMode {
 
+    Servo elbowL;
+    Servo wristL;
     Servo elbowR;
     Servo wristR;
 
@@ -81,11 +83,15 @@ public class Autonomous_COLOR_Red extends LinearOpMode {
     public void runOpMode() {
 
         sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color_r");
+        elbowL = hardwareMap.get(Servo.class, "elbowL");
+        wristL = hardwareMap.get(Servo.class, "wristL");
         elbowR = hardwareMap.get(Servo.class, "elbowR");
         wristR = hardwareMap.get(Servo.class, "wristR");
 
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.45);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.4);
+        wristR.setPosition(0.45);
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -97,14 +103,14 @@ public class Autonomous_COLOR_Red extends LinearOpMode {
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristR.setPosition(1.0);
+            wristR.setPosition(0.0);
             sleep(1000);
             wristR.setPosition(0.4);
             elbowR.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristR.setPosition(0.0);
+            wristR.setPosition(1.0);
             sleep(1000);
             wristR.setPosition(0.4);
             elbowR.setPosition(0.0);
