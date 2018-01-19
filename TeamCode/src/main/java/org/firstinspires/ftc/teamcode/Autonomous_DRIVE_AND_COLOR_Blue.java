@@ -122,7 +122,7 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
 
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -141,9 +141,9 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.45);
+        wristL.setPosition(0.7);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.45);
+        wristR.setPosition(0.1);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -155,7 +155,10 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
+        //set position to neutral
+        wristL.setPosition(0.4);
+        wristR.setPosition(0.4);
+        sleep(1500);
         //Lower sensor arm
         elbowL.setPosition(0.55);
         sleep(1000);

@@ -90,14 +90,18 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
         wristR = hardwareMap.get(Servo.class, "wristR");
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.45);
+        wristL.setPosition(0.7);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.45);
+        wristR.setPosition(0.1);
 
 
 
         // Wait for the game to start (driver presses PLAY).
         waitForStart();
+        //set position to neutral
+        wristL.setPosition(0.4);
+        wristR.setPosition(0.4);
+        sleep(1500);
         //Lower sensor arm
         elbowL.setPosition(0.55);
         sleep(1000);

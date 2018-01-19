@@ -124,9 +124,9 @@ public class Working_TeleOp extends LinearOpMode {
         rightGrabber.setPosition(rightGrabberPosition);
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.45);
+        wristL.setPosition(0.7);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.45);
+        wristR.setPosition(0.1);
 
 
 
@@ -150,8 +150,8 @@ public class Working_TeleOp extends LinearOpMode {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
-            double rotate  = gamepad1.left_stick_x;
-            double strafe = gamepad1.right_stick_x;
+            double rotate  = -gamepad1.left_stick_x;
+            double strafe = -gamepad1.right_stick_x;
             double lift = -gamepad2.left_stick_y;
 
 
