@@ -171,7 +171,7 @@ public class Working_TeleOp extends LinearOpMode {
                 rightGrabberPosition = 0.45;
             }
 
-            else if (gamepad2.right_trigger > 0.1){
+            else if (gamepad2.right_trigger > 0.1) {
                 leftGrabberPosition = 1.0;
                 rightGrabberPosition = 0.0;
             }
