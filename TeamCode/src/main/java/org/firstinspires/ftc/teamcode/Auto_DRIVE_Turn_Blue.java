@@ -66,9 +66,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Drive Color Blue", group="Worksish")
+@Autonomous(name="Auto Drive Turn Color Blue", group="Worksish")
 //@Disabled
-public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
+public class Auto_DRIVE_Turn_Blue extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -190,7 +190,7 @@ public class Autonomous_DRIVE_AND_COLOR_Blue extends LinearOpMode {
         liftMotor.setPower(0.0);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   -25, 25, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        encoderDrive(TURN_SPEED,   21, -21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
         encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
 
         leftGrabber.setPosition(1.0);
