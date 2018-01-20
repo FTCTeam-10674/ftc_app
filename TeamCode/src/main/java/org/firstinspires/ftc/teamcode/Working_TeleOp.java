@@ -124,9 +124,9 @@ public class Working_TeleOp extends LinearOpMode {
         rightGrabber.setPosition(rightGrabberPosition);
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.7);
+        wristL.setPosition(0.6);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.1);
+        wristR.setPosition(0.2);
 
 
 
@@ -167,8 +167,8 @@ public class Working_TeleOp extends LinearOpMode {
             }
 
             else if (gamepad2.left_trigger > 0.1){
-                leftGrabberPosition = 0.55;
-                rightGrabberPosition = 0.45;
+                leftGrabberPosition = 0.6;
+                rightGrabberPosition = 0.4;
             }
 
             else if (gamepad2.right_trigger > 0.1) {

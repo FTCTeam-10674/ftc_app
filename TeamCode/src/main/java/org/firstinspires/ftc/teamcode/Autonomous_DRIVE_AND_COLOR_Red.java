@@ -141,9 +141,9 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.7);
+        wristL.setPosition(0.6);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.1);
+        wristR.setPosition(0.2);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",

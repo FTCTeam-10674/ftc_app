@@ -90,9 +90,9 @@ public class Autonomous_COLOR_Blue extends LinearOpMode {
         wristR = hardwareMap.get(Servo.class, "wristR");
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.7);
+        wristL.setPosition(0.6);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.1);
+        wristR.setPosition(0.2);
 
 
 
