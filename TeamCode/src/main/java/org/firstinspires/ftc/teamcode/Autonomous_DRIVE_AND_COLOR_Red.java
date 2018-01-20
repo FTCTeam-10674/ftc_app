@@ -190,9 +190,11 @@ public class Autonomous_DRIVE_AND_COLOR_Red extends LinearOpMode {
         liftMotor.setPower(0.0);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   0, 0, 0);  // S2: Turn Right 0 Inches with 0 Sec timeout
-        //encoderDrive(DRIVE_SPEED, 0, 0, 0);  // S3: Reverse 0 Inches with 0 Sec timeout
+        encoderDrive(TURN_SPEED,   25, -25, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
 
+        leftGrabber.setPosition(1.0);
+        rightGrabber.setPosition(0.0);
         // pause for servos to move
 
         telemetry.addData("Path", "Complete");
