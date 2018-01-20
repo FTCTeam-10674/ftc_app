@@ -166,6 +166,16 @@ public class Working_TeleOp extends LinearOpMode {
                 rightGrabberPosition = 0.5;
             }
 
+            else if (gamepad2.left_trigger > 0.1){
+                leftGrabberPosition = 0.55;
+                rightGrabberPosition = 0.45;
+            }
+
+            else if (gamepad2.right_trigger > 0.1){
+                leftGrabberPosition = 1.0;
+                rightGrabberPosition = 0.0;
+            }
+
 
             frontLeftPower   = Range.clip(drive + rotate - strafe, -1, 1);
             frontRightPower  = Range.clip(drive - rotate - strafe, -1, 1);
