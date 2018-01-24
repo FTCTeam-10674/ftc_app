@@ -188,6 +188,7 @@ public class Auto_DRIVE_Red extends LinearOpMode {
         sleep(1000);
         liftMotor.setPower(0.0);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        encoderDrive(TURN_SPEED, 5, -5, 3.0);
         encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   -21, 21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
         //encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
