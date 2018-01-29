@@ -38,6 +38,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -65,9 +70,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Drive Color Red", group="Worksish")
+@Autonomous(name="Auto BF Blue Vuforia", group="Worksish")
 //@Disabled
-public class Auto_DRIVE_Red extends LinearOpMode {
+public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -83,7 +88,7 @@ public class Auto_DRIVE_Red extends LinearOpMode {
     Servo elbowR;
     Servo wristR;
 
-    ColorSensor sensorColorR;
+    ColorSensor sensorColorL;
 
     float hsvResult;
 
@@ -96,6 +101,8 @@ public class Auto_DRIVE_Red extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 1.0;
     static final double     TURN_SPEED              = 0.7;
+
+    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
@@ -116,12 +123,12 @@ public class Auto_DRIVE_Red extends LinearOpMode {
         elbowR = hardwareMap.get(Servo.class, "elbowR");
         wristR = hardwareMap.get(Servo.class, "wristR");
 
-        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color_r");
+        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
 
 
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -159,23 +166,23 @@ public class Auto_DRIVE_Red extends LinearOpMode {
         wristR.setPosition(0.4);
         sleep(1500);
         //Lower sensor arm
-        elbowR.setPosition(0.53);
+        elbowL.setPosition(0.53);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
         sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristR.setPosition(0.0);
+            wristL.setPosition(0.0);
             sleep(1000);
-            wristR.setPosition(0.4);
-            elbowR.setPosition(0.0);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
             sleep(2000);
         }
         else {
-            wristR.setPosition(1.0);
+            wristL.setPosition(1.0);
             sleep(1000);
-            wristR.setPosition(0.4);
-            elbowR.setPosition(0.0);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
             sleep(2000);
         }
 
@@ -188,13 +195,14 @@ public class Auto_DRIVE_Red extends LinearOpMode {
         sleep(1000);
         liftMotor.setPower(0.0);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(TURN_SPEED, 5, -5, 3.0);
+        encoderDrive(TURN_SPEED, -5, 5, 3.0);
         encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   -21, 21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        //encoderDrive(TURN_SPEED,   21, -21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
         //encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
 
         leftGrabber.setPosition(1.0);
         rightGrabber.setPosition(0.0);
+
         // pause for servos to move
 
         telemetry.addData("Path", "Complete");
@@ -218,18 +226,18 @@ public class Auto_DRIVE_Red extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColorR.red() * SCALE_FACTOR),
-                    (int) (sensorColorR.green() * SCALE_FACTOR),
-                    (int) (sensorColorR.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (sensorColorL.red() * SCALE_FACTOR),
+                    (int) (sensorColorL.green() * SCALE_FACTOR),
+                    (int) (sensorColorL.blue() * SCALE_FACTOR),
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
             //telemetry.addData("Distance (cm)",
             //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColorR.alpha());
-            telemetry.addData("Red  ", sensorColorR.red());
-            telemetry.addData("Green", sensorColorR.green());
-            telemetry.addData("Blue ", sensorColorR.blue());
+            telemetry.addData("Alpha", sensorColorL.alpha());
+            telemetry.addData("Red  ", sensorColorL.red());
+            telemetry.addData("Green", sensorColorL.green());
+            telemetry.addData("Blue ", sensorColorL.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.
@@ -239,6 +247,35 @@ public class Auto_DRIVE_Red extends LinearOpMode {
             telemetry.update();
         }
         return hsvValues[0];
+    }
+    public int readImage(){
+
+        // LEFT: 1, CENTER: 2, RIGHT: 3
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        if (){
+            return 1;
+        }
+
+        else if (){
+            return 2;
+        }
+
+        else if (){
+            return 3;
+        }
+
     }
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,

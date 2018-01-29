@@ -65,9 +65,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Drive Color Blue", group="Worksish")
+@Autonomous(name="Auto BF Blue", group="Worksish")
 //@Disabled
-public class Auto_DRIVE_Blue extends LinearOpMode {
+public class Auto_Backfield_Blue extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
