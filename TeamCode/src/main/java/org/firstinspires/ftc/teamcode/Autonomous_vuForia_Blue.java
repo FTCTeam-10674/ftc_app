@@ -70,9 +70,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto BF Blue Vuforia", group="Worksish")
+@Autonomous(name="Auto Drive VuForia Blue", group="Worksish")
 //@Disabled
-public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
+public class Autonomous_vuForia_Blue extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -92,6 +92,10 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
 
     float hsvResult;
 
+
+    VuforiaLocalizer vuforia;
+
+
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: AndyMark Motor Encoder
@@ -101,8 +105,6 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 1.0;
     static final double     TURN_SPEED              = 0.7;
-
-    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
@@ -147,9 +149,9 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.7);
+        wristL.setPosition(0.6);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.1);
+        wristR.setPosition(0.2);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -164,26 +166,26 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         //set position to neutral
         wristL.setPosition(0.4);
         wristR.setPosition(0.4);
-        sleep(1500);
+        sleep(500);
         //Lower sensor arm
         elbowL.setPosition(0.53);
-        sleep(1000);
+        sleep(500);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(7);
-        sleep(1000);
+        hsvResult = senseColor(5);
+        sleep(500);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
             wristL.setPosition(0.0);
-            sleep(1000);
+            sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
-            sleep(2000);
+            sleep(500);
         }
         else {
             wristL.setPosition(1.0);
-            sleep(1000);
+            sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
-            sleep(2000);
+            sleep(500);
         }
 
 
@@ -192,16 +194,39 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         rightGrabber.setPosition(0.5);
         sleep(500);
         liftMotor.setPower(-0.5);
-        sleep(1000);
+        sleep(500);
         liftMotor.setPower(0.0);
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(TURN_SPEED, -5, 5, 3.0);
-        encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   21, -21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
-        //encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
+        sleep(500);
 
+        int image = readImage(2.0);
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        encoderDrive(DRIVE_SPEED,  32,  32, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
+
+        if (image == 1){
+
+        }
+        else if (image == 2) {
+            encoderDrive(DRIVE_SPEED, 7, 7, 1.0);
+        }
+
+        else if (image == 3) {
+            encoderDrive(DRIVE_SPEED, 14, 14, 2.0);
+        }
+
+
+
+        encoderDrive(TURN_SPEED,   17, -17, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        encoderDrive(DRIVE_SPEED, 20, 20, 1.0);  // S3: Reverse 0 Inches with 0 Sec timeout
         leftGrabber.setPosition(1.0);
         rightGrabber.setPosition(0.0);
+        sleep(500);
+
+        encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+        encoderDrive(TURN_SPEED, 30, -30, 4.0);
+        encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+
+
+
 
         // pause for servos to move
 
@@ -217,7 +242,7 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public float senseColor(double timeoutS){
+    public float senseColor(double timeoutS) {
 
         float hsvValues[] = {0F, 0F, 0F};
         final double SCALE_FACTOR = 255;
@@ -248,7 +273,7 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         }
         return hsvValues[0];
     }
-    public int readImage(){
+    public int readImage(double timeoutS){
 
         // LEFT: 1, CENTER: 2, RIGHT: 3
 
@@ -258,27 +283,27 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
 
         parameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
 
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
 
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-            return 1;
+        runtime.reset();
+
+        while(opModeIsActive() && runtime.seconds() > timeoutS ){
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+                return 1;
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                return 2;
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                return 3;
+            }
         }
 
-        else if (vuMark == RelicRecoveryVuMark.CENTER){
-            return 2;
-        }
-
-        else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            return 3;
-        }
-
-        else{
-            return 0;
-        }
+        return 0;
 
     }
     public void encoderDrive(double speed,

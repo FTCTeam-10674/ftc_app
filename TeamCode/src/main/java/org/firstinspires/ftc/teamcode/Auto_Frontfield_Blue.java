@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -87,6 +86,13 @@ public class Auto_Frontfield_Blue extends LinearOpMode {
     ColorSensor sensorColorL;
 
     float hsvResult;
+
+    int LEFT = 1;
+    int CENTER = 2;
+    int RIGHT = 3;
+
+    int vuMark = LEFT;
+
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -158,26 +164,26 @@ public class Auto_Frontfield_Blue extends LinearOpMode {
         //set position to neutral
         wristL.setPosition(0.4);
         wristR.setPosition(0.4);
-        sleep(1500);
+        sleep(500);
         //Lower sensor arm
         elbowL.setPosition(0.53);
-        sleep(1000);
+        sleep(500);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(7);
-        sleep(1000);
+        hsvResult = senseColor(5);
+        sleep(500);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
             wristL.setPosition(0.0);
-            sleep(1000);
+            sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
-            sleep(2000);
+            sleep(500);
         }
         else {
             wristL.setPosition(1.0);
-            sleep(1000);
+            sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
-            sleep(2000);
+            sleep(500);
         }
 
 
@@ -186,15 +192,32 @@ public class Auto_Frontfield_Blue extends LinearOpMode {
         rightGrabber.setPosition(0.5);
         sleep(500);
         liftMotor.setPower(-0.5);
-        sleep(1000);
+        sleep(500);
         liftMotor.setPower(0.0);
+        sleep(500);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   21, -21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
-        encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
+        encoderDrive(DRIVE_SPEED,  32,  32, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
 
+        if (vuMark == CENTER) {
+            encoderDrive(DRIVE_SPEED, 4, 4, 1.0);
+        }
+
+        else if (vuMark == RIGHT) {
+            encoderDrive(DRIVE_SPEED, 8, 8, 2.0);
+        }
+
+        encoderDrive(TURN_SPEED,   21, -21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        encoderDrive(DRIVE_SPEED, 20, 20, 1.0);  // S3: Reverse 0 Inches with 0 Sec timeout
         leftGrabber.setPosition(1.0);
         rightGrabber.setPosition(0.0);
+        sleep(500);
+
+        encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+        encoderDrive(TURN_SPEED, 30, -30, 4.0);
+        encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+
+
+
 
         // pause for servos to move
 
