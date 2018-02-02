@@ -169,8 +169,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         // Send telemetry message to alert driver that we are calibrating;
         telemetry.addData(">", "Calibrating Gyro");    //
         telemetry.update();
-
-
+        
         // make sure the gyro is calibrated before continuing
 
         telemetry.addData(">", "Robot Ready.");    //
