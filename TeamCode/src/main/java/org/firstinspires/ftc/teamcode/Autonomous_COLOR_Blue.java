@@ -67,12 +67,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto Color Blue", group="Test")
 //@Disabled
-public class Autonomous_Color_Blue extends LinearOpMode {
+public class Autonomous_COLOR_Blue extends LinearOpMode {
 
     Servo elbowL;
     Servo wristL;
+    Servo elbowR;
+    Servo wristR;
 
-    ColorSensor sensorColor;
+    ColorSensor sensorColorL;
 
     float hsvResult;
 
@@ -81,18 +83,27 @@ public class Autonomous_Color_Blue extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
         elbowL = hardwareMap.get(Servo.class, "elbowL");
         wristL = hardwareMap.get(Servo.class, "wristL");
+        elbowR = hardwareMap.get(Servo.class, "elbowR");
+        wristR = hardwareMap.get(Servo.class, "wristR");
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.4);
+        wristL.setPosition(0.6);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.2);
 
 
-        // Wait for the game to start (driver presses PLAY)
+
+        // Wait for the game to start (driver presses PLAY).
         waitForStart();
+        //set position to neutral
+        wristL.setPosition(0.4);
+        wristR.setPosition(0.4);
+        sleep(1500);
         //Lower sensor arm
-        elbowL.setPosition(0.55);
+        elbowL.setPosition(0.53);
         sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
@@ -133,18 +144,18 @@ public class Autonomous_Color_Blue extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (sensorColorL.red() * SCALE_FACTOR),
+                    (int) (sensorColorL.green() * SCALE_FACTOR),
+                    (int) (sensorColorL.blue() * SCALE_FACTOR),
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
             //telemetry.addData("Distance (cm)",
             //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Alpha", sensorColorL.alpha());
+            telemetry.addData("Red  ", sensorColorL.red());
+            telemetry.addData("Green", sensorColorL.green());
+            telemetry.addData("Blue ", sensorColorL.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.

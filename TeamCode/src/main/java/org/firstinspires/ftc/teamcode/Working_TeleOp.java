@@ -52,9 +52,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Working TeleOp 50%", group="Meets")
-@Disabled
-public class Working_TeleOp_SLOW50 extends LinearOpMode {
+@TeleOp(name="Working TeleOp", group="Meets")
+//@Disabled
+public class Working_TeleOp extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -68,6 +68,11 @@ public class Working_TeleOp_SLOW50 extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
     //boolean grabberOpen = true;
+
+    Servo elbowL;
+    Servo wristL;
+    Servo elbowR;
+    Servo wristR;
 
     @Override
     public void runOpMode() {
@@ -87,6 +92,11 @@ public class Working_TeleOp_SLOW50 extends LinearOpMode {
         liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
+
+        elbowL = hardwareMap.get(Servo.class, "elbowL");
+        wristL = hardwareMap.get(Servo.class, "wristL");
+        elbowR = hardwareMap.get(Servo.class, "elbowR");
+        wristR = hardwareMap.get(Servo.class, "wristR");
 
         /*
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -113,6 +123,11 @@ public class Working_TeleOp_SLOW50 extends LinearOpMode {
         leftGrabber.setPosition(leftGrabberPosition);
         rightGrabber.setPosition(rightGrabberPosition);
 
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.6);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.2);
+
 
 
 
@@ -137,7 +152,7 @@ public class Working_TeleOp_SLOW50 extends LinearOpMode {
             double drive = -gamepad1.left_stick_y;
             double rotate  = gamepad1.left_stick_x;
             double strafe = gamepad1.right_stick_x;
-            double lift = gamepad2.left_stick_y;
+            double lift = -gamepad2.left_stick_y;
 
 
             if (gamepad2.right_bumper){
@@ -151,11 +166,21 @@ public class Working_TeleOp_SLOW50 extends LinearOpMode {
                 rightGrabberPosition = 0.5;
             }
 
+            else if (gamepad2.left_trigger > 0.1){
+                leftGrabberPosition = 0.6;
+                rightGrabberPosition = 0.4;
+            }
 
-            frontLeftPower   = Range.clip(drive + rotate - strafe, -0.5, 0.5);
-            frontRightPower  = Range.clip(drive - rotate + strafe, -0.5, 0.5);
-            backLeftPower    = Range.clip(drive + rotate + strafe, -0.5, 0.5);
-            backRightPower   = Range.clip(drive - rotate - strafe, -0.5, 0.5);
+            else if (gamepad2.right_trigger > 0.1) {
+                leftGrabberPosition = 1.0;
+                rightGrabberPosition = 0.0;
+            }
+
+
+            frontLeftPower   = Range.clip(drive - rotate + strafe, -1, 1);
+            frontRightPower  = Range.clip(drive + rotate + strafe, -1, 1);
+            backLeftPower    = Range.clip(drive - rotate - strafe, -1, 1);
+            backRightPower   = Range.clip(drive + rotate - strafe, -1, 1);
 
 
             // Tank Mode uses one stick to control each wheel.
