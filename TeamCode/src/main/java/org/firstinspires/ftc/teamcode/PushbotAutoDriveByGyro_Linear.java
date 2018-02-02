@@ -278,6 +278,8 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             frontLeftDrive.setPower(speed);
             frontRightDrive.setPower(speed);
+            backLeftDrive.setPower(speed);
+            backRightDrive.setPower(speed);
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
