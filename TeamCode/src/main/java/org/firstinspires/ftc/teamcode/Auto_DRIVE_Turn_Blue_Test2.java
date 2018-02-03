@@ -301,7 +301,7 @@ public class Auto_DRIVE_Turn_Blue_Test2 extends LinearOpMode {
 
             // reset the timeout time and start motion.
             runtime.reset();
-            frontLeftDrive.setPower(Math.abs(speed));
+            frontLeftDrive.setPower(Math.abs(speed)); //offset faulty wheel
             frontRightDrive.setPower(Math.abs(speed));
             backLeftDrive.setPower(Math.abs(speed));
             backRightDrive.setPower(Math.abs(speed));
