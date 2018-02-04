@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -90,9 +91,10 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
     /* Declare OpMode members. */
     //HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     //ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
-    BNO055IMU gyro = null; //hub gyro
+    BNO055IMU gyro; //hub gyro
 
     Orientation angles;
+    Acceleration gravity;
 
     // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
     // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
@@ -175,13 +177,13 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
 
         gyro = hardwareMap.get(BNO055IMU.class, "imu_gyro");
-        gyro.initialize(parameters);
+
 
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -191,9 +193,12 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         // Send telemetry message to alert driver that we are calibrating;
         telemetry.addData(">", "Calibrating Gyro");    //
         telemetry.update();
-        
+        gyro.initialize(parameters);
         // make sure the gyro is calibrated before continuing
-
+        while (!isStopRequested() && !gyro.isGyroCalibrated())  {
+            sleep(50);
+            idle();
+        }
         telemetry.addData(">", "Robot Ready.");    //
         telemetry.update();
 
@@ -208,8 +213,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         wristR.setPosition(0.2);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
-
-
+/*
         while (!isStarted()) {
             telemetry.addAction(new Runnable() { @Override public void run()
             {
@@ -217,16 +221,19 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
                 // to do that in each of the three items that need that info, as that's
                 // three times the necessary expense.
                 angles   = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                gravity = gyro.getGravity();
             }
             });
-                telemetry.addData(">", "Robot Heading = %d", formatAngle(angles.angleUnit, angles.firstAngle));
+                telemetry.addData(">", "Robot Heading = ", new Func<String>() {
+                            @Override public String value() { return formatAngle(angles.angleUnit, angles.firstAngle); }
+                });
                 telemetry.update();
                 idle();
 
 
         }
-
-
+*/
+waitForStart();
         gyro.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         wristL.setPosition(0.4);
