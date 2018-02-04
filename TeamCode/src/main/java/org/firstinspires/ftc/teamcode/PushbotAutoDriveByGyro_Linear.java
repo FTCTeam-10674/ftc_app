@@ -29,10 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -110,6 +113,18 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
     Servo elbowR;
     Servo wristR;
 
+    ColorSensor sensorColorL;
+
+    float hsvResult;
+
+    int LEFT = 1;
+    int CENTER = 2;
+    int RIGHT = 3;
+
+    int vuMark = RIGHT;
+
+    private ElapsedTime     runtime = new ElapsedTime();
+
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.5 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
@@ -118,8 +133,8 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.7;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
@@ -157,10 +172,17 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         elbowR = hardwareMap.get(Servo.class, "elbowR");
         wristR = hardwareMap.get(Servo.class, "wristR");
 
+        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color_l");
+
         gyro = hardwareMap.get(BNO055IMU.class, "imu_gyro");
         gyro.initialize(parameters);
 
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
         frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -179,6 +201,11 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.6);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.2);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
 
@@ -202,12 +229,61 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         gyro.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
+        wristL.setPosition(0.4);
+        wristR.setPosition(0.4);
+        sleep(500);
+        //Lower sensor arm
+        elbowL.setPosition(0.53);
+        sleep(500);
+        //If the color is blue, knock the other one over
+        hsvResult = senseColor(5);
+        sleep(500);
+        if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
+            wristL.setPosition(0.0);
+            sleep(500);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
+            sleep(500);
+        }
+        else {
+            wristL.setPosition(1.0);
+            sleep(500);
+            wristL.setPosition(0.4);
+            elbowL.setPosition(0.0);
+            sleep(500);
+        }
+
+
+
+        leftGrabber.setPosition(0.5);
+        rightGrabber.setPosition(0.5);
+        sleep(500);
+        liftMotor.setPower(-0.5);
+        sleep(500);
+        liftMotor.setPower(0.0);
+        sleep(500);
+
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
-        gyroDrive(DRIVE_SPEED, 29.0, 0.0);    // Drive FWD 48 inches
+        gyroDrive(DRIVE_SPEED, 27.0, 0.0);    // Drive FWD 48 inches
+
+        if (vuMark == CENTER) {
+            gyroDrive(DRIVE_SPEED, 4.0, 0.0);
+        }
+
+        else if (vuMark == RIGHT) {
+            gyroDrive(DRIVE_SPEED, 8.0, 0.0);
+            sleep(500);
+        }
+
         gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
         gyroHold( TURN_SPEED, -90.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
+        gyroDrive(DRIVE_SPEED, 20.0, -90.0);
+        gyroDrive(DRIVE_SPEED, -20.0, -90.0);
+        gyroTurn( TURN_SPEED, -180.0);         // Turn  CCW to -45 Degrees
+        gyroHold( TURN_SPEED, -180.0, 0.5);
+        gyroDrive(DRIVE_SPEED, -20.0, -180.0);
         /*gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
         gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
         gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
@@ -217,6 +293,38 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+    }
+
+    public float senseColor(double timeoutS){
+
+        float hsvValues[] = {0F, 0F, 0F};
+        final double SCALE_FACTOR = 255;
+
+        while (opModeIsActive() && runtime.seconds() < timeoutS) {
+            // convert the RGB values to HSV values.
+            // multiply by the SCALE_FACTOR.
+            // then cast it back to int (SCALE_FACTOR is a double)
+            Color.RGBToHSV((int) (sensorColorL.red() * SCALE_FACTOR),
+                    (int) (sensorColorL.green() * SCALE_FACTOR),
+                    (int) (sensorColorL.blue() * SCALE_FACTOR),
+                    hsvValues);
+
+            // send the info back to driver station using telemetry function.
+            //telemetry.addData("Distance (cm)",
+            //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", sensorColorL.alpha());
+            telemetry.addData("Red  ", sensorColorL.red());
+            telemetry.addData("Green", sensorColorL.green());
+            telemetry.addData("Blue ", sensorColorL.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+
+            // change the background color to match the color detected by the RGB sensor.
+            // pass a reference to the hue, saturation, and value array as an argument
+            // to the HSVToColor method.
+
+            telemetry.update();
+        }
+        return hsvValues[0];
     }
 
     String formatAngle(AngleUnit angleUnit, double angle) {
