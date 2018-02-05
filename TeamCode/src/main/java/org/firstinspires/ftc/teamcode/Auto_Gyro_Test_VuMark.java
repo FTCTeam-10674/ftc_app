@@ -41,13 +41,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
 
@@ -84,15 +93,16 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Gyro", group="Pushbot")
+@Autonomous(name="AutoVuMark", group="Pushbot")
 //@Disabled
-public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
+public class Auto_Gyro_Test_VuMark extends LinearOpMode {
 
     /* Declare OpMode members. */
     //HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     //ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
     BNO055IMU gyro; //hub gyro
 
+    OpenGLMatrix lastLocation = null;
     Orientation angles;
     Acceleration gravity;
 
@@ -119,11 +129,6 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     float hsvResult;
 
-    int LEFT = 1;
-    int CENTER = 2;
-    int RIGHT = 3;
-
-    int vuMark = RIGHT;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -135,13 +140,14 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.7;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.6;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
+    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
@@ -213,27 +219,28 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         wristR.setPosition(0.2);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
-/*
-        while (!isStarted()) {
-            telemetry.addAction(new Runnable() { @Override public void run()
-            {
-                // Acquiring the angles is relatively expensive; we don't want
-                // to do that in each of the three items that need that info, as that's
-                // three times the necessary expense.
-                angles   = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                gravity = gyro.getGravity();
-            }
-            });
-                telemetry.addData(">", "Robot Heading = ", new Func<String>() {
-                            @Override public String value() { return formatAngle(angles.angleUnit, angles.firstAngle); }
-                });
-                telemetry.update();
-                idle();
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters vuParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        vuParameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
+        vuParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(vuParameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
 
-        }
-*/
-waitForStart();
+        waitForStart();
+
+
+        relicTrackables.activate();
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+
+       // int image = readImage(5);
+
+
+
         gyro.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         wristL.setPosition(0.4);
@@ -243,8 +250,8 @@ waitForStart();
         elbowL.setPosition(0.53);
         sleep(500);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(5);
-        sleep(500);
+        hsvResult = senseColor(7);
+        sleep(2000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
             wristL.setPosition(0.0);
             sleep(500);
@@ -265,38 +272,48 @@ waitForStart();
         leftGrabber.setPosition(0.5);
         rightGrabber.setPosition(0.5);
         sleep(500);
-        liftMotor.setPower(-0.5);
-        sleep(500);
+        liftMotor.setPower(0.5);
+        sleep(750);
         liftMotor.setPower(0.0);
         sleep(500);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
-        gyroDrive(DRIVE_SPEED, 27.0, 0.0);    // Drive FWD 48 inches
+        gyroDrive(DRIVE_SPEED, 25.0, 0.0);
 
-        if (vuMark == CENTER) {
-            gyroDrive(DRIVE_SPEED, 4.0, 0.0);
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+
         }
 
-        else if (vuMark == RIGHT) {
-            gyroDrive(DRIVE_SPEED, 8.0, 0.0);
+        else if (vuMark == RelicRecoveryVuMark.CENTER) {
+            gyroDrive(DRIVE_SPEED, 7.0, 0.0);
+        }
+
+        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            gyroDrive(DRIVE_SPEED, 14.0, 0.0);
             sleep(500);
         }
 
-        gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
-        gyroHold( TURN_SPEED, -90.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-        gyroDrive(DRIVE_SPEED, 20.0, -90.0);
-        gyroDrive(DRIVE_SPEED, -20.0, -90.0);
-        gyroTurn( TURN_SPEED, -180.0);         // Turn  CCW to -45 Degrees
-        gyroHold( TURN_SPEED, -180.0, 0.5);
-        gyroDrive(DRIVE_SPEED, -20.0, -180.0);
+        gyroTurn( TURN_SPEED, 90.0);
+        gyroHold( TURN_SPEED, 90.0, 0.5);
+        gyroDrive(DRIVE_SPEED, 10.0, 90.0);
+        leftGrabber.setPosition(0.7);
+        rightGrabber.setPosition(0.3);
+        gyroDrive(DRIVE_SPEED, -10.0, 90.0);
+        gyroTurn( TURN_SPEED, -90.0);
+        gyroHold( TURN_SPEED, -90.0, 0.5);
+        gyroDrive(DRIVE_SPEED, -20.0, 90.0);
         /*gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
         gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
         gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
         gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
         gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
         gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches */
+
+        liftMotor.setPower(-0.5);
+        sleep(750);
+        liftMotor.setPower(0.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -568,6 +585,68 @@ waitForStart();
      */
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
+    }
+
+   /* public int readImage(int timeoutS){
+
+
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
+        relicTrackables.activate();
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        while (opModeIsActive() && timeoutS > runtime.seconds()) {
+
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+
+                telemetry.addData("VuMark", "%s visible", vuMark);
+
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                telemetry.addData("Pose", format(pose));
+
+                if (pose != null) {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                    double tX = trans.get(0);
+                    double tY = trans.get(1);
+                    double tZ = trans.get(2);
+
+                    // Extract the rotational components of the target relative to the robot
+                    double rX = rot.firstAngle;
+                    double rY = rot.secondAngle;
+                    double rZ = rot.thirdAngle;
+                }
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+        }
+
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+            return 1;
+        }
+
+        else if (vuMark == RelicRecoveryVuMark.CENTER) {
+            return 2;
+        }
+
+        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            return 3;
+        }
+
+        else {
+            return 1;
+        }
+    }*/
+
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
 }
