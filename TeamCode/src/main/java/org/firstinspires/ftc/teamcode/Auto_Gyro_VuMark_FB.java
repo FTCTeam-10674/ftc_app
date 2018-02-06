@@ -41,10 +41,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -55,7 +53,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
@@ -93,9 +90,9 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoVuMark", group="Pushbot")
+@Autonomous(name="AutoVuMark FB", group="Pushbot")
 //@Disabled
-public class Auto_Gyro_Test_VuMark extends LinearOpMode {
+public class Auto_Gyro_VuMark_FB extends LinearOpMode {
 
     /* Declare OpMode members. */
     //HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -280,19 +277,34 @@ public class Auto_Gyro_Test_VuMark extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
-        gyroDrive(DRIVE_SPEED, 25.0, 0.0);
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-
+            gyroDrive(DRIVE_SPEED, 24.0, 0.0);
+            gyroTurn(TURN_SPEED, -90.0);
+            gyroHold( TURN_SPEED, -90.0, 0.5);
+            gyroDrive(DRIVE_SPEED, 5.0, -90.0);
         }
 
         else if (vuMark == RelicRecoveryVuMark.CENTER) {
-            gyroDrive(DRIVE_SPEED, 7.0, 0.0);
+            gyroDrive(DRIVE_SPEED, 24.0, 0.0);
+            gyroTurn(TURN_SPEED, -90.0);
+            gyroHold( TURN_SPEED, -90.0, 0.5);
+            gyroDrive(DRIVE_SPEED, 12.0, -90.0);
         }
 
         else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            gyroDrive(DRIVE_SPEED, 14.0, 0.0);
+            gyroDrive(DRIVE_SPEED, 24.0, 0.0);
+            gyroTurn(TURN_SPEED, -90.0);
+            gyroHold( TURN_SPEED, -90.0, 0.5);
+            gyroDrive(DRIVE_SPEED, 19.0, -90.0);
             sleep(500);
+        }
+
+        else {
+            gyroDrive(DRIVE_SPEED, 24.0, 0.0);
+            gyroTurn(TURN_SPEED, -90.0);
+            gyroHold( TURN_SPEED, -90.0, 0.5);
+            gyroDrive(DRIVE_SPEED, 5.0, -90.0);
         }
 
         gyroTurn( TURN_SPEED, 90.0);
@@ -303,7 +315,7 @@ public class Auto_Gyro_Test_VuMark extends LinearOpMode {
         gyroDrive(DRIVE_SPEED, -10.0, 90.0);
         gyroTurn( TURN_SPEED, -90.0);
         gyroHold( TURN_SPEED, -90.0, 0.5);
-        gyroDrive(DRIVE_SPEED, -20.0, 90.0);
+        gyroDrive(DRIVE_SPEED, -20.0, -90.0);
         /*gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
         gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
         gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
