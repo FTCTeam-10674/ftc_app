@@ -38,9 +38,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
@@ -248,38 +256,81 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         }
         return hsvValues[0];
     }
-    public int readImage(){
+    public int readImage(int timeoutS){ // LEFT: 1, CENTER: 2, RIGHT: 3, UNKNOWN: 0
+        int i = 0;
+        OpenGLMatrix lastLocation = null;
+        double tX;
+        double tY;
+        double tZ;
 
-        // LEFT: 1, CENTER: 2, RIGHT: 3
+        double rX;
+        double rY;
+        double rZ;
+
+        VuforiaLocalizer vuforia;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
         parameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
 
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        relicTrackables.activate();
 
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-            return 1;
+        while(opModeIsActive() && runtime.seconds() < timeoutS){
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) { // Test to see if image is visable
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose(); // Get Positional value to use later
+                telemetry.addData("Pose", format(pose)); // I'm not sure what ALT + ENTER does, but that seems to fix it.
+                if (pose != null)
+                {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                    tX = trans.get(0);
+                    tY = trans.get(1);
+                    tZ = trans.get(2);
+
+                    // Extract the rotational components of the target relative to the robot. NOTE: VERY IMPORTANT IF BASING MOVEMENT OFF OF THE IMAGE!!!!
+                    rX = rot.firstAngle;
+                    rY = rot.secondAngle;
+                    rZ = rot.thirdAngle;
+                }
+                if (vuMark == RelicRecoveryVuMark.LEFT)
+                { // Test to see if Image is the "LEFT" image and display value.
+                    telemetry.addData("VuMark is", "Left");
+                    telemetry.addData("X =", tX); //
+                    telemetry.addData("Y =", tY); //no idea why these aren't working but the others are.
+                    telemetry.addData("Z =", tZ); //
+                    i = 1;
+                } else if (vuMark == RelicRecoveryVuMark.CENTER)
+                { // Test to see if Image is the "CENTER" image and display values.
+                    telemetry.addData("VuMark is", "Center");
+                    telemetry.addData("X =", tX);
+                    telemetry.addData("Y =", tY);
+                    telemetry.addData("Z =", tZ);
+                    i = 2;
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT)
+                { // Test to see if Image is the "RIGHT" image and display values.
+                    telemetry.addData("VuMark is", "Right");
+                    telemetry.addData("X =", tX);
+                    telemetry.addData("Y =", tY);
+                    telemetry.addData("Z =", tZ);
+                    i = 3;
+                }
+            } else
+            {
+                telemetry.addData("VuMark", "not visible");
+                i = 0;
+            }
+            telemetry.update();
         }
-
-        else if (vuMark == RelicRecoveryVuMark.CENTER){
-            return 2;
-        }
-
-        else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            return 3;
-        }
-
-        else{
-            return 0;
-        }
-
+        return i;
     }
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
