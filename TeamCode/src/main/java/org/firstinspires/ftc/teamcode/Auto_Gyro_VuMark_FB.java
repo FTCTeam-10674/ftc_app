@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -53,6 +54,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
@@ -234,7 +236,7 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
 
-       // int image = readImage(5);
+        int image = readImage(5);
 
 
 
@@ -278,21 +280,21 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
 
-        if (vuMark == RelicRecoveryVuMark.LEFT) {
+        if (image == 1) {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
             gyroDrive(DRIVE_SPEED, 5.0, -90.0);
         }
 
-        else if (vuMark == RelicRecoveryVuMark.CENTER) {
+        else if (image == 2) {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
             gyroDrive(DRIVE_SPEED, 12.0, -90.0);
         }
 
-        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+        else if (image == 3) {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
@@ -361,6 +363,73 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
             telemetry.update();
         }
         return hsvValues[0];
+    }
+    public int readImage(int timeoutS){ // LEFT: 1, CENTER: 2, RIGHT: 3, UNKNOWN: 0
+        int i = 0;
+        OpenGLMatrix lastLocation = null;
+        double tX;
+        double tY;
+        double tZ;
+
+        double rX;
+        double rY;
+        double rZ;
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
+        relicTrackables.activate();
+
+        while(opModeIsActive() && runtime.seconds() < timeoutS){
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) { // Test to see if image is visable
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose(); // Get Positional value to use later
+                telemetry.addData("Pose", format(pose)); // I'm not sure what ALT + ENTER does, but that seems to fix it.
+                if (pose != null)
+                {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                    tX = trans.get(0);
+                    tY = trans.get(1);
+                    tZ = trans.get(2);
+
+                    // Extract the rotational components of the target relative to the robot. NOTE: VERY IMPORTANT IF BASING MOVEMENT OFF OF THE IMAGE!!!!
+                    rX = rot.firstAngle;
+                    rY = rot.secondAngle;
+                    rZ = rot.thirdAngle;
+                }
+                if (vuMark == RelicRecoveryVuMark.LEFT)
+                { // Test to see if Image is the "LEFT" image and display value.
+                    telemetry.addData("VuMark is", "Left");
+                    //telemetry.addData("X =", tX); //
+                    //telemetry.addData("Y =", tY); //no idea why these aren't working but the others are.
+                    //telemetry.addData("Z =", tZ); //
+                    i = 1;
+                } else if (vuMark == RelicRecoveryVuMark.CENTER)
+                { // Test to see if Image is the "CENTER" image and display values.
+                    telemetry.addData("VuMark is", "Center");
+                    //telemetry.addData("X =", tX);
+                    //telemetry.addData("Y =", tY);
+                    //telemetry.addData("Z =", tZ);
+                    i = 2;
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT)
+                { // Test to see if Image is the "RIGHT" image and display values.
+                    telemetry.addData("VuMark is", "Right");
+                    //telemetry.addData("X =", tX);
+                    //telemetry.addData("Y =", tY);
+                    //telemetry.addData("Z =", tZ);
+                    i = 3;
+                }
+            } else
+            {
+                telemetry.addData("VuMark", "not visible");
+                i = 0;
+            }
+            telemetry.update();
+        }
+        return i;
     }
 
     String formatAngle(AngleUnit angleUnit, double angle) {

@@ -51,6 +51,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import static com.sun.tools.javac.util.Constants.format;
+
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -304,23 +306,23 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
                 if (vuMark == RelicRecoveryVuMark.LEFT)
                 { // Test to see if Image is the "LEFT" image and display value.
                     telemetry.addData("VuMark is", "Left");
-                    telemetry.addData("X =", tX); //
-                    telemetry.addData("Y =", tY); //no idea why these aren't working but the others are.
-                    telemetry.addData("Z =", tZ); //
+                    //telemetry.addData("X =", tX); //
+                    //telemetry.addData("Y =", tY); //no idea why these aren't working but the others are.
+                    //telemetry.addData("Z =", tZ); //
                     i = 1;
                 } else if (vuMark == RelicRecoveryVuMark.CENTER)
                 { // Test to see if Image is the "CENTER" image and display values.
                     telemetry.addData("VuMark is", "Center");
-                    telemetry.addData("X =", tX);
-                    telemetry.addData("Y =", tY);
-                    telemetry.addData("Z =", tZ);
+                    //telemetry.addData("X =", tX);
+                    //telemetry.addData("Y =", tY);
+                    //telemetry.addData("Z =", tZ);
                     i = 2;
                 } else if (vuMark == RelicRecoveryVuMark.RIGHT)
                 { // Test to see if Image is the "RIGHT" image and display values.
                     telemetry.addData("VuMark is", "Right");
-                    telemetry.addData("X =", tX);
-                    telemetry.addData("Y =", tY);
-                    telemetry.addData("Z =", tZ);
+                    //telemetry.addData("X =", tX);
+                    //telemetry.addData("Y =", tY);
+                    //telemetry.addData("Z =", tZ);
                     i = 3;
                 }
             } else
