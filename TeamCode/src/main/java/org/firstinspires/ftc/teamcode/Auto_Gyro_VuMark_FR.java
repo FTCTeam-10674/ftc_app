@@ -59,8 +59,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
 
-import static com.sun.tools.doclint.Entity.image;
-
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -246,22 +244,23 @@ public class Auto_Gyro_VuMark_FR extends LinearOpMode {
 
         wristL.setPosition(0.4);
         wristR.setPosition(0.4);
-        sleep(500);
+        sleep(1000);
         //Lower sensor arm
-        elbowR.setPosition(0.53);
-        sleep(500);
+        elbowR.setPosition(0.6);
+        wristL.setPosition(0.37);
+        sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
-        sleep(2000);
+        sleep(1000);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristR.setPosition(0.0);
+            wristR.setPosition(1.0);
             sleep(500);
             wristR.setPosition(0.4);
             elbowR.setPosition(0.0);
             sleep(500);
         }
         else {
-            wristR.setPosition(1.0);
+            wristR.setPosition(0.0);
             sleep(500);
             wristR.setPosition(0.4);
             elbowR.setPosition(0.0);
@@ -319,12 +318,6 @@ public class Auto_Gyro_VuMark_FR extends LinearOpMode {
         gyroTurn( TURN_SPEED, 90.0);
         gyroHold( TURN_SPEED, 90.0, 0.5);
         gyroDrive(DRIVE_SPEED, -20.0, 90.0);
-        /*gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
-        gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
-        gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
-        gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
-        gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
-        gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches */
 
         liftMotor.setPower(-0.5);
         sleep(750);
@@ -669,63 +662,6 @@ public class Auto_Gyro_VuMark_FR extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-   /* public int readImage(int timeoutS){
-
-
-
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-
-        relicTrackables.activate();
-
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-        while (opModeIsActive() && timeoutS > runtime.seconds()) {
-
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
-
-                telemetry.addData("VuMark", "%s visible", vuMark);
-
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-                telemetry.addData("Pose", format(pose));
-
-                if (pose != null) {
-                    VectorF trans = pose.getTranslation();
-                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                    double tX = trans.get(0);
-                    double tY = trans.get(1);
-                    double tZ = trans.get(2);
-
-                    // Extract the rotational components of the target relative to the robot
-                    double rX = rot.firstAngle;
-                    double rY = rot.secondAngle;
-                    double rZ = rot.thirdAngle;
-                }
-            } else {
-                telemetry.addData("VuMark", "not visible");
-            }
-        }
-
-        if (vuMark == RelicRecoveryVuMark.LEFT) {
-            return 1;
-        }
-
-        else if (vuMark == RelicRecoveryVuMark.CENTER) {
-            return 2;
-        }
-
-        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            return 3;
-        }
-
-        else {
-            return 1;
-        }
-    }*/
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";

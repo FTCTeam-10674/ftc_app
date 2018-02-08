@@ -241,14 +241,14 @@ public class Auto_Gyro_VuMark_BB extends LinearOpMode {
 
         wristL.setPosition(0.4);
         wristR.setPosition(0.4);
-        sleep(500);
+        sleep(1000);
         //Lower sensor arm
         elbowL.setPosition(0.6);
         wristL.setPosition(0.37);
-        sleep(500);
+        sleep(1000);
         //If the color is blue, knock the other one over
         hsvResult = senseColor(7);
-        sleep(2000);
+        sleep(1000);
         if (opModeIsActive() && hsvResult > 250 && hsvResult < 50) {
             wristL.setPosition(0.0);
             sleep(500);
