@@ -139,7 +139,7 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.6;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.6;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
@@ -212,10 +212,6 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        elbowL.setPosition(0.0);
-        wristL.setPosition(0.6);
-        elbowR.setPosition(0.0);
-        wristR.setPosition(0.2);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -223,20 +219,16 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
         vuParameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
         vuParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(vuParameters);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
 
         waitForStart();
 
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.6);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.2);
 
-        relicTrackables.activate();
-
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-
-        int image = readImage(5);
+        int image = readImage(7);
 
 
 
@@ -250,17 +242,17 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
         wristL.setPosition(0.37);
         sleep(1000);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(7);
-        sleep(1000);
+        hsvResult = senseColor(10);
+        sleep(500);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristL.setPosition(0.0);
+            wristL.setPosition(1.0);
             sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
             sleep(500);
         }
         else {
-            wristL.setPosition(1.0);
+            wristL.setPosition(0.0);
             sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
@@ -272,7 +264,7 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
         leftGrabber.setPosition(0.5);
         rightGrabber.setPosition(0.5);
         sleep(500);
-        liftMotor.setPower(0.5);
+        liftMotor.setPower(0.6);
         sleep(750);
         liftMotor.setPower(0.0);
         sleep(500);
@@ -285,21 +277,21 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 5.0, -90.0);
+            gyroDrive(DRIVE_SPEED, 6.0, -90.0);
         }
 
         else if (image == 2) {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 12.0, -90.0);
+            gyroDrive(DRIVE_SPEED, 13.0, -90.0);
         }
 
         else if (image == 3) {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 19.0, -90.0);
+            gyroDrive(DRIVE_SPEED, 21.0, -90.0);
             sleep(500);
         }
 
@@ -307,18 +299,20 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 5.0, -90.0);
+            gyroDrive(DRIVE_SPEED, 6.0, -90.0);
         }
 
-        gyroTurn( TURN_SPEED, 90.0);
-        gyroHold( TURN_SPEED, 90.0, 0.5);
-        gyroDrive(DRIVE_SPEED, 10.0, 90.0);
+        gyroTurn( TURN_SPEED, 0.0);
+        gyroHold( TURN_SPEED, 0.0, 0.5);
+        gyroDrive(DRIVE_SPEED, 10.0, 0.0);
         leftGrabber.setPosition(0.7);
         rightGrabber.setPosition(0.3);
-        gyroDrive(DRIVE_SPEED, -10.0, 90.0);
-        gyroTurn( TURN_SPEED, -90.0);
-        gyroHold( TURN_SPEED, -90.0, 0.5);
-        gyroDrive(DRIVE_SPEED, -20.0, -90.0);
+        gyroDrive(DRIVE_SPEED, -8.0, 0.0);
+        gyroTurn( TURN_SPEED, -180.0);
+        gyroHold( TURN_SPEED, -180.0, 0.5);
+        gyroDrive(DRIVE_SPEED, -20.0, -180.0);
+        gyroDrive(DRIVE_SPEED, 7.0, -180.0);
+
 
         liftMotor.setPower(-0.5);
         sleep(750);

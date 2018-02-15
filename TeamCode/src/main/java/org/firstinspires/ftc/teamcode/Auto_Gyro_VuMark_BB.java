@@ -212,10 +212,6 @@ public class Auto_Gyro_VuMark_BB extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        elbowL.setPosition(0.0);
-        wristL.setPosition(0.6);
-        elbowR.setPosition(0.0);
-        wristR.setPosition(0.2);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
 
@@ -229,9 +225,10 @@ public class Auto_Gyro_VuMark_BB extends LinearOpMode {
 
         waitForStart();
 
-
-
-
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.6);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.2);
 
        int image = readImage(7);
 
@@ -247,17 +244,17 @@ public class Auto_Gyro_VuMark_BB extends LinearOpMode {
         wristL.setPosition(0.37);
         sleep(1000);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(7);
-        sleep(1000);
-        if (opModeIsActive() && hsvResult > 250 && hsvResult < 50) {
-            wristL.setPosition(0.0);
+        hsvResult = senseColor(10);
+        sleep(500);
+        if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
+            wristL.setPosition(1.0);
             sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
             sleep(500);
         }
         else {
-            wristL.setPosition(1.0);
+            wristL.setPosition(0.0);
             sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);

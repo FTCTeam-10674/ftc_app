@@ -212,29 +212,22 @@ public class Auto_Gyro_VuMark_BR extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        elbowL.setPosition(0.0);
-        wristL.setPosition(0.6);
-        elbowR.setPosition(0.0);
-        wristR.setPosition(0.2);
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters vuParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         vuParameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
         vuParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(vuParameters);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        vuParameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
 
+        this.vuforia = ClassFactory.createVuforiaLocalizer(vuParameters);
 
         waitForStart();
 
-
-        relicTrackables.activate();
-
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
+        elbowL.setPosition(0.0);
+        wristL.setPosition(0.6);
+        elbowR.setPosition(0.0);
+        wristR.setPosition(0.2);
 
         int image = readImage(5);
 
@@ -246,24 +239,24 @@ public class Auto_Gyro_VuMark_BR extends LinearOpMode {
         wristR.setPosition(0.4);
         sleep(1000);
         //Lower sensor arm
-        elbowL.setPosition(0.6);
-        wristL.setPosition(0.37);
+        elbowR.setPosition(0.6);
+        wristR.setPosition(0.37);
         sleep(1000);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(7);
-        sleep(1000);
-        if (opModeIsActive() && hsvResult > 250 && hsvResult < 50) {
-            wristL.setPosition(1.0);
+        hsvResult = senseColor(10);
+        sleep(500);
+        if (opModeIsActive() && hsvResult < 250 && hsvResult > 50) {
+            wristR.setPosition(1.0);
             sleep(500);
-            wristL.setPosition(0.4);
-            elbowL.setPosition(0.0);
+            wristR.setPosition(0.4);
+            elbowR.setPosition(0.0);
             sleep(500);
         }
         else {
-            wristL.setPosition(0.0);
+            wristR.setPosition(0.0);
             sleep(500);
-            wristL.setPosition(0.4);
-            elbowL.setPosition(0.0);
+            wristR.setPosition(0.4);
+            elbowR.setPosition(0.0);
             sleep(500);
         }
 
