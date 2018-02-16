@@ -110,10 +110,17 @@ public class Working_TeleOp extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
 
 
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        /*
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        */
 
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
@@ -149,9 +156,9 @@ public class Working_TeleOp extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            double rotate  = gamepad1.left_stick_x;
-            double strafe = -gamepad1.right_stick_x;
+            double drive = -gamepad1.left_stick_y;
+            double rotate  = -gamepad1.left_stick_x;
+            double strafe = gamepad1.right_stick_x;
             double lift = gamepad2.left_stick_y;
 
 

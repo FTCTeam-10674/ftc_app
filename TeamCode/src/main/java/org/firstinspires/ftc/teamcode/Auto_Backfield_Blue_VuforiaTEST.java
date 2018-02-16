@@ -262,6 +262,7 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
     public int readImage(int timeoutS){ // LEFT: 1, CENTER: 2, RIGHT: 3, UNKNOWN: 0
         int i = 0;
         OpenGLMatrix lastLocation = null;
+
         double tX;
         double tY;
         double tZ;
