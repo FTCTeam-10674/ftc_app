@@ -282,21 +282,21 @@ public class Auto_Gyro_VuMark_FR extends LinearOpMode {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, 90.0);
             gyroHold( TURN_SPEED, 90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 5.0, 90.0);
+            gyroDrive(DRIVE_SPEED, 3.5, 90.0);
         }
 
         else if (image == 2) {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, 90.0);
             gyroHold( TURN_SPEED, 90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 12.0, 90.0);
+            gyroDrive(DRIVE_SPEED, 10.0, 90.0);
         }
 
         else if (image == 1) {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, 90.0);
             gyroHold( TURN_SPEED, 90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 20.0, 90.0);
+            gyroDrive(DRIVE_SPEED, 18.5, 90.0);
             sleep(500);
         }
 

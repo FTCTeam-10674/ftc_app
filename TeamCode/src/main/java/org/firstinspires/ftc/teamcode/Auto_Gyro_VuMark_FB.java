@@ -291,7 +291,7 @@ public class Auto_Gyro_VuMark_FB extends LinearOpMode {
             gyroDrive(DRIVE_SPEED, 24.0, 0.0);
             gyroTurn(TURN_SPEED, -90.0);
             gyroHold( TURN_SPEED, -90.0, 0.5);
-            gyroDrive(DRIVE_SPEED, 13.0, -90.0);
+            gyroDrive(DRIVE_SPEED, 14.0, -90.0);
         }
 
         else if (image == 3) {
