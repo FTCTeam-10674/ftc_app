@@ -65,6 +65,7 @@ public class HardwareHowardbot
     public Servo    latch = null;
     public Servo    sensArm = null;
     public ColorSensor colSensor;
+    int donothing;
 
     public final static double LATCH_HOME = 0;
     public final static double SENSARM_HOME = 0;
