@@ -128,6 +128,8 @@ public class HardwareHowardbot
         rightGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mainArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        //ha ha
+
     }
  }
 
