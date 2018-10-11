@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teamcodeEdgar;
 
 import android.graphics.Color;
 
@@ -66,9 +66,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto FF Blue", group="Worksish")
+@Autonomous(name="Auto Drive Turn Color Blue2", group="Worksish")
 @Disabled
-public class Auto_Frontfield_Blue extends LinearOpMode {
+public class Auto_DRIVE_Turn_Blue_Test2 extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -92,7 +92,7 @@ public class Auto_Frontfield_Blue extends LinearOpMode {
     int CENTER = 2;
     int RIGHT = 3;
 
-    int vuMark = LEFT;
+    int vuMark = RIGHT;
 
 
     private ElapsedTime     runtime = new ElapsedTime();
@@ -102,7 +102,7 @@ public class Auto_Frontfield_Blue extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0  ;    // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 1.0;
+    static final double     DRIVE_SPEED             = 0.5;
     static final double     TURN_SPEED              = 0.7;
 
     @Override
@@ -197,25 +197,33 @@ public class Auto_Frontfield_Blue extends LinearOpMode {
         liftMotor.setPower(0.0);
         sleep(500);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  32,  32, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  27,  27, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
+        sleep(500);
 
         if (vuMark == CENTER) {
             encoderDrive(DRIVE_SPEED, 4, 4, 1.0);
+            sleep(500);
         }
 
         else if (vuMark == RIGHT) {
             encoderDrive(DRIVE_SPEED, 8, 8, 2.0);
+            sleep(500);
         }
 
-        encoderDrive(TURN_SPEED,   21, -21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        encoderDrive(TURN_SPEED,   14, -14, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        sleep(500);
         encoderDrive(DRIVE_SPEED, 20, 20, 1.0);  // S3: Reverse 0 Inches with 0 Sec timeout
+        sleep(500);
         leftGrabber.setPosition(1.0);
         rightGrabber.setPosition(0.0);
         sleep(500);
 
         encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+        sleep(500);
         encoderDrive(TURN_SPEED, 30, -30, 4.0);
+        sleep(500);
         encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+        sleep(500);
 
 
 
@@ -294,7 +302,7 @@ public class Auto_Frontfield_Blue extends LinearOpMode {
 
             // reset the timeout time and start motion.
             runtime.reset();
-            frontLeftDrive.setPower(Math.abs(speed));
+            frontLeftDrive.setPower(Math.abs(speed)); //offset faulty wheel
             frontRightDrive.setPower(Math.abs(speed));
             backLeftDrive.setPower(Math.abs(speed));
             backRightDrive.setPower(Math.abs(speed));

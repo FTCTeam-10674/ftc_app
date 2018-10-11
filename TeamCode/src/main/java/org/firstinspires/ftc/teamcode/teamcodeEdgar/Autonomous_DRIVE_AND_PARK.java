@@ -27,14 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
-
-import android.graphics.Color;
+package org.firstinspires.ftc.teamcode.teamcodeEdgar;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,9 +63,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto FF Red", group="Worksish")
+@Autonomous(name="Auto DriveAndPark", group="Just Drive")
 @Disabled
-public class Auto_Frontfield_Red extends LinearOpMode {
+public class Autonomous_DRIVE_AND_PARK extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -79,24 +76,16 @@ public class Auto_Frontfield_Red extends LinearOpMode {
     private Servo leftGrabber;
     private Servo rightGrabber;
 
-    Servo elbowL;
-    Servo wristL;
-    Servo elbowR;
-    Servo wristR;
-
-    ColorSensor sensorColorR;
-
-    float hsvResult;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: AndyMark Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.5  ;    // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0  ;    // For figuring circumference
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 1.0;
-    static final double     TURN_SPEED              = 0.7;
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
 
     @Override
     public void runOpMode() {
@@ -111,15 +100,6 @@ public class Auto_Frontfield_Red extends LinearOpMode {
         liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
         leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
-
-        elbowL = hardwareMap.get(Servo.class, "elbowL");
-        wristL = hardwareMap.get(Servo.class, "wristL");
-        elbowR = hardwareMap.get(Servo.class, "elbowR");
-        wristR = hardwareMap.get(Servo.class, "wristR");
-
-        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color_r");
-
-
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -140,11 +120,6 @@ public class Auto_Frontfield_Red extends LinearOpMode {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        elbowL.setPosition(0.0);
-        wristL.setPosition(0.6);
-        elbowR.setPosition(0.0);
-        wristR.setPosition(0.2);
-
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                           frontLeftDrive.getCurrentPosition(),
@@ -155,32 +130,6 @@ public class Auto_Frontfield_Red extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        //set position to neutral
-        wristL.setPosition(0.4);
-        wristR.setPosition(0.4);
-        sleep(1500);
-        //Lower sensor arm
-        elbowR.setPosition(0.53);
-        sleep(1000);
-        //If the color is blue, knock the other one over
-        hsvResult = senseColor(7);
-        sleep(1000);
-        if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
-            wristR.setPosition(0.0);
-            sleep(1000);
-            wristR.setPosition(0.4);
-            elbowR.setPosition(0.0);
-            sleep(2000);
-        }
-        else {
-            wristR.setPosition(1.0);
-            sleep(1000);
-            wristR.setPosition(0.4);
-            elbowR.setPosition(0.0);
-            sleep(2000);
-        }
-
-
 
         leftGrabber.setPosition(0.5);
         rightGrabber.setPosition(0.5);
@@ -190,11 +139,11 @@ public class Auto_Frontfield_Red extends LinearOpMode {
         liftMotor.setPower(0.0);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   -21, 21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
-        encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
-
+        //encoderDrive(TURN_SPEED,   0, 0, 0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        //encoderDrive(DRIVE_SPEED, 0, 0, 0);  // S3: Reverse 0 Inches with 0 Sec timeout
         leftGrabber.setPosition(1.0);
         rightGrabber.setPosition(0.0);
+
         // pause for servos to move
 
         telemetry.addData("Path", "Complete");
@@ -209,57 +158,24 @@ public class Auto_Frontfield_Red extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public float senseColor(double timeoutS){
-
-        float hsvValues[] = {0F, 0F, 0F};
-        final double SCALE_FACTOR = 255;
-
-        while (opModeIsActive() && runtime.seconds() < timeoutS) {
-            // convert the RGB values to HSV values.
-            // multiply by the SCALE_FACTOR.
-            // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColorR.red() * SCALE_FACTOR),
-                    (int) (sensorColorR.green() * SCALE_FACTOR),
-                    (int) (sensorColorR.blue() * SCALE_FACTOR),
-                    hsvValues);
-
-            // send the info back to driver station using telemetry function.
-            //telemetry.addData("Distance (cm)",
-            //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColorR.alpha());
-            telemetry.addData("Red  ", sensorColorR.red());
-            telemetry.addData("Green", sensorColorR.green());
-            telemetry.addData("Blue ", sensorColorR.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-
-            // change the background color to match the color detected by the RGB sensor.
-            // pass a reference to the hue, saturation, and value array as an argument
-            // to the HSVToColor method.
-
-            telemetry.update();
-        }
-        return hsvValues[0];
-    }
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
-        int newFrontLeftTarget;
-        int newFrontRightTarget;
-        int newBackLeftTarget;
-        int newBackRightTarget;
+        int newLeftTarget;
+        int newRightTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newFrontLeftTarget = frontLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newFrontRightTarget = frontRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newBackLeftTarget = backLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newBackRightTarget = backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            frontLeftDrive.setTargetPosition(newFrontLeftTarget);
-            frontRightDrive.setTargetPosition(newFrontRightTarget);
-            backLeftDrive.setTargetPosition(newBackLeftTarget);
-            backRightDrive.setTargetPosition(newBackRightTarget);
+            newLeftTarget = frontLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = frontRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = backLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            frontLeftDrive.setTargetPosition(newLeftTarget);
+            frontRightDrive.setTargetPosition(newRightTarget);
+            backLeftDrive.setTargetPosition(newLeftTarget);
+            backRightDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
             frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -285,7 +201,7 @@ public class Auto_Frontfield_Red extends LinearOpMode {
                    (frontLeftDrive.isBusy() && frontRightDrive.isBusy() && backLeftDrive.isBusy() && backRightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newFrontLeftTarget,  newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
+                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                                             frontLeftDrive.getCurrentPosition(),
                                             frontRightDrive.getCurrentPosition(),
@@ -307,8 +223,7 @@ public class Auto_Frontfield_Red extends LinearOpMode {
             backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-              sleep(250);   // optional pause after each move
+            //  sleep(250);   // optional pause after each move
         }
     }
 }

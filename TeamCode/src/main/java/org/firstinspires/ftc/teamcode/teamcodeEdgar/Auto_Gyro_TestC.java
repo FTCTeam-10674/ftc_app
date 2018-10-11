@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teamcodeEdgar;
 
 import android.graphics.Color;
 
@@ -85,9 +85,9 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoGyroL", group="Pushbot")
+@Autonomous(name="AutoGyroC", group="Pushbot")
 @Disabled
-public class Auto_Gyro_TestL extends LinearOpMode {
+public class Auto_Gyro_TestC extends LinearOpMode {
 
     /* Declare OpMode members. */
     //HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -124,7 +124,7 @@ public class Auto_Gyro_TestL extends LinearOpMode {
     int CENTER = 2;
     int RIGHT = 3;
 
-    int vuMark = LEFT;
+    int vuMark = CENTER;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
