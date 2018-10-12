@@ -27,14 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teamcodeEdgar;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -52,22 +50,14 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Working TeleOp", group="Meets")
+@TeleOp(name="Ravens Protobot Linear OpMode", group="Test")
 @Disabled
-public class OLDWorking_TeleOp extends LinearOpMode {
+public class Ravens_Protobot_Linear_OpMode extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-
-    private DcMotor frontLeftDrive;
-    private DcMotor frontRightDrive;
-    private DcMotor backLeftDrive;
-    private DcMotor backRightDrive;
-
-    private DcMotor liftMotor;
-    private Servo leftGrabber;
-    private Servo rightGrabber;
-    //boolean grabberOpen = true;
+    private DcMotor leftDrive = null;
+    private DcMotor rightDrive = null;
 
     @Override
     public void runOpMode() {
@@ -77,44 +67,13 @@ public class OLDWorking_TeleOp extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-
-
-        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backLeftDrive  = hardwareMap.get(DcMotor.class, "back_left_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-
-        liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
-        leftGrabber = hardwareMap.get(Servo.class, "left_grabber");
-        rightGrabber = hardwareMap.get(Servo.class, "right_grabber");
-
-        /*
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("Path0",  "Starting at %7d", liftMotor.getCurrentPosition());
-        telemetry.update();
-        */
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-
-
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        liftMotor.setDirection(DcMotor.Direction.FORWARD);
-
-        double leftGrabberPosition = 0.0;
-        double rightGrabberPosition = 1.0;
-
-        leftGrabber.setPosition(leftGrabberPosition);
-        rightGrabber.setPosition(rightGrabberPosition);
-
-
-
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -124,38 +83,18 @@ public class OLDWorking_TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
-            double frontLeftPower;
-            double frontRightPower;
-            double backLeftPower;
-            double backRightPower;
+            double leftPower;
+            double rightPower;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            double rotate  = -gamepad1.left_stick_x;
-            double strafe = -gamepad1.right_stick_x;
-            double lift = -gamepad2.left_stick_y;
-
-
-            if (gamepad2.right_bumper){
-                leftGrabberPosition = 0.0;
-                rightGrabberPosition = 1.0;
-            }
-
-            else if (gamepad2.left_bumper){
-                leftGrabberPosition = 0.5;
-                rightGrabberPosition = 0.5;
-            }
-
-
-            frontLeftPower   = Range.clip(drive + rotate - strafe, -1.0, 1.0);
-            frontRightPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
-            backLeftPower    = Range.clip(drive + rotate + strafe, -1.0, 1.0);
-            backRightPower   = Range.clip(drive - rotate + strafe, -1.0, 1.0);
-
+            double drive = -gamepad1.left_stick_y;
+            double turn  =  gamepad1.right_stick_x;
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -163,26 +102,12 @@ public class OLDWorking_TeleOp extends LinearOpMode {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-
-            frontLeftDrive.setPower(frontLeftPower);
-            frontRightDrive.setPower(frontRightPower);
-            backLeftDrive.setPower(backLeftPower);
-            backRightDrive.setPower(backRightPower);
-
-            liftMotor.setPower(lift);
-            leftGrabber.setPosition(leftGrabberPosition);
-            rightGrabber.setPosition(rightGrabberPosition);
-
-
+            leftDrive.setPower(leftPower);
+            rightDrive.setPower(rightPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "front_left (%.2f), front_right (%.2f), back_left (%.2f), " +
-                    "back_right (%.2f)", frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-            telemetry.addData("Servos", "left_grabber_arm (%.2f), right_grabber_arm (%.2f)", leftGrabberPosition, rightGrabberPosition);
-            telemetry.addData("Lift", "lift_motor (%.2f)", lift);
-            //telemetry.addData("Lift encoder", "lift encoder (%.7d)", liftMotor.getCurrentPosition());
-            //telemetry.addData("Grabber state", "grabberOpen (%b)", grabberOpen);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
     }

@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teamcodeEdgar;
+package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
@@ -39,20 +39,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import static com.sun.tools.javac.util.Constants.format;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -81,9 +71,9 @@ import static com.sun.tools.javac.util.Constants.format;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto BF Blue Vuforia", group="Worksish")
+@Autonomous(name="Auto Drive VuForia Blue", group="Worksish")
 @Disabled
-public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
+public class Autonomous_vuForia_Blue extends LinearOpMode {
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -103,6 +93,10 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
 
     float hsvResult;
 
+
+    VuforiaLocalizer vuforia;
+
+
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: AndyMark Motor Encoder
@@ -112,8 +106,6 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 1.0;
     static final double     TURN_SPEED              = 0.7;
-
-    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
@@ -158,9 +150,9 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elbowL.setPosition(0.0);
-        wristL.setPosition(0.7);
+        wristL.setPosition(0.6);
         elbowR.setPosition(0.0);
-        wristR.setPosition(0.1);
+        wristR.setPosition(0.2);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -175,26 +167,26 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         //set position to neutral
         wristL.setPosition(0.4);
         wristR.setPosition(0.4);
-        sleep(1500);
+        sleep(500);
         //Lower sensor arm
         elbowL.setPosition(0.53);
-        sleep(1000);
+        sleep(500);
         //If the color is blue, knock the other one over
-        hsvResult = senseColor(7);
-        sleep(1000);
+        hsvResult = senseColor(5);
+        sleep(500);
         if (opModeIsActive() && hsvResult > 50 && hsvResult < 250) {
             wristL.setPosition(0.0);
-            sleep(1000);
+            sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
-            sleep(2000);
+            sleep(500);
         }
         else {
             wristL.setPosition(1.0);
-            sleep(1000);
+            sleep(500);
             wristL.setPosition(0.4);
             elbowL.setPosition(0.0);
-            sleep(2000);
+            sleep(500);
         }
 
 
@@ -203,16 +195,39 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         rightGrabber.setPosition(0.5);
         sleep(500);
         liftMotor.setPower(-0.5);
-        sleep(1000);
+        sleep(500);
         liftMotor.setPower(0.0);
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(TURN_SPEED, -5, 5, 3.0);
-        encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   21, -21, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
-        //encoderDrive(DRIVE_SPEED, 12, 12, 3.0);  // S3: Reverse 0 Inches with 0 Sec timeout
+        sleep(500);
 
+        int image = readImage(2.0);
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        encoderDrive(DRIVE_SPEED,  32,  32, 5.0);  // S1: Forward 36 Inches with 5 Sec timeout
+
+        if (image == 1){
+
+        }
+        else if (image == 2) {
+            encoderDrive(DRIVE_SPEED, 7, 7, 1.0);
+        }
+
+        else if (image == 3) {
+            encoderDrive(DRIVE_SPEED, 14, 14, 2.0);
+        }
+
+
+
+        encoderDrive(TURN_SPEED,   17, -17, 4.0);  // S2: Turn Right 0 Inches with 0 Sec timeout
+        encoderDrive(DRIVE_SPEED, 20, 20, 1.0);  // S3: Reverse 0 Inches with 0 Sec timeout
         leftGrabber.setPosition(1.0);
         rightGrabber.setPosition(0.0);
+        sleep(500);
+
+        encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+        encoderDrive(TURN_SPEED, 30, -30, 4.0);
+        encoderDrive(DRIVE_SPEED, -20,-20, 1.0);
+
+
+
 
         // pause for servos to move
 
@@ -228,7 +243,7 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public float senseColor(double timeoutS){
+    public float senseColor(double timeoutS) {
 
         float hsvValues[] = {0F, 0F, 0F};
         final double SCALE_FACTOR = 255;
@@ -259,82 +274,38 @@ public class Auto_Backfield_Blue_VuforiaTEST extends LinearOpMode {
         }
         return hsvValues[0];
     }
-    public int readImage(int timeoutS){ // LEFT: 1, CENTER: 2, RIGHT: 3, UNKNOWN: 0
-        int i = 0;
-        OpenGLMatrix lastLocation = null;
+    public int readImage(double timeoutS){
 
-        double tX;
-        double tY;
-        double tZ;
-
-        double rX;
-        double rY;
-        double rZ;
-
-        VuforiaLocalizer vuforia;
+        // LEFT: 1, CENTER: 2, RIGHT: 3
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
 
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "AQoL1OT/////AAAAmYWLzC+XjEBmlXjNuz20D6Qdc6TJeVAx2ko5q1i4KwFKXKiVK3pQKuOyVYN2Jm71RtDB0US25Q0qlNmPFZkCzeji6pahjC9j/sA/1g0DrTRsD55qSkWOSyAq2P0E3H6ykeo+vT3pWMiyHDUn/P8sLNeav1dPaXWu8sI+P//jb+8HaPVteJ8CXpF06PseALoOjXNgt+17D+Q1+6hdwmPYKaB7cwAOzIL3IAkVdyP4rbJGYQWsDAYsQ4zgAwGyscXaNPOGzNR2PCRN00ukubvZFuYL+DLRgGLY1+c/Nf8rpgwxgoDVLQpIrTQr5J3cK1VpfOTXZxaQxPu6j0FAxAb7hf11A1w4A706Gjolp1G5Rezn";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
-        relicTrackables.activate();
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-        while(opModeIsActive() && runtime.seconds() < timeoutS){
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) { // Test to see if image is visable
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose(); // Get Positional value to use later
-                telemetry.addData("Pose", format(pose)); // I'm not sure what ALT + ENTER does, but that seems to fix it.
-                if (pose != null)
-                {
-                    VectorF trans = pose.getTranslation();
-                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        runtime.reset();
 
-                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                    tX = trans.get(0);
-                    tY = trans.get(1);
-                    tZ = trans.get(2);
-
-                    // Extract the rotational components of the target relative to the robot. NOTE: VERY IMPORTANT IF BASING MOVEMENT OFF OF THE IMAGE!!!!
-                    rX = rot.firstAngle;
-                    rY = rot.secondAngle;
-                    rZ = rot.thirdAngle;
-                }
-                if (vuMark == RelicRecoveryVuMark.LEFT)
-                { // Test to see if Image is the "LEFT" image and display value.
-                    telemetry.addData("VuMark is", "Left");
-                    //telemetry.addData("X =", tX); //
-                    //telemetry.addData("Y =", tY); //no idea why these aren't working but the others are.
-                    //telemetry.addData("Z =", tZ); //
-                    i = 1;
-                } else if (vuMark == RelicRecoveryVuMark.CENTER)
-                { // Test to see if Image is the "CENTER" image and display values.
-                    telemetry.addData("VuMark is", "Center");
-                    //telemetry.addData("X =", tX);
-                    //telemetry.addData("Y =", tY);
-                    //telemetry.addData("Z =", tZ);
-                    i = 2;
-                } else if (vuMark == RelicRecoveryVuMark.RIGHT)
-                { // Test to see if Image is the "RIGHT" image and display values.
-                    telemetry.addData("VuMark is", "Right");
-                    //telemetry.addData("X =", tX);
-                    //telemetry.addData("Y =", tY);
-                    //telemetry.addData("Z =", tZ);
-                    i = 3;
-                }
-            } else
-            {
-                telemetry.addData("VuMark", "not visible");
-                i = 0;
+        while(opModeIsActive() && runtime.seconds() > timeoutS ){
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+                return 1;
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                return 2;
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                return 3;
             }
-            telemetry.update();
         }
-        return i;
+
+        return 0;
+
     }
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
