@@ -51,21 +51,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class HardwareHowardbot
+public class HwMap
 {
     /* Public OpMode members. */
     public DcMotor  flDrive   = null;
     public DcMotor  frDrive  = null;
     public DcMotor  blDrive     = null;
     public DcMotor  brDrive    = null;
-    public DcMotor  winch   = null;
+    public DcMotor  telescope   = null;
     public DcMotor  mainArm   = null;
-    public DcMotor  leftGrabber = null;
-    public DcMotor  rightGrabber = null;
+    public DcMotor  lCollector = null;
+    public DcMotor rCollector = null;
     public Servo    latch = null;
     public Servo    sensArm = null;
     public ColorSensor colSensor;
-    int donothing;
 
     public final static double LATCH_HOME = 0;
     public final static double SENSARM_HOME = 0;
@@ -76,7 +75,7 @@ public class HardwareHowardbot
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareHowardbot(){
+    public HwMap(){
 
     }
 
@@ -90,10 +89,10 @@ public class HardwareHowardbot
         frDrive = hwMap.get(DcMotor.class, "frdrive");
         blDrive  = hwMap.get(DcMotor.class, "bldrive");
         brDrive = hwMap.get(DcMotor.class, "brdrive");
-        winch = hwMap.get(DcMotor.class, "winch");
+        telescope = hwMap.get(DcMotor.class, "telescope");
         mainArm    = hwMap.get(DcMotor.class, "marm");
-        leftGrabber = hwMap.get(DcMotor.class, "lgrabber");
-        rightGrabber = hwMap.get(DcMotor.class, "rgrabber");
+        lCollector = hwMap.get(DcMotor.class, "lcollector");
+        rCollector = hwMap.get(DcMotor.class, "rcollector");
         latch = hwMap.get(Servo.class, "latch");
         sensArm = hwMap.get(Servo.class, "sensarm");
         colSensor = hwMap.get(ColorSensor.class, "colsens");
@@ -101,20 +100,20 @@ public class HardwareHowardbot
         frDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.FORWARD);
         brDrive.setDirection(DcMotor.Direction.REVERSE);
-        winch.setDirection(DcMotor.Direction.FORWARD);
+        telescope.setDirection(DcMotor.Direction.FORWARD);
         mainArm.setDirection(DcMotor.Direction.FORWARD);
-        leftGrabber.setDirection(DcMotor.Direction.FORWARD);
-        rightGrabber.setDirection(DcMotor.Direction.FORWARD);
+        lCollector.setDirection(DcMotor.Direction.FORWARD);
+        rCollector.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         flDrive.setPower (0);
         frDrive.setPower (0);
         blDrive.setPower (0);
         brDrive.setPower (0);
-        winch.setPower (0);
+        telescope.setPower (0);
         mainArm.setPower (0);
-        leftGrabber.setPower (0);
-        rightGrabber.setPower (0);
+        lCollector.setPower (0);
+        rCollector.setPower (0);
         latch.setPosition(LATCH_HOME);
         sensArm.setPosition(SENSARM_HOME);
 
@@ -124,9 +123,9 @@ public class HardwareHowardbot
         frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        telescope.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mainArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //ha ha
