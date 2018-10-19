@@ -90,30 +90,38 @@ public class RR_Auto1 extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        howard.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        howard.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        howard.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          howard.leftDrive.getCurrentPosition(),
-                          howard.rightDrive.getCurrentPosition());
+                          howard.flDrive.getCurrentPosition(),
+                          howard.frDrive.getCurrentPosition(),
+                          howard.blDrive.getCurrentPosition(),
+                          howard.brDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        //lower robot from hanging position
+        howard.armWinch.setPower(-1 * howard.WINCH_POWER);
+        sleep(howard.WINCH_SECONDS);
+        howard.armWinch.setPower(0);
+        howard.latch.setPosition(howard.LATCH_OPEN);
+        howard.armWinch.setPower(howard.WINCH_POWER);
+        sleep(howard.WINCH_SECONDS);
+        howard.armWinch.setPower(0);
 
-        howard.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        howard.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
+
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -137,19 +145,19 @@ public class RR_Auto1 extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = howard.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = howard.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            howard.leftDrive.setTargetPosition(newLeftTarget);
-            howard.rightDrive.setTargetPosition(newRightTarget);
+            newLeftTarget = howard.flDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = howard.frDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            howard.flDrive.setTargetPosition(newLeftTarget);
+            howard.frDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            howard.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            howard.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            howard.leftDrive.setPower(Math.abs(speed));
-            howard.rightDrive.setPower(Math.abs(speed));
+            howard.flDrive.setPower(Math.abs(speed));
+            howard.frDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -159,23 +167,23 @@ public class RR_Auto1 extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (howard.leftDrive.isBusy() && howard.rightDrive.isBusy())) {
+                   (howard.flDrive.isBusy() && howard.frDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            howard.leftDrive.getCurrentPosition(),
-                                            howard.rightDrive.getCurrentPosition());
+                                            howard.flDrive.getCurrentPosition(),
+                                            howard.frDrive.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            howard.leftDrive.setPower(0);
-            howard.rightDrive.setPower(0);
+            howard.flDrive.setPower(0);
+            howard.frDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            howard.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            howard.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }

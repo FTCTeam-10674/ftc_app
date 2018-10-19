@@ -54,20 +54,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HwMap
 {
     /* Public OpMode members. */
-    public DcMotor  flDrive   = null;
-    public DcMotor  frDrive  = null;
-    public DcMotor  blDrive     = null;
-    public DcMotor  brDrive    = null;
-    public DcMotor  telescope   = null;
-    public DcMotor  mainArm   = null;
-    public DcMotor  lCollector = null;
-    public DcMotor rCollector = null;
-    public Servo    latch = null;
-    public Servo    sensArm = null;
-    public ColorSensor colSensor;
+    public DcMotor     flDrive    = null;
+    public DcMotor     frDrive    = null;
+    public DcMotor     blDrive    = null;
+    public DcMotor     brDrive    = null;
+    public DcMotor     armWinch   = null;
+    public DcMotor     armSwing   = null;
+    public DcMotor     lCollector = null;
+    public DcMotor     rCollector = null;
+    public Servo       latch      = null;
+    public Servo       sensArm    = null;
+    public ColorSensor colSensor  = null;
 
-    public final static double LATCH_HOME = 0;
-    public final static double SENSARM_HOME = 0;
+    public final static double LATCH_CLOSED  = 0;
+    public final static double LATCH_OPEN    = 1;
+    public final static double SENSARM_HOME  = 0;
+    public final static long   WINCH_SECONDS = 7;
+    public final static double WINCH_POWER   = 1;
 
 
     /* local OpMode members. */
@@ -89,8 +92,8 @@ public class HwMap
         frDrive = hwMap.get(DcMotor.class, "frdrive");
         blDrive  = hwMap.get(DcMotor.class, "bldrive");
         brDrive = hwMap.get(DcMotor.class, "brdrive");
-        telescope = hwMap.get(DcMotor.class, "telescope");
-        mainArm    = hwMap.get(DcMotor.class, "marm");
+        armWinch = hwMap.get(DcMotor.class, "telescope");
+        armSwing    = hwMap.get(DcMotor.class, "marm");
         lCollector = hwMap.get(DcMotor.class, "lcollector");
         rCollector = hwMap.get(DcMotor.class, "rcollector");
         latch = hwMap.get(Servo.class, "latch");
@@ -100,8 +103,8 @@ public class HwMap
         frDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.FORWARD);
         brDrive.setDirection(DcMotor.Direction.REVERSE);
-        telescope.setDirection(DcMotor.Direction.FORWARD);
-        mainArm.setDirection(DcMotor.Direction.FORWARD);
+        armWinch.setDirection(DcMotor.Direction.FORWARD);
+        armSwing.setDirection(DcMotor.Direction.FORWARD);
         lCollector.setDirection(DcMotor.Direction.FORWARD);
         rCollector.setDirection(DcMotor.Direction.FORWARD);
 
@@ -110,11 +113,11 @@ public class HwMap
         frDrive.setPower (0);
         blDrive.setPower (0);
         brDrive.setPower (0);
-        telescope.setPower (0);
-        mainArm.setPower (0);
+        armWinch.setPower (0);
+        armSwing.setPower (0);
         lCollector.setPower (0);
         rCollector.setPower (0);
-        latch.setPosition(LATCH_HOME);
+        latch.setPosition(LATCH_CLOSED);
         sensArm.setPosition(SENSARM_HOME);
 
         // Set all motors to run without encoders.
@@ -123,10 +126,10 @@ public class HwMap
         frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        telescope.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        mainArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //ha ha
 
