@@ -63,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Howard Auto", group="Pushbot")
 //@Disabled
-public class RR_Auto1 extends LinearOpMode {
+public class BDepot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HwMap howard   = new HwMap();   // Use a Pushbot's hardware
@@ -74,8 +74,9 @@ public class RR_Auto1 extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
+    static final double     DRIVE_SPEED             = 1.0;
     static final double     TURN_SPEED              = 0.5;
+    static final double     STRAFE_SPEED            = 0.8;
 
     @Override
     public void runOpMode() {
@@ -112,13 +113,23 @@ public class RR_Auto1 extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        howard.armWinch.setPower(-1 * howard.WINCH_POWER);
-        sleep(howard.WINCH_SECONDS);
+        howard.armWinch.setPower(howard.WINCH_POWER);
+        sleep(howard.TIME_TO_EXTEND);
         howard.armWinch.setPower(0);
         howard.latch.setPosition(howard.LATCH_OPEN);
-        howard.armWinch.setPower(howard.WINCH_POWER);
-        sleep(howard.WINCH_SECONDS);
+        howard.armWinch.setPower(-howard.WINCH_POWER);
+        sleep(howard.TIME_TO_EXTEND);
         howard.armWinch.setPower(0);
+
+        //CALIBRATE GYRO AND/OR COMPUTER VISION CODE
+
+        encoderDrive(DRIVE_SPEED, 30, 30, 3);
+        encoderStrafe(STRAFE_SPEED, -16.97, 2);
+        senseColor(5);
+        //...
+
+
+
 
 
 
@@ -187,5 +198,37 @@ public class RR_Auto1 extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public void encoderStrafe (double speed,
+                               double inchesToRight,
+                               double timeoutS) {
+        int newFRBLTarget;
+        int newFLBRTarget;
+
+        if (opModeIsActive()){
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (howard.flDrive.isBusy() && howard.frDrive.isBusy() &&
+                            howard.blDrive.isBusy() && howard.brDrive.isBusy())){
+                //LOGIC
+            }
+            howard.flDrive.setPower(0);
+            howard.frDrive.setPower(0);
+            howard.blDrive.setPower(0);
+            howard.brDrive.setPower(0);
+
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+
+    }
+
+    public void senseColor (double timeoutS){
+        //LOGIC
     }
 }

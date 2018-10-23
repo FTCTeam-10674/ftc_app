@@ -69,7 +69,7 @@ public class HwMap
     public final static double LATCH_CLOSED  = 0;
     public final static double LATCH_OPEN    = 1;
     public final static double SENSARM_HOME  = 0;
-    public final static long   WINCH_SECONDS = 7;
+    public final static long TIME_TO_EXTEND = 7;
     public final static double WINCH_POWER   = 1;
 
 
@@ -134,5 +134,6 @@ public class HwMap
         //ha ha
 
     }
+
  }
 
