@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -62,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Howard Auto", group="Pushbot")
-//@Disabled
+@Disabled
 public class BDepot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -124,7 +125,7 @@ public class BDepot_Auto1 extends LinearOpMode {
         //CALIBRATE GYRO AND/OR COMPUTER VISION CODE
 
         encoderDrive(DRIVE_SPEED, 30, 30, 3);
-        encoderStrafe(STRAFE_SPEED, -16.97, 2);
+        encoderStrafe(STRAFE_SPEED, 8.48, 2);
         senseColor(5);
         //...
 
@@ -149,26 +150,40 @@ public class BDepot_Auto1 extends LinearOpMode {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newleftTarget;
+        int newrightTarget;
+
+        howard.flDrive.setDirection(DcMotor.Direction.FORWARD);
+        howard.frDrive.setDirection(DcMotor.Direction.REVERSE);
+        howard.blDrive.setDirection(DcMotor.Direction.FORWARD);
+        howard.brDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = howard.flDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = howard.frDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            howard.flDrive.setTargetPosition(newLeftTarget);
-            howard.frDrive.setTargetPosition(newRightTarget);
+            newleftTarget = howard.flDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newrightTarget = howard.frDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            howard.flDrive.setTargetPosition(newleftTarget);
+            howard.frDrive.setTargetPosition(newrightTarget);
+
+            newleftTarget = howard.blDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newrightTarget = howard.brDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            howard.blDrive.setTargetPosition(newleftTarget);
+            howard.brDrive.setTargetPosition(newrightTarget);
 
             // Turn On RUN_TO_POSITION
             howard.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             howard.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             howard.flDrive.setPower(Math.abs(speed));
             howard.frDrive.setPower(Math.abs(speed));
+            howard.blDrive.setPower(Math.abs(speed));
+            howard.brDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -178,35 +193,69 @@ public class BDepot_Auto1 extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (howard.flDrive.isBusy() && howard.frDrive.isBusy())) {
+                   (howard.flDrive.isBusy() && howard.frDrive.isBusy() && howard.blDrive.isBusy() && howard.brDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path1",  "Running to %7d :%7d", newleftTarget,  newrightTarget, newleftTarget, newrightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                                             howard.flDrive.getCurrentPosition(),
-                                            howard.frDrive.getCurrentPosition());
+                                            howard.frDrive.getCurrentPosition(),
+                        howard.blDrive.getCurrentPosition(),
+                        howard.brDrive.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
             howard.flDrive.setPower(0);
             howard.frDrive.setPower(0);
+            howard.blDrive.setPower(0);
+            howard.brDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
             howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }
     }
 
     public void encoderStrafe (double speed,
-                               double inchesToRight,
+                               double strafeInches,
                                double timeoutS) {
         int newFRBLTarget;
         int newFLBRTarget;
 
+        howard.flDrive.setDirection(DcMotor.Direction.FORWARD);
+        howard.frDrive.setDirection(DcMotor.Direction.REVERSE);
+        howard.blDrive.setDirection(DcMotor.Direction.REVERSE);
+        howard.brDrive.setDirection(DcMotor.Direction.FORWARD);
+
         if (opModeIsActive()){
+
+            newFRBLTarget = howard.flDrive.getCurrentPosition() + (int)(strafeInches * COUNTS_PER_INCH);
+            newFLBRTarget = howard.frDrive.getCurrentPosition() + (int)(strafeInches * COUNTS_PER_INCH);
+            howard.flDrive.setTargetPosition(newFRBLTarget);
+            howard.frDrive.setTargetPosition(newFLBRTarget);
+
+            newFRBLTarget = howard.blDrive.getCurrentPosition() + (int)(strafeInches * COUNTS_PER_INCH);
+            newFLBRTarget = howard.brDrive.getCurrentPosition() + (int)(strafeInches * COUNTS_PER_INCH);
+            howard.blDrive.setTargetPosition(newFRBLTarget);
+            howard.brDrive.setTargetPosition(newFLBRTarget);
+
+            // Turn On RUN_TO_POSITION
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            howard.flDrive.setPower(Math.abs(speed));
+            howard.frDrive.setPower(Math.abs(speed));
+            howard.blDrive.setPower(Math.abs(speed));
+            howard.brDrive.setPower(Math.abs(speed));
 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
