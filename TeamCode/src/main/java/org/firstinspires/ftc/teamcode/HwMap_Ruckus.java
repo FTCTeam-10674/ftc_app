@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class HwMap
+public class HwMap_Ruckus
 {
     /* Public OpMode members. */
     public DcMotor     flDrive    = null;
@@ -73,6 +73,7 @@ public class HwMap
     public final static double SENSARM_HOME  = 0;
     public final static long TIME_TO_EXTEND = 7;
     public final static double WINCH_POWER   = 1;
+    public final static double COLLECTOR_POWER = 1;
 
 
     /* local OpMode members. */
@@ -80,7 +81,7 @@ public class HwMap
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HwMap(){
+    public HwMap_Ruckus(){
 
     }
 
@@ -108,7 +109,7 @@ public class HwMap
         armWinch.setDirection(DcMotor.Direction.FORWARD);
         armSwing.setDirection(DcMotor.Direction.FORWARD);
         lCollector.setDirection(DcMotor.Direction.FORWARD);
-        rCollector.setDirection(DcMotor.Direction.FORWARD);
+        rCollector.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         flDrive.setPower (0);

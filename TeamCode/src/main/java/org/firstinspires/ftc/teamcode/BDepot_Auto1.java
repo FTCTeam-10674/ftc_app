@@ -68,7 +68,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class BDepot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HwMap howard   = new HwMap();   // Use a Pushbot's hardware
+    HwMap_Ruckus howard   = new HwMap_Ruckus();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
