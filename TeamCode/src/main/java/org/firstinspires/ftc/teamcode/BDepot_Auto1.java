@@ -29,8 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -63,7 +64,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Howard Auto", group="Pushbot")
-@Disabled
+//@Disabled
 public class BDepot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -277,7 +278,35 @@ public class BDepot_Auto1 extends LinearOpMode {
 
     }
 
-    public void senseColor (double timeoutS){
-        //LOGIC
+    public float senseColor(double timeoutS){
+
+        float hsvValues[] = {0F, 0F, 0F};
+        final double SCALE_FACTOR = 255;
+
+        while (opModeIsActive() && runtime.seconds() < timeoutS) {
+            // convert the RGB values to HSV values.
+            // multiply by the SCALE_FACTOR.
+            // then cast it back to int (SCALE_FACTOR is a double)
+            Color.RGBToHSV((int) (howard.colSensor.red() * SCALE_FACTOR),
+                    (int) (howard.colSensor.green() * SCALE_FACTOR),
+                    (int) (howard.colSensor.blue() * SCALE_FACTOR),
+                    hsvValues);
+
+            // send the info back to driver station using telemetry function.
+            //telemetry.addData("Distance (cm)",
+            //        String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", howard.colSensor.alpha());
+            telemetry.addData("Red  ", howard.colSensor.red());
+            telemetry.addData("Green", howard.colSensor.green());
+            telemetry.addData("Blue ", howard.colSensor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+
+            // change the background color to match the color detected by the RGB sensor.
+            // pass a reference to the hue, saturation, and value array as an argument
+            // to the HSVToColor method.
+
+            telemetry.update();
+        }
+        return hsvValues[0];
     }
 }

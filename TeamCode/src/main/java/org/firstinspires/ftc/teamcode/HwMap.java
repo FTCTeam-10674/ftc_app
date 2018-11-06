@@ -66,6 +66,8 @@ public class HwMap
     public Servo       sensArm    = null;
     public ColorSensor colSensor  = null;
 
+    float hsvResult;
+
     public final static double LATCH_CLOSED  = 0;
     public final static double LATCH_OPEN    = 1;
     public final static double SENSARM_HOME  = 0;
@@ -130,6 +132,8 @@ public class HwMap
         lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
 
         //ha ha
 
