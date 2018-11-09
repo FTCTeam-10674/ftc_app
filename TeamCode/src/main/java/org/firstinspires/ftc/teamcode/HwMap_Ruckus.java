@@ -29,10 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -58,13 +56,13 @@ public class HwMap_Ruckus
     public DcMotor     frDrive    = null;
     public DcMotor     blDrive    = null;
     public DcMotor     brDrive    = null;
-    public DcMotor     armWinch   = null;
+    /*public DcMotor     armWinch   = null;
     public DcMotor     armSwing   = null;
     public DcMotor     lCollector = null;
     public DcMotor     rCollector = null;
     public Servo       latch      = null;
     public Servo       sensArm    = null;
-    public ColorSensor colSensor  = null;
+    public ColorSensor colSensor  = null; */
 
     float hsvResult;
 
@@ -95,33 +93,33 @@ public class HwMap_Ruckus
         frDrive = hwMap.get(DcMotor.class, "frdrive");
         blDrive  = hwMap.get(DcMotor.class, "bldrive");
         brDrive = hwMap.get(DcMotor.class, "brdrive");
-        armWinch = hwMap.get(DcMotor.class, "telescope");
+        /* armWinch = hwMap.get(DcMotor.class, "telescope");
         armSwing    = hwMap.get(DcMotor.class, "marm");
         lCollector = hwMap.get(DcMotor.class, "lcollector");
         rCollector = hwMap.get(DcMotor.class, "rcollector");
         latch = hwMap.get(Servo.class, "latch");
         sensArm = hwMap.get(Servo.class, "sensarm");
-        colSensor = hwMap.get(ColorSensor.class, "colsens");
-        flDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        frDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        blDrive.setDirection(DcMotor.Direction.FORWARD);
-        brDrive.setDirection(DcMotor.Direction.REVERSE);
-        armWinch.setDirection(DcMotor.Direction.FORWARD);
+        colSensor = hwMap.get(ColorSensor.class, "colsens"); */
+        flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        blDrive.setDirection(DcMotor.Direction.REVERSE);
+        brDrive.setDirection(DcMotor.Direction.FORWARD);
+        /*armWinch.setDirection(DcMotor.Direction.FORWARD);
         armSwing.setDirection(DcMotor.Direction.FORWARD);
         lCollector.setDirection(DcMotor.Direction.FORWARD);
-        rCollector.setDirection(DcMotor.Direction.REVERSE);
+        rCollector.setDirection(DcMotor.Direction.REVERSE);*/
 
         // Set all motors to zero power
         flDrive.setPower (0);
         frDrive.setPower (0);
         blDrive.setPower (0);
         brDrive.setPower (0);
-        armWinch.setPower (0);
+        /*armWinch.setPower (0);
         armSwing.setPower (0);
         lCollector.setPower (0);
         rCollector.setPower (0);
         latch.setPosition(LATCH_CLOSED);
-        sensArm.setPosition(SENSARM_HOME);
+        sensArm.setPosition(SENSARM_HOME);*/
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -129,10 +127,10 @@ public class HwMap_Ruckus
         frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        /*armWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
 
 
 

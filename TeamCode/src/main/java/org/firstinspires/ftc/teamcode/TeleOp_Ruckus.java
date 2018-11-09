@@ -48,16 +48,19 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="TeleOp Ruckus", group="Linear Opmode")
 //@Disabled
 public class TeleOp_Ruckus extends LinearOpMode {
     HwMap_Ruckus howard   = new HwMap_Ruckus();
 
+
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    boolean isLatchOpen = true;
 
     @Override
     public void runOpMode() {
+        howard.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -77,7 +80,7 @@ public class TeleOp_Ruckus extends LinearOpMode {
             double swingPower;
             double latchPos = howard.LATCH_OPEN;
             double collectorPower;
-            boolean isLatchOpen = true;
+
 
 
             // Choose to drive using either Tank Mode, or POV Mode
@@ -87,14 +90,14 @@ public class TeleOp_Ruckus extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive  = -gamepad1.left_stick_y;
             double rotate =  gamepad1.right_stick_x;
-            double strafe = gamepad1.right_stick_x;
+            double strafe = gamepad1.left_stick_x;
 
-            flPower  = Range.clip(drive + rotate + strafe, -1.0, 1.0);
+            flPower  = Range.clip(drive + rotate - strafe, -1.0, 1.0);
             frPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
-            blPower  = Range.clip(drive + rotate - strafe, -1.0, 1.0);
+            blPower  = Range.clip(drive + rotate + strafe, -1.0, 1.0);
             brPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
 
-            winchPower = -gamepad2.left_stick_y;
+            /*winchPower = -gamepad2.left_stick_y;
             swingPower = -gamepad2.right_stick_y;
             if(gamepad2.right_trigger > 0.75){
                 collectorPower = howard.COLLECTOR_POWER;
@@ -106,14 +109,14 @@ public class TeleOp_Ruckus extends LinearOpMode {
                 collectorPower = 0;
             }
 
-            if(!isLatchOpen && gamepad1.a) {
+            if(!isLatchOpen && gamepad2.a) {
                 latchPos = howard.LATCH_OPEN;
                 isLatchOpen = true;
             }
-            else if(isLatchOpen  && gamepad1.a) {
+            else if(isLatchOpen  && gamepad2.a) {
                 latchPos = howard.LATCH_CLOSED;
                 isLatchOpen = false;
-            }
+            } */
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -125,11 +128,11 @@ public class TeleOp_Ruckus extends LinearOpMode {
             howard.frDrive.setPower(frPower);
             howard.blDrive.setPower(blPower);
             howard.brDrive.setPower(brPower);
-            howard.armWinch.setPower(winchPower);
+            /* howard.armWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
             howard.lCollector.setPower(collectorPower);
             howard.rCollector.setPower(-collectorPower);
-            howard.latch.setPosition(latchPos);
+            howard.latch.setPosition(latchPos); */
 
 
             // Show the elapsed game time and wheel power.

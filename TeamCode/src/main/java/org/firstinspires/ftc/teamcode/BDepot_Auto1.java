@@ -29,9 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -64,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Howard Auto", group="Pushbot")
-//@Disabled
+@Disabled
 public class BDepot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -115,13 +114,13 @@ public class BDepot_Auto1 extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        howard.armWinch.setPower(howard.WINCH_POWER);
+        /*howard.armWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.armWinch.setPower(0);
         howard.latch.setPosition(howard.LATCH_OPEN);
         howard.armWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
-        howard.armWinch.setPower(0);
+        howard.armWinch.setPower(0);*/
 
         //CALIBRATE GYRO AND/OR COMPUTER VISION CODE
 
@@ -287,7 +286,7 @@ public class BDepot_Auto1 extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (howard.colSensor.red() * SCALE_FACTOR),
+            /*Color.RGBToHSV((int) (howard.colSensor.red() * SCALE_FACTOR),
                     (int) (howard.colSensor.green() * SCALE_FACTOR),
                     (int) (howard.colSensor.blue() * SCALE_FACTOR),
                     hsvValues);
@@ -299,7 +298,7 @@ public class BDepot_Auto1 extends LinearOpMode {
             telemetry.addData("Red  ", howard.colSensor.red());
             telemetry.addData("Green", howard.colSensor.green());
             telemetry.addData("Blue ", howard.colSensor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
+            telemetry.addData("Hue", hsvValues[0]); */
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
