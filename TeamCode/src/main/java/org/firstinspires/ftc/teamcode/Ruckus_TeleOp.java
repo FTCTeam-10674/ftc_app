@@ -50,8 +50,8 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="TeleOp Ruckus", group="Linear Opmode")
 //@Disabled
-public class TeleOp_Ruckus extends LinearOpMode {
-    HwMap_Ruckus howard   = new HwMap_Ruckus();
+public class Ruckus_TeleOp extends LinearOpMode {
+    Ruckus_HwMap howard   = new Ruckus_HwMap();
 
 
     // Declare OpMode members.
@@ -88,6 +88,8 @@ public class TeleOp_Ruckus extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
+
+            //Drive train controls
             double drive  = -gamepad1.left_stick_y;
             double rotate =  gamepad1.right_stick_x;
             double strafe = gamepad1.left_stick_x;
@@ -97,8 +99,11 @@ public class TeleOp_Ruckus extends LinearOpMode {
             blPower  = Range.clip(drive + rotate + strafe, -1.0, 1.0);
             brPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
 
-            /*winchPower = -gamepad2.left_stick_y;
+            //Arm controls
+            winchPower = -gamepad2.left_stick_y;
             swingPower = -gamepad2.right_stick_y;
+
+            //Collector controls
             if(gamepad2.right_trigger > 0.75){
                 collectorPower = howard.COLLECTOR_POWER;
             }
@@ -109,30 +114,26 @@ public class TeleOp_Ruckus extends LinearOpMode {
                 collectorPower = 0;
             }
 
+            //Latch controls
             if(!isLatchOpen && gamepad2.a) {
                 latchPos = howard.LATCH_OPEN;
                 isLatchOpen = true;
             }
-            else if(isLatchOpen  && gamepad2.a) {
+            else if(isLatchOpen  && gamepad2.b) {
                 latchPos = howard.LATCH_CLOSED;
                 isLatchOpen = false;
-            } */
-
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
+            }
 
             // Send calculated power to wheels
             howard.flDrive.setPower(flPower);
             howard.frDrive.setPower(frPower);
             howard.blDrive.setPower(blPower);
             howard.brDrive.setPower(brPower);
-            /* howard.armWinch.setPower(winchPower);
+             howard.armWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
             howard.lCollector.setPower(collectorPower);
             howard.rCollector.setPower(-collectorPower);
-            howard.latch.setPosition(latchPos); */
+            howard.latch.setPosition(latchPos);
 
 
             // Show the elapsed game time and wheel power.

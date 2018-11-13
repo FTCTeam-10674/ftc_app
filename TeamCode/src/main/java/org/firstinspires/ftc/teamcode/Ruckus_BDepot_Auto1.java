@@ -64,10 +64,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Howard Auto", group="Pushbot")
 @Disabled
-public class BDepot_Auto1 extends LinearOpMode {
+public class Ruckus_BDepot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HwMap_Ruckus howard   = new HwMap_Ruckus();   // Use a Pushbot's hardware
+    Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -123,16 +123,6 @@ public class BDepot_Auto1 extends LinearOpMode {
         howard.armWinch.setPower(0);*/
 
         //CALIBRATE GYRO AND/OR COMPUTER VISION CODE
-
-        encoderDrive(DRIVE_SPEED, 30, 30, 3);
-        encoderStrafe(STRAFE_SPEED, 8.48, 2);
-        senseColor(5);
-        //...
-
-
-
-
-
 
 
         telemetry.addData("Path", "Complete");
