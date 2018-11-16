@@ -29,11 +29,18 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 /**
  * This is NOT an opmode.
@@ -53,7 +60,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class Ruckus_HwMap
 {
-    /* Public OpMode members. */
+    //Electronics
     public DcMotor     flDrive    = null;
     public DcMotor     frDrive    = null;
     public DcMotor     blDrive    = null;
@@ -66,8 +73,48 @@ public class Ruckus_HwMap
     public Servo       sensArm    = null;
     public ColorSensor colSensor  = null;
 
+    //Gyro
+    BNO055IMU gyro;
+    OpenGLMatrix lastLocation = null;
+    Orientation angles;
+    Acceleration gravity;
+
+    public void gyroInit() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile  = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled       = true;
+        parameters.loggingTag           = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        gyro.initialize(parameters);
+    }
+
+
+    //Encoders
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.5 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    // These constants define the desired driving/control characteristics
+    // The can/should be tweaked to suite the specific robot drive train.
+    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.6;     // Nominal half speed for better accuracy.
+
+    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+
+    //Color sensor
     float hsvResult;
 
+    //Vuforia
+    VuforiaLocalizer vuforia;
+
+    //Constants
     public final static double LATCH_CLOSED  = 0;
     public final static double LATCH_OPEN    = 1;
     public final static double SENSARM_HOME  = 0;
@@ -77,7 +124,7 @@ public class Ruckus_HwMap
     public final static double COLLECTOR_POWER = 1;
 
 
-    /* local OpMode members. */
+    //local OpMode members
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
@@ -103,6 +150,7 @@ public class Ruckus_HwMap
         latch = hwMap.get(Servo.class, "latch");
         sensArm = hwMap.get(Servo.class, "sensarm");
         colSensor = hwMap.get(ColorSensor.class, "colsens");
+        gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -135,9 +183,6 @@ public class Ruckus_HwMap
         rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-
-        //ha ha
 
     }
 

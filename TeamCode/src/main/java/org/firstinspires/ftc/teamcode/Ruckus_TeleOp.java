@@ -124,12 +124,12 @@ public class Ruckus_TeleOp extends LinearOpMode {
                 isLatchOpen = false;
             }
 
-            // Send calculated power to wheels
+            // Send calculations to motors/servos
             howard.flDrive.setPower(flPower);
             howard.frDrive.setPower(frPower);
             howard.blDrive.setPower(blPower);
             howard.brDrive.setPower(brPower);
-             howard.armWinch.setPower(winchPower);
+            howard.armWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
             howard.lCollector.setPower(collectorPower);
             howard.rCollector.setPower(-collectorPower);

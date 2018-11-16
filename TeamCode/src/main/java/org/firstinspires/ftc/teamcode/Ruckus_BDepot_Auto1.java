@@ -34,6 +34,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -114,15 +120,22 @@ public class Ruckus_BDepot_Auto1 extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        /*howard.armWinch.setPower(howard.WINCH_POWER);
+        howard.armWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.armWinch.setPower(0);
         howard.latch.setPosition(howard.LATCH_OPEN);
+        sleep(100);
         howard.armWinch.setPower(-howard.WINCH_POWER);
-        sleep(howard.TIME_TO_EXTEND);
-        howard.armWinch.setPower(0);*/
+        sleep(howard.TIME_TO_RETRACT);
+        howard.armWinch.setPower(0);
 
-        //CALIBRATE GYRO AND/OR COMPUTER VISION CODE
+        //init gyro
+        howard.gyroInit();
+        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
+            sleep(50);
+            idle();
+        }
+
 
 
         telemetry.addData("Path", "Complete");
@@ -297,5 +310,216 @@ public class Ruckus_BDepot_Auto1 extends LinearOpMode {
             telemetry.update();
         }
         return hsvValues[0];
+    }
+    
+    public void gyroDrive ( double speed,
+                            double distance,
+                            double angle) {
+
+        int     newFrontLeftTarget;
+        int     newFrontRightTarget;
+        int     newBackLeftTarget;
+        int     newBackRightTarget;
+        int     moveCounts;
+        double  max;
+        double  error;
+        double  steer;
+        double  leftSpeed;
+        double  rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            // Determine new target position, and pass to motor controller
+            newFrontLeftTarget = howard.flDrive.getCurrentPosition() + moveCounts;
+            newFrontRightTarget = howard.frDrive.getCurrentPosition() + moveCounts;
+            newBackLeftTarget = howard.blDrive.getCurrentPosition() + moveCounts;
+            newBackRightTarget = howard.brDrive.getCurrentPosition() + moveCounts;
+            howard.flDrive.setTargetPosition(newFrontLeftTarget);
+            howard.frDrive.setTargetPosition(newFrontRightTarget);
+            howard.blDrive.setTargetPosition(newBackLeftTarget);
+            howard.brDrive.setTargetPosition(newBackRightTarget);
+
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // start motion.
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            howard.flDrive.setPower(speed);
+            howard.frDrive.setPower(speed);
+            howard.blDrive.setPower(speed);
+            howard.brDrive.setPower(speed);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() &&
+                    (howard.flDrive.isBusy() && howard.frDrive.isBusy() && howard.blDrive.isBusy() && howard.brDrive.isBusy())) {
+
+                // adjust relative speed based on heading error.
+                error = getError(angle);
+                steer = getSteer(error, howard.P_DRIVE_COEFF);
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                leftSpeed = speed - steer;
+                rightSpeed = speed + steer;
+
+                // Normalize speeds if either one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0)
+                {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
+                }
+
+                howard.flDrive.setPower(leftSpeed);
+                howard.frDrive.setPower(rightSpeed);
+                howard.blDrive.setPower(leftSpeed);
+                howard.brDrive.setPower(rightSpeed);
+
+                // Display drive status for the driver.
+                telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
+                telemetry.addData("Target",  "%7d:%7d:%7d:%7d",      newFrontLeftTarget,  newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
+                telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",      howard.flDrive.getCurrentPosition(),
+                        howard.frDrive.getCurrentPosition(),
+                        howard.blDrive.getCurrentPosition(),
+                        howard.brDrive.getCurrentPosition());
+                telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            howard.flDrive.setPower(0);
+            howard.frDrive.setPower(0);
+            howard.blDrive.setPower(0);
+            howard.brDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    /**
+     *  Method to spin on central axis to point in a new direction.
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the heading (angle)
+     *  2) Driver stops the opmode running.
+     *
+     * @param speed Desired speed of turn.
+     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from current heading.
+     */
+    public void gyroTurn (  double speed, double angle) {
+
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && !onHeading(speed, angle, howard.P_TURN_COEFF)) {
+            // Update telemetry & Allow time for other processes to run.
+            telemetry.update();
+        }
+    }
+
+    /**
+     *  Method to obtain & hold a heading for a finite amount of time
+     *  Move will stop once the requested time has elapsed
+     *
+     * @param speed      Desired speed of turn.
+     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from current heading.
+     * @param holdTime   Length of time (in seconds) to hold the specified heading.
+     */
+    public void gyroHold( double speed, double angle, double holdTime) {
+
+        ElapsedTime holdTimer = new ElapsedTime();
+
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
+            // Update telemetry & Allow time for other processes to run.
+            onHeading(speed, angle, howard.P_TURN_COEFF);
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        howard.flDrive.setPower(0);
+        howard.frDrive.setPower(0);
+        howard.blDrive.setPower(0);
+        howard.brDrive.setPower(0);
+    }
+
+    /**
+     * Perform one cycle of closed loop heading control.
+     *
+     * @param speed     Desired speed of turn.
+     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
+     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                  If a relative angle is required, add/subtract from current heading.
+     * @param PCoeff    Proportional Gain coefficient
+     * @return
+     */
+    boolean onHeading(double speed, double angle, double PCoeff) {
+        double error;
+        double steer;
+        boolean onTarget = false;
+        double leftSpeed;
+        double rightSpeed;
+
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= howard.HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        } else {
+            steer = getSteer(error, PCoeff);
+            rightSpeed = speed * steer;
+            leftSpeed = -rightSpeed;
+        }
+
+
+        // Send desired speeds to motors.
+        howard.flDrive.setPower(leftSpeed);
+        howard.frDrive.setPower(rightSpeed);
+        howard.blDrive.setPower(leftSpeed);
+        howard.brDrive.setPower(rightSpeed);
+
+        // Display it for the driver.
+        telemetry.addData("Target", "%5.2f", angle);
+        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+    public double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        robotError = targetAngle - howard.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        while (robotError > 180)  robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    /**
+     * returns desired steering force.  +/- 1 range.  +ve = steer left
+     * @param error   Error angle in robot relative degrees
+     * @param PCoeff  Proportional Gain Coefficient
+     * @return
+     */
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }
