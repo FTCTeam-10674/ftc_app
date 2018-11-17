@@ -70,7 +70,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @Autonomous(name="Howard Auto", group="Pushbot")
 @Disabled
-public class Ruckus_BDepot_Auto1 extends LinearOpMode {
+public class Ruckus_BCrater_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
     Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
@@ -136,14 +136,14 @@ public class Ruckus_BDepot_Auto1 extends LinearOpMode {
 
         // >> Starting in Depot pos: turn right
         //    Starting in Crater pos: turn left
-        gyroTurn(howard.TURN_SPEED, 45.0);
-        gyroHold(howard.TURN_SPEED, 45.0, 0.5);
-        gyroDrive(howard.DRIVE_SPEED, 30.0, 45.0);
+        gyroTurn(howard.TURN_SPEED, 135.0);
+        gyroHold(howard.TURN_SPEED, 135.0, 0.5);
+        gyroDrive(howard.DRIVE_SPEED, 54.0, 135.0);
 
         //DISPENSE TEAM MARKER
 
         //reverse to crater
-        gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
+        gyroDrive(howard.DRIVE_SPEED, -70.0, 135.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

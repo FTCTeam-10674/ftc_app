@@ -78,7 +78,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double brPower;
             double winchPower;
             double swingPower;
-            double latchPos = howard.LATCH_OPEN;
+            double latchPos;
             double collectorPower;
 
 
@@ -90,9 +90,10 @@ public class Ruckus_TeleOp extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
 
             //Drive train controls
-            double drive  = -gamepad1.left_stick_y;
+            //FIX DRIVE AND STRAFE: drive on y, strafe on x.
+            double drive  = gamepad1.left_stick_x;
             double rotate =  gamepad1.right_stick_x;
-            double strafe = gamepad1.left_stick_x;
+            double strafe = gamepad1.left_stick_y;
 
             flPower  = Range.clip(drive + rotate - strafe, -1.0, 1.0);
             frPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
@@ -133,7 +134,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.armSwing.setPower(swingPower);
             howard.lCollector.setPower(collectorPower);
             howard.rCollector.setPower(-collectorPower);
-            howard.latch.setPosition(latchPos);
+            //howard.latch.setPosition(latchPos);
 
 
             // Show the elapsed game time and wheel power.

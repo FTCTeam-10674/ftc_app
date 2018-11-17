@@ -147,10 +147,10 @@ public class Ruckus_HwMap
         armSwing    = hwMap.get(DcMotor.class, "marm");
         lCollector = hwMap.get(DcMotor.class, "lcollector");
         rCollector = hwMap.get(DcMotor.class, "rcollector");
-        latch = hwMap.get(Servo.class, "latch");
-        sensArm = hwMap.get(Servo.class, "sensarm");
-        colSensor = hwMap.get(ColorSensor.class, "colsens");
-        gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
+        //latch = hwMap.get(Servo.class, "latch");
+        //sensArm = hwMap.get(Servo.class, "sensarm");
+        //colSensor = hwMap.get(ColorSensor.class, "colsens");
+        //gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -169,8 +169,8 @@ public class Ruckus_HwMap
         armSwing.setPower (0);
         lCollector.setPower (0);
         rCollector.setPower (0);
-        latch.setPosition(LATCH_CLOSED);
-        sensArm.setPosition(SENSARM_HOME);
+        //latch.setPosition(LATCH_CLOSED);
+        //sensArm.setPosition(SENSARM_HOME);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
