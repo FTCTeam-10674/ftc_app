@@ -70,7 +70,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @Autonomous(name="Howard Auto", group="Pushbot")
 @Disabled
-public class Ruckus_BDepot_Auto1 extends LinearOpMode {
+public class Ruckus_Depot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
     Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
@@ -111,14 +111,14 @@ public class Ruckus_BDepot_Auto1 extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        howard.armWinch.setPower(howard.WINCH_POWER);
+        /*howard.armWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.armWinch.setPower(0);
         howard.latch.setPosition(howard.LATCH_OPEN);
         sleep(100);
         howard.armWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
-        howard.armWinch.setPower(0);
+        howard.armWinch.setPower(0);*/
 
         //VUFORIA ORIENTATION
 
@@ -140,7 +140,10 @@ public class Ruckus_BDepot_Auto1 extends LinearOpMode {
         gyroHold(howard.TURN_SPEED, 45.0, 0.5);
         gyroDrive(howard.DRIVE_SPEED, 30.0, 45.0);
 
-        //DISPENSE TEAM MARKER
+        //dump marker in depot
+        howard.dumper.setPosition(howard.DUMPED);
+        sleep(2000);
+        howard.dumper.setPosition(howard.UNDUMPED);
 
         //reverse to crater
         gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);

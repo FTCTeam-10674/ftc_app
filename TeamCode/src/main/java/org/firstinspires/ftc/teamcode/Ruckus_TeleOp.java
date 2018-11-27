@@ -53,10 +53,13 @@ import com.qualcomm.robotcore.util.Range;
 public class Ruckus_TeleOp extends LinearOpMode {
     Ruckus_HwMap howard   = new Ruckus_HwMap();
 
+    //These must be outside of while loop, otherwise it will keep being reinitialized
+    double dumpPos = howard.UNDUMPED;
+    double latchPos = howard.LATCH_OPEN;
+
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    boolean isLatchOpen = true;
 
     @Override
     public void runOpMode() {
@@ -78,7 +81,6 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double brPower;
             double winchPower;
             double swingPower;
-            double latchPos;
             double collectorPower;
 
 
@@ -91,9 +93,9 @@ public class Ruckus_TeleOp extends LinearOpMode {
 
             //Drive train controls
             //FIX DRIVE AND STRAFE: drive on y, strafe on x.
-            double drive  = gamepad1.left_stick_x;
+            double drive  = -gamepad1.left_stick_y;
             double rotate =  gamepad1.right_stick_x;
-            double strafe = gamepad1.left_stick_y;
+            double strafe =  gamepad1.left_stick_x;
 
             flPower  = Range.clip(drive + rotate - strafe, -1.0, 1.0);
             frPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
@@ -116,15 +118,20 @@ public class Ruckus_TeleOp extends LinearOpMode {
             }
 
             //Latch controls
-            if(!isLatchOpen && gamepad2.a) {
+            if(gamepad2.a) {
                 latchPos = howard.LATCH_OPEN;
-                isLatchOpen = true;
             }
-            else if(isLatchOpen  && gamepad2.b) {
+            else if(gamepad2.b) {
                 latchPos = howard.LATCH_CLOSED;
-                isLatchOpen = false;
             }
 
+            //Dumper controls
+            if(gamepad1.a) {
+                dumpPos = howard.DUMPED;
+            }
+            else if(gamepad1.b) {
+                dumpPos = howard.UNDUMPED;
+            }
             // Send calculations to motors/servos
             howard.flDrive.setPower(flPower);
             howard.frDrive.setPower(frPower);
@@ -134,7 +141,8 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.armSwing.setPower(swingPower);
             howard.lCollector.setPower(collectorPower);
             howard.rCollector.setPower(-collectorPower);
-            //howard.latch.setPosition(latchPos);
+            howard.dumper.setPosition(dumpPos);
+            howard.latch.setPosition(latchPos);
 
 
             // Show the elapsed game time and wheel power.

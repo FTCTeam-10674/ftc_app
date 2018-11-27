@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -61,17 +60,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 public class Ruckus_HwMap
 {
     //Electronics
-    public DcMotor     flDrive    = null;
-    public DcMotor     frDrive    = null;
-    public DcMotor     blDrive    = null;
-    public DcMotor     brDrive    = null;
-    public DcMotor     armWinch   = null;
-    public DcMotor     armSwing   = null;
-    public DcMotor     lCollector = null;
-    public DcMotor     rCollector = null;
-    public Servo       latch      = null;
-    public Servo       sensArm    = null;
-    public ColorSensor colSensor  = null;
+    public DcMotor  flDrive    = null;
+    public DcMotor  frDrive    = null;
+    public DcMotor  blDrive    = null;
+    public DcMotor  brDrive    = null;
+    public DcMotor  armWinch   = null;
+    public DcMotor  armSwing   = null;
+    public DcMotor  lCollector = null;
+    public DcMotor  rCollector = null;
+    public Servo    latch      = null;
+    public Servo    dumper     = null;
 
     //Gyro
     BNO055IMU gyro;
@@ -117,11 +115,12 @@ public class Ruckus_HwMap
     //Constants
     public final static double LATCH_CLOSED  = 0;
     public final static double LATCH_OPEN    = 1;
-    public final static double SENSARM_HOME  = 0;
     public final static long TIME_TO_EXTEND = 4 * 1000;
     public final static long TIME_TO_RETRACT = 7 * 1000;
     public final static double WINCH_POWER   = 0.4;
     public final static double COLLECTOR_POWER = 1;
+    public final static double UNDUMPED = 0;
+    public final static double DUMPED = 1;
 
 
     //local OpMode members
@@ -147,10 +146,9 @@ public class Ruckus_HwMap
         armSwing    = hwMap.get(DcMotor.class, "marm");
         lCollector = hwMap.get(DcMotor.class, "lcollector");
         rCollector = hwMap.get(DcMotor.class, "rcollector");
+        dumper = hwMap.get(Servo.class, "dumper");
         //latch = hwMap.get(Servo.class, "latch");
-        //sensArm = hwMap.get(Servo.class, "sensarm");
-        //colSensor = hwMap.get(ColorSensor.class, "colsens");
-        //gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
+        gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -169,8 +167,8 @@ public class Ruckus_HwMap
         armSwing.setPower (0);
         lCollector.setPower (0);
         rCollector.setPower (0);
+        dumper.setPosition(UNDUMPED);
         //latch.setPosition(LATCH_CLOSED);
-        //sensArm.setPosition(SENSARM_HOME);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
