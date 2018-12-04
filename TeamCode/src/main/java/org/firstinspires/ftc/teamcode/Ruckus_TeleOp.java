@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -53,10 +54,6 @@ import com.qualcomm.robotcore.util.Range;
 public class Ruckus_TeleOp extends LinearOpMode {
     Ruckus_HwMap howard   = new Ruckus_HwMap();
 
-    //These must be outside of while loop, otherwise it will keep being reinitialized
-
-
-
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -66,6 +63,16 @@ public class Ruckus_TeleOp extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        howard.flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        howard.armWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.armSwing.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        howard.armWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double dumpPos = howard.UNDUMPED;
         double latchPos = howard.LATCH_OPEN;
@@ -89,6 +96,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double blPower;
             double brPower;
             double winchPower;
+            double winchPos = howard.armWinch.getCurrentPosition();
             double swingPower;
             //double collectorPower;
 
@@ -112,7 +120,15 @@ public class Ruckus_TeleOp extends LinearOpMode {
             brPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
 
             //Arm controls
-            winchPower = -gamepad2.left_stick_y;
+            if (winchPos <= howard.WINCH_MIN){
+                winchPower = Range.clip(-gamepad2.left_stick_y, 0.0, 1.0);
+            }
+            else if (winchPos >= howard.WINCH_MAX){
+                winchPower = Range.clip(-gamepad2.left_stick_y, -1.0, 0.0);
+            }
+            else {
+                winchPower = Range.clip(-gamepad2.left_stick_y, 1.0, -1.0);
+            }
             swingPower = -gamepad2.right_stick_y;
 
             if (gamepad2.right_bumper){
@@ -179,7 +195,9 @@ public class Ruckus_TeleOp extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", flPower, frPower);
+            telemetry.addData("Motor Powers", "fl (%.2f), fr (%.2f), bl (%.2f), br (%.2f)",
+                                               flPower,   frPower,   blPower,   brPower);
+            telemetry.addData("Winch Position", "count (%7d)", winchPos);
             telemetry.addData("Servos", "latch (%.2f), dumper (%.2f)", latchPos, dumpPos);
             telemetry.update();
         }

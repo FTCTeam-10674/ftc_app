@@ -133,8 +133,8 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         gyroHold(howard.TURN_SPEED, -45.0, 0.5);
         gyroDrive(howard.DRIVE_SPEED, 48.0, -45.0);
 
-        // >> Starting in Depot pos: turn right
-        //    Starting in Crater pos: turn left
+        //Starting in Depot pos: turn right
+        //Starting in Crater pos: turn left
         gyroTurn(howard.TURN_SPEED, 45.0);
         gyroHold(howard.TURN_SPEED, 45.0, 0.5);
         gyroDrive(howard.DRIVE_SPEED, 30.0, 45.0);
