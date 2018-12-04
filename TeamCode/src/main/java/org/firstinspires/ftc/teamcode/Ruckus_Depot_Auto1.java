@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -68,8 +67,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Howard Auto", group="Pushbot")
-@Disabled
+@Autonomous(name="Howard Depot", group="Pushbot")
+//@Disabled
 public class Ruckus_Depot_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -86,7 +85,7 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         howard.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
         howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -111,14 +110,14 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        /*howard.armWinch.setPower(howard.WINCH_POWER);
+        howard.armWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.armWinch.setPower(0);
         howard.latch.setPosition(howard.LATCH_OPEN);
         sleep(100);
         howard.armWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
-        howard.armWinch.setPower(0);*/
+        howard.armWinch.setPower(0);
 
         //VUFORIA ORIENTATION
 
@@ -146,7 +145,7 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         howard.dumper.setPosition(howard.UNDUMPED);
 
         //reverse to crater
-        gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
+        //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

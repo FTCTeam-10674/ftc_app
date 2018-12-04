@@ -54,8 +54,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
     Ruckus_HwMap howard   = new Ruckus_HwMap();
 
     //These must be outside of while loop, otherwise it will keep being reinitialized
-    double dumpPos = howard.UNDUMPED;
-    double latchPos = howard.LATCH_OPEN;
+
 
 
     // Declare OpMode members.
@@ -67,9 +66,19 @@ public class Ruckus_TeleOp extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+
+        double dumpPos = howard.UNDUMPED;
+        double latchPos = howard.LATCH_OPEN;
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+        double leftGrabberPosition = 0.0;
+        double rightGrabberPosition = 1.0;
+
+        howard.lGrabbo.setPosition(leftGrabberPosition);
+        howard.rGrabbo.setPosition(rightGrabberPosition);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -81,7 +90,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double brPower;
             double winchPower;
             double swingPower;
-            double collectorPower;
+            //double collectorPower;
 
 
 
@@ -95,7 +104,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             //FIX DRIVE AND STRAFE: drive on y, strafe on x.
             double drive  = -gamepad1.left_stick_y;
             double rotate =  gamepad1.right_stick_x;
-            double strafe =  gamepad1.left_stick_x;
+            double strafe = -gamepad1.left_stick_x;
 
             flPower  = Range.clip(drive + rotate - strafe, -1.0, 1.0);
             frPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
@@ -106,8 +115,29 @@ public class Ruckus_TeleOp extends LinearOpMode {
             winchPower = -gamepad2.left_stick_y;
             swingPower = -gamepad2.right_stick_y;
 
+            if (gamepad2.right_bumper){
+                leftGrabberPosition = 0.3;
+                rightGrabberPosition = 0.7;
+                //grabberOpen = true;
+            }
+
+            else if (gamepad2.left_bumper){
+                leftGrabberPosition = 0.6;
+                rightGrabberPosition = 0.4;
+            }
+
+            else if (gamepad2.left_trigger > 0.1){
+                leftGrabberPosition = 0.4;
+                rightGrabberPosition = 0.6;
+            }
+
+            else if (gamepad2.right_trigger > 0.1) {
+                leftGrabberPosition = 0.0;
+                rightGrabberPosition = 1.0;
+            }
+
             //Collector controls
-            if(gamepad2.right_trigger > 0.75){
+           /* if(gamepad2.right_trigger > 0.75){
                 collectorPower = howard.COLLECTOR_POWER;
             }
             else if(gamepad2.left_trigger > 0.75){
@@ -115,7 +145,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             }
             else{
                 collectorPower = 0;
-            }
+            }*/
 
             //Latch controls
             if(gamepad2.a) {
@@ -139,15 +169,18 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.brDrive.setPower(brPower);
             howard.armWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
-            howard.lCollector.setPower(collectorPower);
-            howard.rCollector.setPower(-collectorPower);
+            //howard.lCollector.setPower(collectorPower);
+            //howard.rCollector.setPower(-collectorPower);
             howard.dumper.setPosition(dumpPos);
             howard.latch.setPosition(latchPos);
+            howard.lGrabbo.setPosition(leftGrabberPosition);
+            howard.rGrabbo.setPosition(rightGrabberPosition);
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", flPower, frPower);
+            telemetry.addData("Servos", "latch (%.2f), dumper (%.2f)", latchPos, dumpPos);
             telemetry.update();
         }
     }

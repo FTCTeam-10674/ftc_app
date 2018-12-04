@@ -66,10 +66,12 @@ public class Ruckus_HwMap
     public DcMotor  brDrive    = null;
     public DcMotor  armWinch   = null;
     public DcMotor  armSwing   = null;
-    public DcMotor  lCollector = null;
-    public DcMotor  rCollector = null;
+    //public DcMotor  lCollector = null;
+    //public DcMotor  rCollector = null;
     public Servo    latch      = null;
     public Servo    dumper     = null;
+    public Servo    lGrabbo    = null;
+    public Servo    rGrabbo    = null;
 
     //Gyro
     BNO055IMU gyro;
@@ -113,14 +115,14 @@ public class Ruckus_HwMap
     VuforiaLocalizer vuforia;
 
     //Constants
-    public final static double LATCH_CLOSED  = 0;
-    public final static double LATCH_OPEN    = 1;
+    public final static double LATCH_CLOSED  = 1;
+    public final static double LATCH_OPEN    = 0;
     public final static long TIME_TO_EXTEND = 4 * 1000;
     public final static long TIME_TO_RETRACT = 7 * 1000;
     public final static double WINCH_POWER   = 0.4;
-    public final static double COLLECTOR_POWER = 1;
-    public final static double UNDUMPED = 0;
-    public final static double DUMPED = 1;
+    //public final static double COLLECTOR_POWER = 1;
+    public final static double UNDUMPED = 1;
+    public final static double DUMPED = 0;
 
 
     //local OpMode members
@@ -144,10 +146,12 @@ public class Ruckus_HwMap
         brDrive = hwMap.get(DcMotor.class, "brdrive");
         armWinch = hwMap.get(DcMotor.class, "telescope");
         armSwing    = hwMap.get(DcMotor.class, "marm");
-        lCollector = hwMap.get(DcMotor.class, "lcollector");
-        rCollector = hwMap.get(DcMotor.class, "rcollector");
+        lGrabbo = hwMap.get(Servo.class, "lgrab");
+        rGrabbo = hwMap.get(Servo.class, "rgrab");
+        //lCollector = hwMap.get(DcMotor.class, "lcollector");
+        //rCollector = hwMap.get(DcMotor.class, "rcollector");
         dumper = hwMap.get(Servo.class, "dumper");
-        //latch = hwMap.get(Servo.class, "latch");
+        latch = hwMap.get(Servo.class, "latch");
         gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -155,8 +159,8 @@ public class Ruckus_HwMap
         brDrive.setDirection(DcMotor.Direction.FORWARD);
         armWinch.setDirection(DcMotor.Direction.FORWARD);
         armSwing.setDirection(DcMotor.Direction.FORWARD);
-        lCollector.setDirection(DcMotor.Direction.FORWARD);
-        rCollector.setDirection(DcMotor.Direction.REVERSE);
+        //lCollector.setDirection(DcMotor.Direction.FORWARD);
+        //rCollector.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         flDrive.setPower (0);
@@ -165,8 +169,8 @@ public class Ruckus_HwMap
         brDrive.setPower (0);
         armWinch.setPower (0);
         armSwing.setPower (0);
-        lCollector.setPower (0);
-        rCollector.setPower (0);
+        //lCollector.setPower (0);
+        //rCollector.setPower (0);
         dumper.setPosition(UNDUMPED);
         //latch.setPosition(LATCH_CLOSED);
 
@@ -177,8 +181,8 @@ public class Ruckus_HwMap
         blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
