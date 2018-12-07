@@ -93,8 +93,8 @@ public class Ruckus_HwMap
 
 
     //Encoders
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.5 ;     // This is < 1.0 if geared UP
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // 1120 is for Neverrest motor
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -123,6 +123,8 @@ public class Ruckus_HwMap
     //public final static double COLLECTOR_POWER = 1;
     public final static double UNDUMPED = 1;
     public final static double DUMPED = 0;
+    public final static double WINCH_MIN = 0;
+    public final static double WINCH_MAX = 224000; //this value is an arbitrary guess right now
 
 
     //local OpMode members
@@ -175,14 +177,14 @@ public class Ruckus_HwMap
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }
