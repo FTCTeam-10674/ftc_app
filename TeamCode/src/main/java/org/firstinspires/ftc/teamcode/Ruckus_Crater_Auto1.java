@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -68,7 +69,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  */
 
 @Autonomous(name="Howard Crater", group="Pushbot")
-//@Disabled
+@Disabled
 public class Ruckus_Crater_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -129,14 +130,14 @@ public class Ruckus_Crater_Auto1 extends LinearOpMode {
         }
 
         //leave the landing zone and drive towards wall
-        gyroTurn(howard.TURN_SPEED, -45.0);
-        gyroHold(howard.TURN_SPEED, -45.0, 0.5);
+        gyroTurn(howard.TURN_SPEED, 45.0);
+        gyroHold(howard.TURN_SPEED, 45.0, 0.5);
         gyroDrive(howard.DRIVE_SPEED, 48.0, -45.0);
 
         // >> Starting in Depot pos: turn right
         //    Starting in Crater pos: turn left
-        gyroTurn(howard.TURN_SPEED, 135.0);
-        gyroHold(howard.TURN_SPEED, 135.0, 0.5);
+        gyroTurn(howard.TURN_SPEED, -135.0);
+        gyroHold(howard.TURN_SPEED, -135.0, 0.5);
         gyroDrive(howard.DRIVE_SPEED, 54.0, 135.0);
 
         //dump marker in depot

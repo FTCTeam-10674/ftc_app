@@ -57,21 +57,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class Ruckus_HwMap
+public class TestHwMap
 {
     //Electronics
     public DcMotor  flDrive    = null;
     public DcMotor  frDrive    = null;
     public DcMotor  blDrive    = null;
     public DcMotor  brDrive    = null;
-    public DcMotor  armWinch   = null;
-    public DcMotor  armSwing   = null;
+    //public DcMotor  armWinch   = null;
+    //public DcMotor  armSwing   = null;
     //public DcMotor  lCollector = null;
     //public DcMotor  rCollector = null;
-    public Servo    latch      = null;
+    //public Servo    latch      = null;
     public Servo    dumper     = null;
-    public Servo    lGrabbo    = null;
-    public Servo    rGrabbo    = null;
+    //public Servo    lGrabbo    = null;
+    //public Servo    rGrabbo    = null;
 
     //Gyro
     BNO055IMU gyro;
@@ -94,14 +94,14 @@ public class Ruckus_HwMap
 
     //Encoders
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.5 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.6;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
@@ -130,7 +130,7 @@ public class Ruckus_HwMap
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public Ruckus_HwMap(){
+    public TestHwMap(){
 
     }
 
@@ -144,21 +144,21 @@ public class Ruckus_HwMap
         frDrive = hwMap.get(DcMotor.class, "frdrive");
         blDrive  = hwMap.get(DcMotor.class, "bldrive");
         brDrive = hwMap.get(DcMotor.class, "brdrive");
-        armWinch = hwMap.get(DcMotor.class, "telescope");
+        /*armWinch = hwMap.get(DcMotor.class, "telescope");
         armSwing    = hwMap.get(DcMotor.class, "marm");
         lGrabbo = hwMap.get(Servo.class, "lgrab");
-        rGrabbo = hwMap.get(Servo.class, "rgrab");
+        rGrabbo = hwMap.get(Servo.class, "rgrab");*/
         //lCollector = hwMap.get(DcMotor.class, "lcollector");
         //rCollector = hwMap.get(DcMotor.class, "rcollector");
         dumper = hwMap.get(Servo.class, "dumper");
-        latch = hwMap.get(Servo.class, "latch");
+        //latch = hwMap.get(Servo.class, "latch");
         gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.REVERSE);
         brDrive.setDirection(DcMotor.Direction.FORWARD);
-        armWinch.setDirection(DcMotor.Direction.FORWARD);
-        armSwing.setDirection(DcMotor.Direction.FORWARD);
+        //armWinch.setDirection(DcMotor.Direction.FORWARD);
+        //armSwing.setDirection(DcMotor.Direction.FORWARD);
         //lCollector.setDirection(DcMotor.Direction.FORWARD);
         //rCollector.setDirection(DcMotor.Direction.REVERSE);
 
@@ -167,8 +167,8 @@ public class Ruckus_HwMap
         frDrive.setPower (0);
         blDrive.setPower (0);
         brDrive.setPower (0);
-        armWinch.setPower (0);
-        armSwing.setPower (0);
+        //armWinch.setPower (0);
+        //armSwing.setPower (0);
         //lCollector.setPower (0);
         //rCollector.setPower (0);
         //latch.setPosition(LATCH_CLOSED);
@@ -179,10 +179,10 @@ public class Ruckus_HwMap
         frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //armWinch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //lCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //rCollector.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
     }

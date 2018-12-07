@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,9 +49,9 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="TeleOp Ruckus", group="Linear Opmode")
-@Disabled
-public class Ruckus_TeleOp extends LinearOpMode {
-    Ruckus_HwMap howard   = new Ruckus_HwMap();
+//@Disabled
+public class TestTeleOp extends LinearOpMode {
+    TestHwMap Test   = new TestHwMap();
 
     //These must be outside of while loop, otherwise it will keep being reinitialized
 
@@ -63,13 +62,13 @@ public class Ruckus_TeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        howard.init(hardwareMap);
+        Test.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
 
-        double dumpPos = howard.UNDUMPED;
-        double latchPos = howard.LATCH_OPEN;
+        double dumpPos = Test.UNDUMPED;
+        double latchPos = Test.LATCH_OPEN;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -77,9 +76,6 @@ public class Ruckus_TeleOp extends LinearOpMode {
 
         double leftGrabberPosition = 0.0;
         double rightGrabberPosition = 1.0;
-
-        howard.lGrabbo.setPosition(leftGrabberPosition);
-        howard.rGrabbo.setPosition(rightGrabberPosition);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -150,32 +146,27 @@ public class Ruckus_TeleOp extends LinearOpMode {
 
             //Latch controls
             if(gamepad2.a) {
-                latchPos = howard.LATCH_OPEN;
+                latchPos = Test.LATCH_OPEN;
             }
             else if(gamepad2.b) {
-                latchPos = howard.LATCH_CLOSED;
+                latchPos = Test.LATCH_CLOSED;
             }
 
             //Dumper controls
             if(gamepad1.a) {
-                dumpPos = howard.DUMPED;
+                dumpPos = Test.DUMPED;
             }
             else if(gamepad1.b) {
-                dumpPos = howard.UNDUMPED;
+                dumpPos = Test.UNDUMPED;
             }
             // Send calculations to motors/servos
-            howard.flDrive.setPower(flPower);
-            howard.frDrive.setPower(frPower);
-            howard.blDrive.setPower(blPower);
-            howard.brDrive.setPower(brPower);
-            howard.armWinch.setPower(winchPower);
-            howard.armSwing.setPower(swingPower);
+            Test.flDrive.setPower(flPower);
+            Test.frDrive.setPower(frPower);
+            Test.blDrive.setPower(blPower);
+            Test.brDrive.setPower(brPower);
             //howard.lCollector.setPower(collectorPower);
             //howard.rCollector.setPower(-collectorPower);
-            howard.dumper.setPosition(dumpPos);
-            howard.latch.setPosition(latchPos);
-            howard.lGrabbo.setPosition(leftGrabberPosition);
-            howard.rGrabbo.setPosition(rightGrabberPosition);
+            Test.dumper.setPosition(dumpPos);
 
 
             // Show the elapsed game time and wheel power.
