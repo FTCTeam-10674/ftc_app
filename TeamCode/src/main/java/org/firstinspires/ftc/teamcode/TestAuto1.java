@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -67,12 +68,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Howard Depot", group="Pushbot")
-//@Disabled
+@Autonomous(name="Howard Test w/o landing", group="Pushbot")
+@Disabled
 public class TestAuto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
-    TestHwMap Test   = new TestHwMap();   // Use a Pushbot's hardware
+    Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     @Override
@@ -82,69 +83,70 @@ public class TestAuto1 extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        Test.init(hardwareMap);
+        howard.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
-        Test.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Test.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Test.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Test.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        Test.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Test.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Test.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Test.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          Test.flDrive.getCurrentPosition(),
-                          Test.frDrive.getCurrentPosition(),
-                          Test.blDrive.getCurrentPosition(),
-                          Test.brDrive.getCurrentPosition());
+                howard.flDrive.getCurrentPosition(),
+                howard.frDrive.getCurrentPosition(),
+                howard.blDrive.getCurrentPosition(),
+                howard.brDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
         //lower robot from hanging position
-        /*howard.armWinch.setPower(howard.WINCH_POWER);
+        /*howard.lWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
-        howard.armWinch.setPower(0);
+        howard.lWinch.setPower(0);
         howard.latch.setPosition(howard.LATCH_OPEN);
         sleep(100);
-        howard.armWinch.setPower(-howard.WINCH_POWER);
+        howard.lWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
-        howard.armWinch.setPower(0);*/
+        howard.lWinch.setPower(0);*/
 
         //VUFORIA ORIENTATION
 
         //init gyro
-        Test.gyroInit();
-        while (!isStopRequested() && !Test.gyro.isGyroCalibrated())  {
+        howard.gyroInit();
+        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
             sleep(50);
             idle();
         }
 
         //leave the landing zone and drive towards wall
-        gyroTurn(Test.TURN_SPEED, 40.0);
-        gyroHold(Test.TURN_SPEED, 40.0, 0.5);
-        gyroDrive(Test.DRIVE_SPEED, 48.0, 45.0);
+        gyroTurn(howard.TURN_SPEED, 40.0);
+        gyroHold(howard.TURN_SPEED, 40.0, 0.5);
+        gyroDrive(howard.DRIVE_SPEED, 48.0, 40.0);
 
         // >> Starting in Depot pos: turn right
         //    Starting in Crater pos: turn left
-        gyroTurn(Test.TURN_SPEED, -40.0);
-        gyroHold(Test.TURN_SPEED, -40.0, 0.5);
-        gyroDrive(Test.DRIVE_SPEED, 40.0, -45.0);
+        gyroTurn(howard.TURN_SPEED, -40.0);
+        gyroHold(howard.TURN_SPEED, -40.0, 0.5);
+        gyroDrive(howard.DRIVE_SPEED, 40.0, -40.0);
 
         //dump marker in depot
-        Test.dumper.setPosition(Test.DUMPED);
+        howard.dumper.setPosition(howard.DUMPED);
         sleep(2000);
-        Test.dumper.setPosition(Test.UNDUMPED);
+        howard.dumper.setPosition(howard.UNDUMPED);
 
         //reverse to crater
-        gyroDrive(Test.DRIVE_SPEED, -70.0, -45.0);
+        //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -200,35 +202,35 @@ public class TestAuto1 extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-            moveCounts = (int)(distance * Test.COUNTS_PER_INCH);
+            moveCounts = (int)(distance * howard.COUNTS_PER_INCH);
             // Determine new target position, and pass to motor controller
-            newFrontLeftTarget = Test.flDrive.getCurrentPosition() + moveCounts;
-            newFrontRightTarget = Test.frDrive.getCurrentPosition() + moveCounts;
-            newBackLeftTarget = Test.blDrive.getCurrentPosition() + moveCounts;
-            newBackRightTarget = Test.brDrive.getCurrentPosition() + moveCounts;
-            Test.flDrive.setTargetPosition(newFrontLeftTarget);
-            Test.frDrive.setTargetPosition(newFrontRightTarget);
-            Test.blDrive.setTargetPosition(newBackLeftTarget);
-            Test.brDrive.setTargetPosition(newBackRightTarget);
+            newFrontLeftTarget = howard.flDrive.getCurrentPosition() + moveCounts;
+            newFrontRightTarget = howard.frDrive.getCurrentPosition() + moveCounts;
+            newBackLeftTarget = howard.blDrive.getCurrentPosition() + moveCounts;
+            newBackRightTarget = howard.brDrive.getCurrentPosition() + moveCounts;
+            howard.flDrive.setTargetPosition(newFrontLeftTarget);
+            howard.frDrive.setTargetPosition(newFrontRightTarget);
+            howard.blDrive.setTargetPosition(newBackLeftTarget);
+            howard.brDrive.setTargetPosition(newBackRightTarget);
 
-            Test.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Test.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Test.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Test.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            Test.flDrive.setPower(speed);
-            Test.frDrive.setPower(speed);
-            Test.blDrive.setPower(speed);
-            Test.brDrive.setPower(speed);
+            howard.flDrive.setPower(speed);
+            howard.frDrive.setPower(speed);
+            howard.blDrive.setPower(speed);
+            howard.brDrive.setPower(speed);
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (Test.flDrive.isBusy() && Test.frDrive.isBusy() && Test.blDrive.isBusy() && Test.brDrive.isBusy())) {
+                    (howard.flDrive.isBusy() && howard.frDrive.isBusy() && howard.blDrive.isBusy() && howard.brDrive.isBusy())) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
-                steer = getSteer(error, Test.P_DRIVE_COEFF);
+                steer = getSteer(error, howard.P_DRIVE_COEFF);
 
                 // if driving in reverse, the motor correction also needs to be reversed
                 if (distance < 0)
@@ -245,33 +247,33 @@ public class TestAuto1 extends LinearOpMode {
                     rightSpeed /= max;
                 }
 
-                Test.flDrive.setPower(leftSpeed);
-                Test.frDrive.setPower(rightSpeed);
-                Test.blDrive.setPower(leftSpeed);
-                Test.brDrive.setPower(rightSpeed);
+                howard.flDrive.setPower(leftSpeed);
+                howard.frDrive.setPower(rightSpeed);
+                howard.blDrive.setPower(leftSpeed);
+                howard.brDrive.setPower(rightSpeed);
 
                 // Display drive status for the driver.
                 telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
                 telemetry.addData("Target",  "%7d:%7d:%7d:%7d",      newFrontLeftTarget,  newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
-                telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",      Test.flDrive.getCurrentPosition(),
-                        Test.frDrive.getCurrentPosition(),
-                        Test.blDrive.getCurrentPosition(),
-                        Test.brDrive.getCurrentPosition());
+                telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",      howard.flDrive.getCurrentPosition(),
+                        howard.frDrive.getCurrentPosition(),
+                        howard.blDrive.getCurrentPosition(),
+                        howard.brDrive.getCurrentPosition());
                 telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
                 telemetry.update();
             }
 
             // Stop all motion;
-            Test.flDrive.setPower(0);
-            Test.frDrive.setPower(0);
-            Test.blDrive.setPower(0);
-            Test.brDrive.setPower(0);
+            howard.flDrive.setPower(0);
+            howard.frDrive.setPower(0);
+            howard.blDrive.setPower(0);
+            howard.brDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            Test.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            Test.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            Test.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            Test.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -289,7 +291,7 @@ public class TestAuto1 extends LinearOpMode {
     public void gyroTurn (  double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, Test.P_TURN_COEFF)) {
+        while (opModeIsActive() && !onHeading(speed, angle, howard.P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
@@ -313,15 +315,15 @@ public class TestAuto1 extends LinearOpMode {
         holdTimer.reset();
         while (opModeIsActive() && (holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, Test.P_TURN_COEFF);
+            onHeading(speed, angle, howard.P_TURN_COEFF);
             telemetry.update();
         }
 
         // Stop all motion;
-        Test.flDrive.setPower(0);
-        Test.frDrive.setPower(0);
-        Test.blDrive.setPower(0);
-        Test.brDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.frDrive.setPower(0);
+        howard.blDrive.setPower(0);
+        howard.brDrive.setPower(0);
     }
 
     /**
@@ -344,7 +346,7 @@ public class TestAuto1 extends LinearOpMode {
         // determine turn power based on +/- error
         error = getError(angle);
 
-        if (Math.abs(error) <= Test.HEADING_THRESHOLD) {
+        if (Math.abs(error) <= howard.HEADING_THRESHOLD) {
             steer = 0.0;
             leftSpeed = 0.0;
             rightSpeed = 0.0;
@@ -357,10 +359,10 @@ public class TestAuto1 extends LinearOpMode {
 
 
         // Send desired speeds to motors.
-        Test.flDrive.setPower(leftSpeed);
-        Test.frDrive.setPower(rightSpeed);
-        Test.blDrive.setPower(leftSpeed);
-        Test.brDrive.setPower(rightSpeed);
+        howard.flDrive.setPower(leftSpeed);
+        howard.frDrive.setPower(rightSpeed);
+        howard.blDrive.setPower(leftSpeed);
+        howard.brDrive.setPower(rightSpeed);
 
         // Display it for the driver.
         telemetry.addData("Target", "%5.2f", angle);
@@ -374,7 +376,7 @@ public class TestAuto1 extends LinearOpMode {
         double robotError;
 
         // calculate error in -179 to +180 range  (
-        robotError = targetAngle - Test.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        robotError = targetAngle - howard.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         while (robotError > 180)  robotError -= 360;
         while (robotError <= -180) robotError += 360;
         return robotError;

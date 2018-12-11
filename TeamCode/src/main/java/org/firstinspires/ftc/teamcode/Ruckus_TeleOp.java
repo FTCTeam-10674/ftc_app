@@ -69,10 +69,10 @@ public class Ruckus_TeleOp extends LinearOpMode {
         howard.blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         howard.brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        howard.armWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.lWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         howard.armSwing.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        howard.armWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         howard.armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double dumpPos = howard.UNDUMPED;
@@ -97,8 +97,9 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double blPower;
             double brPower;
             double winchPower;
-            double winchPos = howard.armWinch.getCurrentPosition();
+            double winchPos = howard.lWinch.getCurrentPosition();
             double swingPower;
+            double swingPos = howard.armSwing.getCurrentPosition();
             //double collectorPower;
 
 
@@ -130,7 +131,16 @@ public class Ruckus_TeleOp extends LinearOpMode {
             else {
                 winchPower = Range.clip(-gamepad2.left_stick_y, 1.0, -1.0);
             }
-            swingPower = -gamepad2.right_stick_y;
+
+            if (swingPos <= howard.SWING_MIN){
+                swingPower = Range.clip(-gamepad2.right_stick_y, 0.0, 1.0);
+            }
+            else if (swingPos >= howard.SWING_MAX){
+                swingPower = Range.clip(-gamepad2.right_stick_y, -1.0, 0.0);
+            }
+            else {
+                swingPower = Range.clip(-gamepad2.left_stick_y, 1.0, -1.0);
+            }
 
             if (gamepad2.right_bumper){
                 leftGrabberPosition = 0.3;
@@ -184,10 +194,9 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.frDrive.setPower(frPower);
             howard.blDrive.setPower(blPower);
             howard.brDrive.setPower(brPower);
-            howard.armWinch.setPower(winchPower);
+            howard.lWinch.setPower(winchPower);
+            howard.rWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
-            //howard.lCollector.setPower(collectorPower);
-            //howard.rCollector.setPower(-collectorPower);
             howard.dumper.setPosition(dumpPos);
             howard.latch.setPosition(latchPos);
             howard.lGrabbo.setPosition(leftGrabberPosition);
