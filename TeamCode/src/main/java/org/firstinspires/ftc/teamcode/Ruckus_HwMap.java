@@ -64,13 +64,13 @@ public class Ruckus_HwMap
     public DcMotor  frDrive    = null;
     public DcMotor  blDrive    = null;
     public DcMotor  brDrive    = null;
-    public DcMotor  lWinch   = null;
-    public DcMotor  rWinch   = null;
+    public DcMotor  lWinch     = null;
+    public DcMotor  rWinch     = null;
     public DcMotor  armSwing   = null;
     public Servo    latch      = null;
     public Servo    dumper     = null;
-    public Servo    lGrabbo    = null;
-    public Servo    rGrabbo    = null;
+    //public Servo    lGrabbo    = null;
+    //public Servo    rGrabbo    = null;
 
     //Gyro
     BNO055IMU gyro;
@@ -150,8 +150,8 @@ public class Ruckus_HwMap
         lWinch = hwMap.get(DcMotor.class, "lwinch");
         rWinch = hwMap.get(DcMotor.class, "rwinch");
         armSwing    = hwMap.get(DcMotor.class, "swing");
-        lGrabbo = hwMap.get(Servo.class, "lgrab");
-        rGrabbo = hwMap.get(Servo.class, "rgrab");
+        //lGrabbo = hwMap.get(Servo.class, "lgrab");
+        //rGrabbo = hwMap.get(Servo.class, "rgrab");
         dumper = hwMap.get(Servo.class, "dumper");
         latch = hwMap.get(Servo.class, "latch");
         gyro = hwMap.get(BNO055IMU.class, "imu_gyro");

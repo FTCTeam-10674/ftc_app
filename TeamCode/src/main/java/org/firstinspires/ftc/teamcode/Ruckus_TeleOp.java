@@ -72,7 +72,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
         howard.armSwing.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         howard.lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //temporarily WITHOUT for testing purposes
 
         double dumpPos = howard.UNDUMPED;
         double latchPos = howard.LATCH_OPEN;
@@ -116,9 +116,9 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double strafe = -gamepad1.left_stick_x;
 
             flPower  = Range.clip(drive + rotate - strafe, -1.0, 1.0);
-            frPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
+            frPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
             blPower  = Range.clip(drive + rotate + strafe, -1.0, 1.0);
-            brPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
+            brPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
 
             //Arm controls
             /*if (winchPos <= howard.WINCH_MIN){
@@ -177,18 +177,18 @@ public class Ruckus_TeleOp extends LinearOpMode {
            swingPower = -gamepad2.right_stick_y;
 
             //Latch controls
-            if(gamepad2.a) {
+            /*if(gamepad2.a) {
                 latchPos = howard.LATCH_OPEN;
             }
             else if(gamepad2.b) {
                 latchPos = howard.LATCH_CLOSED;
-            }
+            }*/
 
             //Dumper controls
-            if(gamepad1.b) {
+            if(gamepad1.x) {
                 dumpPos = howard.DUMPED;
             }
-            else if(gamepad1.a) {
+            else if(gamepad1.y) {
                 dumpPos = howard.UNDUMPED;
             }
             // Send calculations to motors/servos
