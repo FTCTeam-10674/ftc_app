@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -69,7 +68,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  */
 
 @Autonomous(name="Howard Crater", group="Pushbot")
-@Disabled
+//@Disabled
 public class Ruckus_Crater_Auto1 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -111,14 +110,19 @@ public class Ruckus_Crater_Auto1 extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        howard.armWinch.setPower(howard.WINCH_POWER);
+        howard.lWinch.setPower(howard.WINCH_POWER);
+        howard.rWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
-        howard.armWinch.setPower(0);
-        howard.latch.setPosition(howard.LATCH_OPEN);
+        howard.lWinch.setPower(0);
+        howard.rWinch.setPower(0);
+        //howard.latch.setPosition(howard.LATCH_OPEN);
+        //STRAFE TO UNLATCH THE HOOK
         sleep(100);
-        howard.armWinch.setPower(-howard.WINCH_POWER);
+        howard.lWinch.setPower(-howard.WINCH_POWER);
+        howard.rWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
-        howard.armWinch.setPower(0);
+        howard.lWinch.setPower(0);
+        howard.rWinch.setPower(0);
 
         //VUFORIA ORIENTATION
 

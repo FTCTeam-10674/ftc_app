@@ -105,14 +105,19 @@ public class Ruckus_Landing_Auto extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        howard.armWinch.setPower(howard.WINCH_POWER);
+        howard.lWinch.setPower(howard.WINCH_POWER);
+        howard.rWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
-        howard.armWinch.setPower(0);
-        howard.latch.setPosition(howard.LATCH_OPEN);
+        howard.lWinch.setPower(0);
+        howard.rWinch.setPower(0);
+        //howard.latch.setPosition(howard.LATCH_OPEN);
+        //STRAFE TO UNLATCH THE HOOK
         sleep(100);
-        howard.armWinch.setPower(-howard.WINCH_POWER);
+        howard.lWinch.setPower(-howard.WINCH_POWER);
+        howard.rWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
-        howard.armWinch.setPower(0);
+        howard.lWinch.setPower(0);
+        howard.rWinch.setPower(0);
 
 
         telemetry.addData("Path", "Complete");
