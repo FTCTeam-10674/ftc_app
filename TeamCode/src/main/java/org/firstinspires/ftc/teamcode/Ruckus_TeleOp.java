@@ -81,11 +81,11 @@ public class Ruckus_TeleOp extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        double leftGrabberPosition = 0.0;
-        double rightGrabberPosition = 1.0;
+        //double leftGrabberPosition = 0.0;
+        //double rightGrabberPosition = 1.0;
 
-        howard.lGrabbo.setPosition(leftGrabberPosition);
-        howard.rGrabbo.setPosition(rightGrabberPosition);
+        //howard.lGrabbo.setPosition(leftGrabberPosition);
+        //howard.rGrabbo.setPosition(rightGrabberPosition);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -116,12 +116,12 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double strafe = -gamepad1.left_stick_x;
 
             flPower  = Range.clip(drive + rotate - strafe, -1.0, 1.0);
-            frPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
+            frPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
             blPower  = Range.clip(drive + rotate + strafe, -1.0, 1.0);
-            brPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
+            brPower  = Range.clip(drive - rotate + strafe, -1.0, 1.0);
 
             //Arm controls
-            if (winchPos <= howard.WINCH_MIN){
+            /*if (winchPos <= howard.WINCH_MIN){
                 winchPower = Range.clip(-gamepad2.left_stick_y, 0.0, 1.0);
             }
             else if (winchPos >= howard.WINCH_MAX){
@@ -139,9 +139,9 @@ public class Ruckus_TeleOp extends LinearOpMode {
             }
             else {
                 swingPower = Range.clip(-gamepad2.left_stick_y, 1.0, -1.0);
-            }
+            }*/
 
-            if (gamepad2.right_bumper){
+            /*if (gamepad2.right_bumper){
                 leftGrabberPosition = 0.3;
                 rightGrabberPosition = 0.7;
                 //grabberOpen = true;
@@ -161,7 +161,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
                 leftGrabberPosition = 0.0;
                 rightGrabberPosition = 1.0;
             }
-
+*/
             //Collector controls
            /* if(gamepad2.right_trigger > 0.75){
                 collectorPower = howard.COLLECTOR_POWER;
@@ -173,6 +173,9 @@ public class Ruckus_TeleOp extends LinearOpMode {
                 collectorPower = 0;
             }*/
 
+           winchPower = -gamepad2.left_stick_y;
+           swingPower = -gamepad2.right_stick_y;
+
             //Latch controls
             if(gamepad2.a) {
                 latchPos = howard.LATCH_OPEN;
@@ -182,10 +185,10 @@ public class Ruckus_TeleOp extends LinearOpMode {
             }
 
             //Dumper controls
-            if(gamepad1.a) {
+            if(gamepad1.b) {
                 dumpPos = howard.DUMPED;
             }
-            else if(gamepad1.b) {
+            else if(gamepad1.a) {
                 dumpPos = howard.UNDUMPED;
             }
             // Send calculations to motors/servos
@@ -198,15 +201,15 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.armSwing.setPower(swingPower);
             howard.dumper.setPosition(dumpPos);
             howard.latch.setPosition(latchPos);
-            howard.lGrabbo.setPosition(leftGrabberPosition);
-            howard.rGrabbo.setPosition(rightGrabberPosition);
+            //howard.lGrabbo.setPosition(leftGrabberPosition);
+            //howard.rGrabbo.setPosition(rightGrabberPosition);
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motor Powers", "fl (%.2f), fr (%.2f), bl (%.2f), br (%.2f)",
                                                flPower,   frPower,   blPower,   brPower);
-            telemetry.addData("Winch Position", "count (%7d)", winchPos);
+            telemetry.addData("Winch Position", "count (%7f)", winchPos);
             telemetry.addData("Servos", "latch (%.2f), dumper (%.2f)", latchPos, dumpPos);
             telemetry.update();
         }

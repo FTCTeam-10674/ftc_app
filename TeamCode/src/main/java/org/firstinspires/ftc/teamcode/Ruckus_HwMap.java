@@ -120,8 +120,8 @@ public class Ruckus_HwMap
     public final static long TIME_TO_RETRACT = 7 * 1000;
     public final static double WINCH_POWER   = 0.4;
     //public final static double COLLECTOR_POWER = 1;
-    public final static double UNDUMPED = 1;
-    public final static double DUMPED = 0;
+    public final static double UNDUMPED = 0;
+    public final static double DUMPED = 1;
     public final static double WINCH_MIN = 0;
     public final static double WINCH_MAX = 224000; //these values
     public final static double SWING_MIN = -1120;  //are completely
@@ -159,8 +159,8 @@ public class Ruckus_HwMap
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.REVERSE);
         brDrive.setDirection(DcMotor.Direction.FORWARD);
-        lWinch.setDirection(DcMotor.Direction.FORWARD);
-        rWinch.setDirection(DcMotor.Direction.FORWARD);
+        lWinch.setDirection(DcMotor.Direction.REVERSE);
+        rWinch.setDirection(DcMotor.Direction.REVERSE);
         armSwing.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
