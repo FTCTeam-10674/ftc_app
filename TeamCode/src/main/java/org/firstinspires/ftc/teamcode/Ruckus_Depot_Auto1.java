@@ -109,8 +109,8 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //lower robot from hanging position
-        howard.lWinch.setPower(howard.WINCH_POWER);
+        //lower robot from hanging position TEMP COMMENTED FOR MEET 2
+        /*howard.lWinch.setPower(howard.WINCH_POWER);
         howard.rWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.lWinch.setPower(0);
@@ -122,7 +122,7 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         howard.rWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
         howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);
+        howard.rWinch.setPower(0);*/
 
         //VUFORIA ORIENTATION
 
@@ -134,19 +134,19 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         }
 
         //leave the landing zone and drive towards wall
-        gyroTurn(howard.TURN_SPEED, 40.0);
-        gyroHold(howard.TURN_SPEED, 40.0, 0.5);
-        gyroDrive(howard.DRIVE_SPEED, 48.0, 40.0);
+        gyroTurn(howard.TURN_SPEED, 45.0);
+        gyroHold(howard.TURN_SPEED, 45.0, 0.5);
+        gyroDrive(howard.DRIVE_SPEED, 48.0, 45.0);
 
         // >> Starting in Depot pos: turn right
         //    Starting in Crater pos: turn left
-        gyroTurn(howard.TURN_SPEED, -40.0);
-        gyroHold(howard.TURN_SPEED, -40.0, 0.5);
-        gyroDrive(howard.DRIVE_SPEED, 40.0, -40.0);
+        gyroTurn(howard.TURN_SPEED, 135.0);
+        gyroHold(howard.TURN_SPEED, 135.0, 0.5);
+        gyroDrive(howard.DRIVE_SPEED, -25.0, 135.0);
 
         //dump marker in depot
         howard.dumper.setPosition(howard.DUMPED);
-        sleep(2000);
+        sleep(1000);
         howard.dumper.setPosition(howard.UNDUMPED);
 
         //reverse to crater

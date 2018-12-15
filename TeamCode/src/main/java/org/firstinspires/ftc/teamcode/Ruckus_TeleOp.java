@@ -130,7 +130,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             else {
                 winchPower = Range.clip(-gamepad2.left_stick_y, 1.0, -1.0);
             }
-
+            
             if (swingPos <= howard.SWING_MIN){
                 swingPower = Range.clip(-gamepad2.right_stick_y, 0.0, 1.0);
             }
