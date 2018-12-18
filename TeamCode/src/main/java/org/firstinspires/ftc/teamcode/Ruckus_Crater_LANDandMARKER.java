@@ -67,9 +67,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Howard Depot", group="Pushbot")
+@Autonomous(name="Crater LAND & CLAIM", group="Pushbot")
 //@Disabled
-public class Ruckus_Depot_Auto1 extends LinearOpMode {
+public class Ruckus_Crater_LANDandMARKER extends LinearOpMode {
 
     /* Declare OpMode members. */
     Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
@@ -85,7 +85,7 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         howard.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");
+        telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
         howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -109,20 +109,31 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //lower robot from hanging position TEMP COMMENTED FOR MEET 2
-        /*howard.lWinch.setPower(howard.WINCH_POWER);
+        //lower robot from hanging position
+        howard.lWinch.setPower(howard.WINCH_POWER);
         howard.rWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.lWinch.setPower(0);
         howard.rWinch.setPower(0);
+        sleep(500);
         //howard.latch.setPosition(howard.LATCH_OPEN);
-        //STRAFE TO UNLATCH THE HOOK
+        //dead-reckoning strafing to unhook
+        howard.brDrive.setPower(0.3);
+        howard.flDrive.setPower(0.3);
+        howard.blDrive.setPower(-0.3);
+        howard.frDrive.setPower(-0.3);
+        sleep(1000);
+        howard.brDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.blDrive.setPower(0);
+        howard.frDrive.setPower(0);
         sleep(100);
+        //retract arm
         howard.lWinch.setPower(-howard.WINCH_POWER);
         howard.rWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
         howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);*/
+        howard.rWinch.setPower(0);
 
         //VUFORIA ORIENTATION
 
@@ -136,13 +147,13 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         //leave the landing zone and drive towards wall
         gyroTurn(howard.TURN_SPEED, 45.0);
         gyroHold(howard.TURN_SPEED, 45.0, 0.5);
-        gyroDrive(howard.DRIVE_SPEED, 48.0, 45.0);
+        gyroDrive(howard.DRIVE_SPEED, -45.0, 45.0); //the first "-45.0" is inches not degrees
 
         // >> Starting in Depot pos: turn right
         //    Starting in Crater pos: turn left
         gyroTurn(howard.TURN_SPEED, 135.0);
         gyroHold(howard.TURN_SPEED, 135.0, 0.5);
-        gyroDrive(howard.DRIVE_SPEED, -25.0, 135.0);
+        gyroDrive(howard.DRIVE_SPEED, -54.0, 135.0);
 
         //dump marker in depot
         howard.dumper.setPosition(howard.DUMPED);
@@ -150,7 +161,7 @@ public class Ruckus_Depot_Auto1 extends LinearOpMode {
         howard.dumper.setPosition(howard.UNDUMPED);
 
         //reverse to crater
-        //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
+        //gyroDrive(howard.DRIVE_SPEED, -70.0, 135.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
