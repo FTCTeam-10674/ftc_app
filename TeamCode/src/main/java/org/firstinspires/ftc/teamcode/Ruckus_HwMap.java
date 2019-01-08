@@ -40,6 +40,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 /**
  * This is NOT an opmode.
@@ -59,6 +60,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  */
 public class Ruckus_HwMap
 {
+    //Vuforia
+    public static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    public static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    public static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+    public TFObjectDetector tfod;
+    public VuforiaLocalizer vuforia;
+    public static final String VUFORIA_KEY = "ATAZ07f/////AAABmaO/m5kRFU7ai8lNRT328+F+t9O6cEPSpS/CaulMssrGjeqB7XMk4D+WHgcCyOelC7lAFZ8CbchvK3ZCk3UPtOBg5aaoJdlqvpaLjS88IaCVU7H7l4wFuAdo3TcPQFYZph8sDW3BBxgZRTFjPzIl0JOqNam2YAqYfd2MUAhh1DrZEtRHhJKvYR/gy8Z2dioPBFBfrrn7mHDGLbw8FsTOexm0oce0YTTg9H5QPIbxVqfbDWRB5UU2+fBE8arhDdpZGVdgRJhN5iSeNYaOo5Na/LiiMeovXMVrcs81qW1/mVmWOQ4182xNNwEITLuP3VOCuScxEDp53vLjB69LWxOtoMFO2ay3tmy/6GYh2tLntDc7";
+
     //Electronics
     public DcMotor  flDrive    = null;
     public DcMotor  frDrive    = null;
@@ -110,8 +119,6 @@ public class Ruckus_HwMap
     //Color sensor
     float hsvResult;
 
-    //Vuforia
-    VuforiaLocalizer vuforia;
 
     //Constants
     public final static double LATCH_CLOSED  = 1;
@@ -181,6 +188,7 @@ public class Ruckus_HwMap
         brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //we only need one here, we don't both l and r
         armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
 
     }

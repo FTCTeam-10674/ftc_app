@@ -69,7 +69,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @Autonomous(name="Crater LAND & CLAIM", group="Pushbot")
 //@Disabled
-public class Ruckus_Crater_LANDandMARKER extends LinearOpMode {
+public class Ruckus_Crater_LANDandCLAIM extends LinearOpMode {
 
     /* Declare OpMode members. */
     Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
