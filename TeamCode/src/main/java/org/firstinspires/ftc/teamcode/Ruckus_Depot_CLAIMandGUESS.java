@@ -127,6 +127,7 @@ public class Ruckus_Depot_CLAIMandGUESS extends LinearOpMode {
         waitForStart();
 
 
+
         //lower robot from hanging position TEMP COMMENTED FOR MEET 2
         /*howard.lWinch.setPower(howard.WINCH_POWER);
         howard.rWinch.setPower(howard.WINCH_POWER);
@@ -142,7 +143,11 @@ public class Ruckus_Depot_CLAIMandGUESS extends LinearOpMode {
         howard.lWinch.setPower(0);
         howard.rWinch.setPower(0);*/
 
-        int goldPos = identify(4);
+        if (howard.tfod != null) {
+            howard.tfod.activate();
+        }
+
+        int goldPos = identify(7);
 
         //init gyro
         howard.gyroInit();
@@ -151,14 +156,36 @@ public class Ruckus_Depot_CLAIMandGUESS extends LinearOpMode {
             idle();
         }
 
-        //guess Middle mineral and drive to depot
-        //gyroDrive(howard.DRIVE_SPEED, -55.0, 0.0); //PUT IF LOGIC HERE!!!!!!
+        //drive to gold mineral based on value of goldPos
+        if (goldPos == 0){
+
+            gyroTurn(howard.TURN_SPEED, 26.5);
+            gyroHold(howard.TURN_SPEED, 26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, 26.5);
+            gyroTurn(howard.TURN_SPEED, -26.5);
+            gyroHold(howard.TURN_SPEED, -26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -34.0, -26.5); //-4 adj
+
+        } else if (goldPos == 1){
+
+            gyroDrive(howard.DRIVE_SPEED, -64.0, 0.0); //-4 adj
+
+        } else {
+
+            gyroTurn(howard.TURN_SPEED, -26.5);
+            gyroHold(howard.TURN_SPEED, -26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, -26.5);
+            gyroTurn(howard.TURN_SPEED, 26.5);
+            gyroHold(howard.TURN_SPEED, 26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -34.0, 26.5); //-4 adj
+
+        }
 
         //dump marker in depot
         howard.dumper.setPosition(howard.DUMPED);
         sleep(1000);
         howard.dumper.setPosition(howard.UNDUMPED);
-        gyroDrive(howard.DRIVE_SPEED, 4.0, 0.0);
+        gyroDrive(howard.DRIVE_SPEED, 10.0, 0.0);
 
         //reverse to crater
         //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
@@ -238,10 +265,6 @@ public class Ruckus_Depot_CLAIMandGUESS extends LinearOpMode {
             howard.frDrive.setPower(speed);
             howard.blDrive.setPower(speed);
             howard.brDrive.setPower(speed);
-
-            if (howard.tfod != null) {
-                howard.tfod.activate();
-            }
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
