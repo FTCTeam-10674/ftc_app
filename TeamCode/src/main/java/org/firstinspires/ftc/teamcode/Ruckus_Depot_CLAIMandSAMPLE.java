@@ -74,9 +74,9 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Depot CLAIM & GUESS", group="Pushbot")
+@Autonomous(name="Depot CLAIM & SAMPLE", group="Pushbot")
 //@Disabled
-public class Ruckus_Depot_CLAIMandGUESS extends LinearOpMode {
+public class Ruckus_Depot_CLAIMandSAMPLE extends LinearOpMode {
 
 
     /* Declare OpMode members. */
@@ -128,21 +128,6 @@ public class Ruckus_Depot_CLAIMandGUESS extends LinearOpMode {
 
 
 
-        //lower robot from hanging position TEMP COMMENTED FOR MEET 2
-        /*howard.lWinch.setPower(howard.WINCH_POWER);
-        howard.rWinch.setPower(howard.WINCH_POWER);
-        sleep(howard.TIME_TO_EXTEND);
-        howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);
-        //howard.latch.setPosition(howard.LATCH_OPEN);
-        //STRAFE TO UNLATCH THE HOOK
-        sleep(100);
-        howard.lWinch.setPower(-howard.WINCH_POWER);
-        howard.rWinch.setPower(-howard.WINCH_POWER);
-        sleep(howard.TIME_TO_RETRACT);
-        howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);*/
-
         if (howard.tfod != null) {
             howard.tfod.activate();
         }
@@ -181,11 +166,13 @@ public class Ruckus_Depot_CLAIMandGUESS extends LinearOpMode {
 
         }
 
+        /*
         //dump marker in depot
         howard.dumper.setPosition(howard.DUMPED);
         sleep(1000);
         howard.dumper.setPosition(howard.UNDUMPED);
         gyroDrive(howard.DRIVE_SPEED, 10.0, 0.0);
+        */
 
         //reverse to crater
         //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);

@@ -74,18 +74,11 @@ public class Ruckus_TeleOp extends LinearOpMode {
         howard.lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         howard.armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //temporarily WITHOUT for testing purposes
 
-        double dumpPos = howard.UNDUMPED;
-        double latchPos = howard.LATCH_OPEN;
-
+        double wristPos = howard.WRIST_IN;
+        //double dumpPos = howard.UNDUMPED;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-
-        //double leftGrabberPosition = 0.0;
-        //double rightGrabberPosition = 1.0;
-
-        //howard.lGrabbo.setPosition(leftGrabberPosition);
-        //howard.rGrabbo.setPosition(rightGrabberPosition);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -95,12 +88,11 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double frPower;
             double blPower;
             double brPower;
+            double lambPower;
             double winchPower;
             double winchPos = howard.lWinch.getCurrentPosition();
             double swingPower;
             double swingPos = howard.armSwing.getCurrentPosition();
-            //double collectorPower;
-
 
 
             // Choose to drive using either Tank Mode, or POV Mode
@@ -120,7 +112,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             blPower  = Range.clip(drive + rotate + strafe, -1.0, 1.0);
             brPower  = Range.clip(drive - rotate - strafe, -1.0, 1.0);
 
-            //Arm controls
+            //Arm controls w/ Min and Max
             /*if (winchPos <= howard.WINCH_MIN){
                 winchPower = Range.clip(-gamepad2.left_stick_y, 0.0, 1.0);
             }
@@ -141,56 +133,23 @@ public class Ruckus_TeleOp extends LinearOpMode {
                 swingPower = Range.clip(-gamepad2.left_stick_y, 1.0, -1.0);
             }*/
 
-            /*if (gamepad2.right_bumper){
-                leftGrabberPosition = 0.3;
-                rightGrabberPosition = 0.7;
-                //grabberOpen = true;
+            if (gamepad2.right_bumper){
+                wristPos = howard.WRIST_OUT;
+            } else if (gamepad2.left_bumper){
+                wristPos = howard.WRIST_IN;
             }
 
-            else if (gamepad2.left_bumper){
-                leftGrabberPosition = 0.6;
-                rightGrabberPosition = 0.4;
-            }
-
-            else if (gamepad2.left_trigger > 0.1){
-                leftGrabberPosition = 0.4;
-                rightGrabberPosition = 0.6;
-            }
-
-            else if (gamepad2.right_trigger > 0.1) {
-                leftGrabberPosition = 0.0;
-                rightGrabberPosition = 1.0;
-            }
-*/
-            //Collector controls
-           /* if(gamepad2.right_trigger > 0.75){
-                collectorPower = howard.COLLECTOR_POWER;
-            }
-            else if(gamepad2.left_trigger > 0.75){
-                collectorPower = -howard.COLLECTOR_POWER;
-            }
-            else{
-                collectorPower = 0;
-            }*/
-
-           winchPower = -gamepad2.left_stick_y;
-           swingPower = -gamepad2.right_stick_y;
-
-            //Latch controls
-            /*if(gamepad2.a) {
-                latchPos = howard.LATCH_OPEN;
-            }
-            else if(gamepad2.b) {
-                latchPos = howard.LATCH_CLOSED;
-            }*/
+            winchPower = -gamepad2.left_stick_y;
+            swingPower = -gamepad2.right_stick_y;
+            lambPower  = gamepad1.right_trigger - gamepad1.left_trigger;
 
             //Dumper controls
-            if(gamepad1.x) {
+            /*if(gamepad1.x) {
                 dumpPos = howard.DUMPED;
             }
             else if(gamepad1.y) {
                 dumpPos = howard.UNDUMPED;
-            }
+            }*/
             // Send calculations to motors/servos
             howard.flDrive.setPower(flPower);
             howard.frDrive.setPower(frPower);
@@ -199,18 +158,17 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.lWinch.setPower(winchPower);
             howard.rWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
-            howard.dumper.setPosition(dumpPos);
-            howard.latch.setPosition(latchPos);
-            //howard.lGrabbo.setPosition(leftGrabberPosition);
-            //howard.rGrabbo.setPosition(rightGrabberPosition);
+            //howard.dumper.setPosition(dumpPos);
+            howard.lamb.setPower(lambPower);
+            howard.lWrist.setPosition(wristPos + 0.5);
+            howard.rWrist.setPosition((-wristPos) + 0.5);
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motor Powers", "fl (%.2f), fr (%.2f), bl (%.2f), br (%.2f)",
-                                               flPower,   frPower,   blPower,   brPower);
+                                               flPower,   frPower,   blPower,   brPower, lambPower);
             telemetry.addData("Winch Position", "count (%7f)", winchPos);
-            telemetry.addData("Servos", "latch (%.2f), dumper (%.2f)", latchPos, dumpPos);
             telemetry.update();
         }
     }

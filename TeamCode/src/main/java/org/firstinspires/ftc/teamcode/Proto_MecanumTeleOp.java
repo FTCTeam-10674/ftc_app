@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
+@TeleOp(name="Proto TeleOp", group="Iterative Opmode")
 //@Disabled
 public class Proto_MecanumTeleOp extends OpMode
 {
@@ -71,13 +70,17 @@ public class Proto_MecanumTeleOp extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        flDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        frDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        flDrive = hardwareMap.get(DcMotor.class, "fldrive");
+        frDrive = hardwareMap.get(DcMotor.class, "frdrive");
+        blDrive = hardwareMap.get(DcMotor.class, "bldrive");
+        brDrive = hardwareMap.get(DcMotor.class, "brdrive");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        flDrive.setDirection(DcMotor.Direction.FORWARD);
-        frDrive.setDirection(DcMotor.Direction.REVERSE);
+        flDrive.setDirection(DcMotor.Direction.REVERSE);
+        frDrive.setDirection(DcMotor.Direction.FORWARD);
+        blDrive.setDirection(DcMotor.Direction.REVERSE);
+        brDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -115,12 +118,12 @@ public class Proto_MecanumTeleOp extends OpMode
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
         double drive  = -gamepad1.left_stick_y;
-        double turn   =  gamepad1.right_stick_x;
-        double strafe =  gamepad1.left_stick_x;
-        flPower    = Range.clip(drive + turn - strafe, -1.0, 1.0) ;
-        frPower   = Range.clip(drive - turn + strafe, -1.0, 1.0) ;
-        blPower    = Range.clip(drive + turn + strafe, -1.0, 1.0) ;
-        brPower   = Range.clip(drive - turn - strafe, -1.0, 1.0) ;
+        double turn   =  gamepad1.left_stick_x;
+        double strafe =  gamepad1.right_stick_x;
+        flPower = Range.clip(drive + turn - strafe, -1.0, 1.0) ;
+        frPower = Range.clip(drive - turn + strafe, -1.0, 1.0) ;
+        blPower = Range.clip(drive + turn + strafe, -1.0, 1.0) ;
+        brPower = Range.clip(drive - turn - strafe, -1.0, 1.0) ;
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.

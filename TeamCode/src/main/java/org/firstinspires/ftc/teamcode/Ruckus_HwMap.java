@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -76,10 +77,11 @@ public class Ruckus_HwMap
     public DcMotor  lWinch     = null;
     public DcMotor  rWinch     = null;
     public DcMotor  armSwing   = null;
-    public Servo    latch      = null;
-    public Servo    dumper     = null;
-    //public Servo    lGrabbo    = null;
-    //public Servo    rGrabbo    = null;
+    public DcMotor  lamb       = null;
+    //public Servo    dumper     = null;
+    public Servo lWrist        = null;
+    public Servo rWrist        = null;
+    public CRServo octopus     = null;
 
     //Gyro
     BNO055IMU gyro;
@@ -121,19 +123,18 @@ public class Ruckus_HwMap
 
 
     //Constants
-    public final static double LATCH_CLOSED  = 1;
-    public final static double LATCH_OPEN    = 0;
     public final static long TIME_TO_EXTEND = 4 * 1000;
     public final static long TIME_TO_RETRACT = 7 * 1000;
     public final static double WINCH_POWER   = 0.4;
-    //public final static double COLLECTOR_POWER = 1;
-    public final static double UNDUMPED = 0;
-    public final static double DUMPED = 1;
+    //public final static double UNDUMPED = 0;
+    //public final static double DUMPED = 1;
+    public final static double LAMB_POWER = 0.5;
     public final static double WINCH_MIN = 0;
     public final static double WINCH_MAX = 224000; //these values
     public final static double SWING_MIN = -1120;  //are completely
     public final static double SWING_MAX = 224000; //arbitrary
-
+    public final static double WRIST_OUT =  0.5;
+    public final static double WRIST_IN  = -0.5;
 
     //local OpMode members
     HardwareMap hwMap           =  null;
@@ -157,10 +158,10 @@ public class Ruckus_HwMap
         lWinch = hwMap.get(DcMotor.class, "lwinch");
         rWinch = hwMap.get(DcMotor.class, "rwinch");
         armSwing    = hwMap.get(DcMotor.class, "swing");
-        //lGrabbo = hwMap.get(Servo.class, "lgrab");
-        //rGrabbo = hwMap.get(Servo.class, "rgrab");
-        dumper = hwMap.get(Servo.class, "dumper");
-        latch = hwMap.get(Servo.class, "latch");
+        lamb = hwMap.get(DcMotor.class, "lamb");
+        lWrist = hwMap.get(Servo.class, "lwrist");
+        rWrist = hwMap.get(Servo.class, "rwrist");
+        //dumper = hwMap.get(Servo.class, "dumper");
         gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -169,6 +170,7 @@ public class Ruckus_HwMap
         lWinch.setDirection(DcMotor.Direction.REVERSE);
         rWinch.setDirection(DcMotor.Direction.REVERSE);
         armSwing.setDirection(DcMotor.Direction.FORWARD);
+        lamb.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         flDrive.setPower (0);
@@ -178,7 +180,7 @@ public class Ruckus_HwMap
         lWinch.setPower (0);
         rWinch.setPower (0);
         armSwing.setPower (0);
-        //latch.setPosition(LATCH_CLOSED);
+        lamb.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -188,6 +190,7 @@ public class Ruckus_HwMap
         brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //we only need one here, we don't both l and r
         armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lamb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
