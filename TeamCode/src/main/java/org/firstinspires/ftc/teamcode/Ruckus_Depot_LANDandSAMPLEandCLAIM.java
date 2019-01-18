@@ -74,7 +74,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Depot CLAIM & SAMPLE", group="Pushbot")
+@Autonomous(name="Depot LAND & SAMPLE & CLAIM", group="Pushbot")
 //@Disabled
 public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
 

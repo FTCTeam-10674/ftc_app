@@ -161,7 +161,6 @@ public class Ruckus_HwMap
         lamb = hwMap.get(DcMotor.class, "lamb");
         lWrist = hwMap.get(Servo.class, "lwrist");
         rWrist = hwMap.get(Servo.class, "rwrist");
-        //dumper = hwMap.get(Servo.class, "dumper");
         gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -191,7 +190,6 @@ public class Ruckus_HwMap
         lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //we only need one here, we don't both l and r
         armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lamb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
 
 
     }

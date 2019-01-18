@@ -156,9 +156,6 @@ public class Ruckus_Depot_LANDandCLAIM extends LinearOpMode {
         gyroDrive(howard.DRIVE_SPEED, -25.0, -45.0);
 
         //dump marker in depot
-        howard.dumper.setPosition(howard.DUMPED);
-        sleep(1000);
-        howard.dumper.setPosition(howard.UNDUMPED);
 
         //reverse to crater
         //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);

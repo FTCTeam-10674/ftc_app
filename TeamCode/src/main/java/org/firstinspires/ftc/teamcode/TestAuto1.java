@@ -141,9 +141,6 @@ public class TestAuto1 extends LinearOpMode {
         gyroDrive(howard.DRIVE_SPEED, 40.0, -40.0);
 
         //dump marker in depot
-        howard.dumper.setPosition(howard.DUMPED);
-        sleep(2000);
-        howard.dumper.setPosition(howard.UNDUMPED);
 
         //reverse to crater
         //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
