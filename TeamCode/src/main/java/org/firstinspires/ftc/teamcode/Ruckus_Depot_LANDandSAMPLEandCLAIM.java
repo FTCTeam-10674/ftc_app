@@ -143,10 +143,38 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
+        howard.gyroInit();
+        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
+            sleep(50);
+            idle();
+        }
+
+        howard.frDrive.setPower(0.5);
+        howard.flDrive.setPower(0.5);
+        howard.brDrive.setPower(0.5);
+        howard.blDrive.setPower(0.5);
+        sleep(500); //guess to be tested
+        howard.frDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.brDrive.setPower(0);
+        howard.blDrive.setPower(0);
+
         //retract LAM (dead reck)
         howard.lamb.setPower(-howard.LAMB_POWER);
         sleep(4500);
         howard.lamb.setPower(0);
+
+        howard.frDrive.setPower(-0.5);
+        howard.flDrive.setPower(0.5);
+        howard.brDrive.setPower(-0.5);
+        howard.blDrive.setPower(0.5);
+        sleep(500); //guess to be tested
+        howard.frDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.brDrive.setPower(0);
+        howard.blDrive.setPower(0);
+
+        gyroTurn(howard.TURN_SPEED, 180.0);
 
 
 
@@ -154,11 +182,7 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         //DO A 180, identify(), AND DO ANOTHER 180 (cam is on rear)
 
         //init gyro
-        howard.gyroInit();
-        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
-            sleep(50);
-            idle();
-        }
+
 
         //activate TensorFlow
         if (howard.tfod != null) {
@@ -169,33 +193,41 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         //drive to gold mineral based on value of goldPos
         if (goldPos == 0){
 
-            gyroTurn(howard.TURN_SPEED, 26.5);
-            gyroHold(howard.TURN_SPEED, 26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, 26.5);
-            gyroTurn(howard.TURN_SPEED, -26.5);
-            gyroHold(howard.TURN_SPEED, -26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -34.0, -26.5); //-4 adj
+            gyroTurn(howard.TURN_SPEED, 180+26.5);
+            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, 180+26.5);
+            gyroTurn(howard.TURN_SPEED, 180-26.5);
+            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -14.0, 180-26.5); //-24 adj
 
         } else if (goldPos == 1){
 
-            gyroDrive(howard.DRIVE_SPEED, -64.0, 0.0); //-4 adj
+            gyroDrive(howard.DRIVE_SPEED, -44.0, 180.0); //-24 adj
 
         } else {
 
-            gyroTurn(howard.TURN_SPEED, -26.5);
-            gyroHold(howard.TURN_SPEED, -26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, -26.5);
-            gyroTurn(howard.TURN_SPEED, 26.5);
-            gyroHold(howard.TURN_SPEED, 26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -34.0, 26.5); //-4 adj
+            gyroTurn(howard.TURN_SPEED, 180-26.5);
+            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, 180-26.5);
+            gyroTurn(howard.TURN_SPEED, 180+26.5);
+            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -14.0, 180+26.5); //-24 adj
 
         }
 
-        //dump marker in depot
-        gyroDrive(howard.DRIVE_SPEED, 10.0, 0.0);
+        //turn front to face depot
+        gyroTurn(howard.TURN_SPEED, 0.0);
+        gyroHold(howard.TURN_SPEED, 0.0, 0.25);
 
-        //reverse to crater
-        //gyroDrive(howard.DRIVE_SPEED, -70.0, 45.0);
+        //dump marker in depot
+        howard.lWrist.setPosition(howard.WRIST_OUT + 0.5);
+        howard.rWrist.setPosition(-howard.WRIST_OUT + 0.5);
+        howard.armSwing.setPower(0.3);
+        sleep(3000);
+        howard.armSwing.setPower(0.0);
+
+        //back up
+        gyroDrive(howard.DRIVE_SPEED, -12.0, 0.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
