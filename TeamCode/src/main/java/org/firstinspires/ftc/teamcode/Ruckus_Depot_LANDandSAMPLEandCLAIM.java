@@ -483,7 +483,7 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = howard.VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "cam");
 
         //  Instantiate the Vuforia engine
         howard.vuforia = ClassFactory.getInstance().createVuforia(parameters);

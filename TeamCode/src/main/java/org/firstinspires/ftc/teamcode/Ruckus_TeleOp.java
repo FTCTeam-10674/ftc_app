@@ -151,7 +151,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
                 dumpPos = howard.UNDUMPED;
             }*/
             // Send calculations to motors/servos
-            /*howard.flDrive.setPower(flPower);
+            howard.flDrive.setPower(flPower);
             howard.frDrive.setPower(frPower);
             howard.blDrive.setPower(blPower);
             howard.brDrive.setPower(brPower);
@@ -159,7 +159,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.rWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
             //howard.dumper.setPosition(dumpPos);
-            howard.lamb.setPower(lambPower);*/
+            howard.lamb.setPower(lambPower);
             howard.lWrist.setPosition(wristPos + 0.5);
             howard.rWrist.setPosition((-wristPos) + 0.5);
 
