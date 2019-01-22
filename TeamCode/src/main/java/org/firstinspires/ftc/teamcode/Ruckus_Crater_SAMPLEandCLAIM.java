@@ -74,9 +74,9 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Depot SAMPLE & CLAIM", group="Pushbot")
+@Autonomous(name="Crater SAMPLE & CLAIM", group="Pushbot")
 //@Disabled
-public class Ruckus_Depot_SAMPLEandCLAIM extends LinearOpMode {
+public class Ruckus_Crater_SAMPLEandCLAIM extends LinearOpMode {
 
 
     /* Declare OpMode members. */
@@ -127,13 +127,13 @@ public class Ruckus_Depot_SAMPLEandCLAIM extends LinearOpMode {
         waitForStart();
 
         //extend LAM until on wheels touch ground (dead reck)
-        //howard.lamb.setPower(howard.LAMB_POWER);
-        //sleep(4500);
-        //howard.lamb.setPower(0);
+        /*howard.lamb.setPower(howard.LAMB_POWER);
+        sleep(4500);
+        howard.lamb.setPower(0);
 
         //strafe to unhook latch (dead reck)
         //we don't have a gyroStrafe method so we're just hardcoding it.
-        /*howard.frDrive.setPower(0.5);
+        howard.frDrive.setPower(0.5);
         howard.flDrive.setPower(-0.5);
         howard.brDrive.setPower(0.5);
         howard.blDrive.setPower(-0.5);
@@ -143,7 +143,11 @@ public class Ruckus_Depot_SAMPLEandCLAIM extends LinearOpMode {
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
-
+        howard.gyroInit();
+        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
+            sleep(50);
+            idle();
+        }
 
         howard.frDrive.setPower(0.5);
         howard.flDrive.setPower(0.5);
@@ -156,9 +160,9 @@ public class Ruckus_Depot_SAMPLEandCLAIM extends LinearOpMode {
         howard.blDrive.setPower(0);
 
         //retract LAM (dead reck)
-        //howard.lamb.setPower(-howard.LAMB_POWER);
-        //sleep(4500);
-        //howard.lamb.setPower(0);
+        howard.lamb.setPower(-howard.LAMB_POWER);
+        sleep(4500);
+        howard.lamb.setPower(0);
 
         howard.frDrive.setPower(-0.5);
         howard.flDrive.setPower(0.5);
@@ -168,24 +172,16 @@ public class Ruckus_Depot_SAMPLEandCLAIM extends LinearOpMode {
         howard.frDrive.setPower(0);
         howard.flDrive.setPower(0);
         howard.brDrive.setPower(0);
-        howard.blDrive.setPower(0);*/
+        howard.blDrive.setPower(0);
 
-        howard.gyroInit();
-        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
-            sleep(50);
-            idle();
-        }
-        //gyroTurn(howard.TURN_SPEED, 180.0);
-
+        gyroTurn(howard.TURN_SPEED, 180.0);
 
 
 
         //RECENTER TO ORIGIN
         //DO A 180, identify(), AND DO ANOTHER 180 (cam is on rear)
 
-        //init gyro
-
-
+        //init gyro */
 
         //activate TensorFlow
         if (howard.tfod != null) {
@@ -193,29 +189,28 @@ public class Ruckus_Depot_SAMPLEandCLAIM extends LinearOpMode {
         }
 
         int goldPos = identify(7);
-        gyroDrive(howard.DRIVE_SPEED, 0.0, 1.0);
         //drive to gold mineral based on value of goldPos
         if (goldPos == 0){
 
-            gyroTurn(howard.TURN_SPEED, 26.5);
-            gyroHold(howard.TURN_SPEED, 26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, 26.5);
-            gyroTurn(howard.TURN_SPEED, -26.5);
-            gyroHold(howard.TURN_SPEED, -26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -14.0, -26.5); //-24 adj
+            gyroTurn(howard.TURN_SPEED, 180+26.5);
+            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, 180+26.5);
+            gyroTurn(howard.TURN_SPEED, 180-26.5);
+            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -14.0, 180-26.5); //-24 adj
 
         } else if (goldPos == 1){
 
-            gyroDrive(howard.DRIVE_SPEED, -44.0, 0.0); //-24 adj
+            gyroDrive(howard.DRIVE_SPEED, -44.0, 180.0); //-24 adj
 
         } else {
 
-            gyroTurn(howard.TURN_SPEED, -26.5);
-            gyroHold(howard.TURN_SPEED, -26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, -26.5);
-            gyroTurn(howard.TURN_SPEED, 26.5);
-            gyroHold(howard.TURN_SPEED, 26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -14.0, 26.5); //-24 adj
+            gyroTurn(howard.TURN_SPEED, 180-26.5);
+            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, 180-26.5);
+            gyroTurn(howard.TURN_SPEED, 180+26.5);
+            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -14.0, 180+26.5); //-24 adj
 
         }
 

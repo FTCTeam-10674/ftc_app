@@ -133,10 +133,13 @@ public class Ruckus_TeleOp extends LinearOpMode {
                 swingPower = Range.clip(-gamepad2.left_stick_y, 1.0, -1.0);
             }*/
 
+            //collector wrist controls
             if (gamepad2.right_bumper){
-                wristPos = howard.WRIST_OUT;
+                wristPos = howard.WRIST_MID;
             } else if (gamepad2.left_bumper){
                 wristPos = howard.WRIST_IN;
+            } else if (gamepad2.y){
+                wristPos = howard.WRIST_OUT;
             }
 
             winchPower = -gamepad2.left_stick_y;

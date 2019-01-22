@@ -128,12 +128,13 @@ public class Ruckus_HwMap
     public final static double WINCH_POWER   = 0.4;
     //public final static double UNDUMPED = 0;
     //public final static double DUMPED = 1;
-    public final static double LAMB_POWER = 0.5;
+    public final static double LAMB_POWER = 1.0;
     public final static double WINCH_MIN = 0;
     public final static double WINCH_MAX = 224000; //these values
     public final static double SWING_MIN = -1120;  //are completely
     public final static double SWING_MAX = 224000; //arbitrary
     public final static double WRIST_OUT =  0.5;
+    public final static double WRIST_MID = -0.2;
     public final static double WRIST_IN  = -0.5;
 
     //local OpMode members

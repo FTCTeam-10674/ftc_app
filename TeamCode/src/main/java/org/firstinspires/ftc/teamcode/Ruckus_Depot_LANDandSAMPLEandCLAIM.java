@@ -135,8 +135,8 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         //we don't have a gyroStrafe method so we're just hardcoding it.
         howard.frDrive.setPower(0.5);
         howard.flDrive.setPower(-0.5);
-        howard.brDrive.setPower(0.5);
-        howard.blDrive.setPower(-0.5);
+        howard.brDrive.setPower(-0.5);
+        howard.blDrive.setPower(0.5);
         sleep(500); //guess to be tested
         howard.frDrive.setPower(0);
         howard.flDrive.setPower(0);
@@ -166,15 +166,17 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
 
         howard.frDrive.setPower(-0.5);
         howard.flDrive.setPower(0.5);
-        howard.brDrive.setPower(-0.5);
-        howard.blDrive.setPower(0.5);
+        howard.brDrive.setPower(0.5);
+        howard.blDrive.setPower(-0.5);
         sleep(500); //guess to be tested
         howard.frDrive.setPower(0);
         howard.flDrive.setPower(0);
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
+        gyroDrive(howard.DRIVE_SPEED, 2.0, 0);
         gyroTurn(howard.TURN_SPEED, 180.0);
+        gyroDrive(howard.DRIVE_SPEED, 2.0, 180);
 
 
 
@@ -222,9 +224,6 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         //dump marker in depot
         howard.lWrist.setPosition(howard.WRIST_OUT + 0.5);
         howard.rWrist.setPosition(-howard.WRIST_OUT + 0.5);
-        howard.armSwing.setPower(0.3);
-        sleep(3000);
-        howard.armSwing.setPower(0.0);
 
         //back up
         gyroDrive(howard.DRIVE_SPEED, -12.0, 0.0);
