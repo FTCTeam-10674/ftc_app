@@ -143,11 +143,7 @@ public class Ruckus_Crater_SAMPLEandCLAIM extends LinearOpMode {
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
-        howard.gyroInit();
-        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
-            sleep(50);
-            idle();
-        }
+
 
         howard.frDrive.setPower(0.5);
         howard.flDrive.setPower(0.5);
@@ -174,7 +170,7 @@ public class Ruckus_Crater_SAMPLEandCLAIM extends LinearOpMode {
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
-        gyroTurn(howard.TURN_SPEED, 180.0);
+
 
 
 
@@ -184,6 +180,14 @@ public class Ruckus_Crater_SAMPLEandCLAIM extends LinearOpMode {
         //init gyro */
 
         //activate TensorFlow
+
+        howard.gyroInit();
+        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
+            sleep(50);
+            idle();
+        }
+
+
         if (howard.tfod != null) {
             howard.tfod.activate();
         }

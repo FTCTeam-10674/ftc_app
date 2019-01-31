@@ -143,12 +143,6 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
-        howard.gyroInit();
-        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
-            sleep(50);
-            idle();
-        }
-
         howard.frDrive.setPower(0.5);
         howard.flDrive.setPower(0.5);
         howard.brDrive.setPower(0.5);
@@ -174,9 +168,16 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
-        gyroDrive(howard.DRIVE_SPEED, 2.0, 0);
+        howard.gyroInit();
+        while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
+            sleep(50);
+            idle();
+        }
+
+        gyroDrive(howard.DRIVE_SPEED, -1.0, 0);
         gyroTurn(howard.TURN_SPEED, 180.0);
-        gyroDrive(howard.DRIVE_SPEED, 2.0, 180);
+        gyroHold(howard.TURN_SPEED, 180.0, 0.25);
+        gyroDrive(howard.DRIVE_SPEED, -1.0, 180);
 
 
 
