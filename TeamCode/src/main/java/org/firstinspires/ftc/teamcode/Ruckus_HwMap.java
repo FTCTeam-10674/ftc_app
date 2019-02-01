@@ -33,6 +33,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -74,8 +75,8 @@ public class Ruckus_HwMap
     public DcMotor  frDrive    = null;
     public DcMotor  blDrive    = null;
     public DcMotor  brDrive    = null;
-    public DcMotor  lWinch     = null;
-    public DcMotor  rWinch     = null;
+    public DcMotor  winch     = null;
+    //public DcMotor  rWinch     = null;
     public DcMotor  armSwing   = null;
     public DcMotor  lamb       = null;
     //public Servo    dumper     = null;
@@ -118,6 +119,7 @@ public class Ruckus_HwMap
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
+    static final double     LAMB_COUNTS_PER_INCH    = 1120 * 3.175;
     //Color sensor
     float hsvResult;
 
@@ -156,8 +158,8 @@ public class Ruckus_HwMap
         frDrive = hwMap.get(DcMotor.class, "frdrive");
         blDrive  = hwMap.get(DcMotor.class, "bldrive");
         brDrive = hwMap.get(DcMotor.class, "brdrive");
-        lWinch = hwMap.get(DcMotor.class, "lwinch");
-        rWinch = hwMap.get(DcMotor.class, "rwinch");
+        winch = hwMap.get(DcMotor.class, "winch");
+        //rWinch = hwMap.get(DcMotor.class, "rwinch");
         armSwing    = hwMap.get(DcMotor.class, "swing");
         lamb = hwMap.get(DcMotor.class, "lamb");
         lWrist = hwMap.get(Servo.class, "lwrist");
@@ -167,8 +169,8 @@ public class Ruckus_HwMap
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.REVERSE);
         brDrive.setDirection(DcMotor.Direction.FORWARD);
-        lWinch.setDirection(DcMotor.Direction.REVERSE);
-        rWinch.setDirection(DcMotor.Direction.REVERSE);
+        winch.setDirection(DcMotor.Direction.REVERSE);
+        //rWinch.setDirection(DcMotor.Direction.REVERSE);
         armSwing.setDirection(DcMotor.Direction.FORWARD);
         lamb.setDirection(DcMotor.Direction.FORWARD);
 
@@ -177,8 +179,8 @@ public class Ruckus_HwMap
         frDrive.setPower (0);
         blDrive.setPower (0);
         brDrive.setPower (0);
-        lWinch.setPower (0);
-        rWinch.setPower (0);
+        winch.setPower (0);
+        //rWinch.setPower (0);
         armSwing.setPower (0);
         lamb.setPower(0);
 
@@ -188,7 +190,7 @@ public class Ruckus_HwMap
         frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //we only need one here, we don't both l and r
+        winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //we only need one here, we don't both l and r
         armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lamb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

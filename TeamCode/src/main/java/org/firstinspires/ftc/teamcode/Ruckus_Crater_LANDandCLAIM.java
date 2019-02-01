@@ -110,11 +110,11 @@ public class Ruckus_Crater_LANDandCLAIM extends LinearOpMode {
         waitForStart();
 
         //lower robot from hanging position
-        howard.lWinch.setPower(howard.WINCH_POWER);
+        /*howard.lWinch.setPower(howard.WINCH_POWER);
         howard.rWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);
+        howard.rWinch.setPower(0);*/
         sleep(500);
         //howard.latch.setPosition(howard.LATCH_OPEN);
         //dead-reckoning strafing to unhook
@@ -129,11 +129,11 @@ public class Ruckus_Crater_LANDandCLAIM extends LinearOpMode {
         howard.frDrive.setPower(0);
         sleep(100);
         //retract arm
-        howard.lWinch.setPower(-howard.WINCH_POWER);
+        /*howard.lWinch.setPower(-howard.WINCH_POWER);
         howard.rWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
         howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);
+        howard.rWinch.setPower(0);*/
 
         //VUFORIA ORIENTATION
 

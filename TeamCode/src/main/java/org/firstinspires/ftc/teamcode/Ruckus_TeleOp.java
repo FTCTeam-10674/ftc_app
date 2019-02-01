@@ -68,10 +68,10 @@ public class Ruckus_TeleOp extends LinearOpMode {
         howard.blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         howard.brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        howard.lWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         howard.armSwing.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        howard.lWinch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         howard.armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //temporarily WITHOUT for testing purposes
 
         double wristPos = howard.WRIST_IN;
@@ -90,7 +90,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             double brPower;
             double lambPower;
             double winchPower;
-            double winchPos = howard.lWinch.getCurrentPosition();
+            double winchPos = howard.winch.getCurrentPosition();
             double swingPower;
             double swingPos = howard.armSwing.getCurrentPosition();
 
@@ -158,8 +158,8 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.frDrive.setPower(frPower);
             howard.blDrive.setPower(blPower);
             howard.brDrive.setPower(brPower);
-            howard.lWinch.setPower(winchPower);
-            howard.rWinch.setPower(winchPower);
+            howard.winch.setPower(winchPower);
+            //howard.rWinch.setPower(winchPower);
             howard.armSwing.setPower(swingPower);
             //howard.dumper.setPosition(dumpPos);
             howard.lamb.setPower(lambPower);
