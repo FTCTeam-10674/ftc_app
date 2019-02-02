@@ -186,13 +186,13 @@ public class Ruckus_HwMap
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //we only need one here, we don't both l and r
         armSwing.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lamb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lamb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }

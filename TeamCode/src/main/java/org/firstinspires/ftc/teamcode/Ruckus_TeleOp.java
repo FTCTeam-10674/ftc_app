@@ -63,10 +63,11 @@ public class Ruckus_TeleOp extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        howard.flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        howard.frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        howard.blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        howard.brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        howard.flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //this is redundant now
+        howard.frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //
+        howard.blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //
+        howard.brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //
 
         howard.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         howard.armSwing.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

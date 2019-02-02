@@ -104,16 +104,6 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
-        howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        howard.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        howard.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        howard.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -127,7 +117,7 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
         waitForStart();
 
         //extend LAM until on wheels touch ground (encoder)
-        encoderLamb(howard.LAMB_POWER, 7.5, 12);
+        encoderLamb(howard.LAMB_POWER, 7.375, 10);
 
 
         //strafe to unhook latch (dead reck)
@@ -135,7 +125,7 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
         howard.flDrive.setPower(0.5);
         howard.brDrive.setPower(0.5);
         howard.blDrive.setPower(-0.5);
-        sleep(1000);
+        sleep(400);
         howard.frDrive.setPower(0);
         howard.flDrive.setPower(0);
         howard.brDrive.setPower(0);
@@ -148,7 +138,7 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
         howard.flDrive.setPower(0.5);
         howard.brDrive.setPower(0.5);
         howard.blDrive.setPower(0.5);
-        sleep(500);
+        sleep(250);
         howard.frDrive.setPower(0);
         howard.flDrive.setPower(0);
         howard.brDrive.setPower(0);
@@ -161,14 +151,24 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
         howard.flDrive.setPower(-0.5);
         howard.brDrive.setPower(-0.5);
         howard.blDrive.setPower(0.5);
-        sleep(1000);
+        sleep(400);
         howard.frDrive.setPower(0);
         howard.flDrive.setPower(0);
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
 
-        sleep(500);
-        
+        sleep(250);
+
+
+        howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         howard.gyroInit();
         while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
             sleep(50);
@@ -177,22 +177,19 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
 
         gyroTurn(howard.TURN_SPEED, 180.0);
         gyroHold(howard.TURN_SPEED, 180.0, 0.25);
+        gyroDrive(howard.DRIVE_SPEED, 4.0, 180.0);
 
-
-
-        //RECENTER TO ORIGIN
-        //DO A 180, identify(), AND DO ANOTHER 180 (cam is on rear)
-
-        //init gyro
-
+        sleep(500);
 
         //activate TensorFlow
         if (howard.tfod != null) {
             howard.tfod.activate();
         }
 
-        int goldPos = identify(7);
-        //drive to gold mineral based on value of goldPos
+        sleep(1000);
+        int goldPos = identify(5);
+
+        //drive to gold mineral based on value of goldPos (facing backwards)
         if (goldPos == 0){
 
             gyroTurn(howard.TURN_SPEED, 180+26.5);
@@ -232,6 +229,8 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
         telemetry.update();
     }
 
+
+    //METHODS
 
     public float senseColor(double timeoutS){
 
