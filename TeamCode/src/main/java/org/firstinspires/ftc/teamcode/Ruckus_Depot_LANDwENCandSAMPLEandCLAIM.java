@@ -187,14 +187,15 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
         }
 
         sleep(1000);
-        int goldPos = identify(5);
+        runtime.reset();
+        int goldPos = identify(1);
 
         //drive to gold mineral based on value of goldPos (facing backwards)
         if (goldPos == 0){
 
             gyroTurn(howard.TURN_SPEED, 180+26.5);
             gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, 180+26.5);
+            gyroDrive(howard.DRIVE_SPEED, -30.0, 180+26.5);
             gyroTurn(howard.TURN_SPEED, 180-26.5);
             gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
             gyroDrive(howard.DRIVE_SPEED, -14.0, 180-26.5); //-24 adj
@@ -207,7 +208,7 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
 
             gyroTurn(howard.TURN_SPEED, 180-26.5);
             gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, 180-26.5);
+            gyroDrive(howard.DRIVE_SPEED, -30.0, 180-26.5);
             gyroTurn(howard.TURN_SPEED, 180+26.5);
             gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
             gyroDrive(howard.DRIVE_SPEED, -14.0, 180+26.5); //-24 adj
