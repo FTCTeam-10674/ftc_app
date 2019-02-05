@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -67,9 +68,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Crater LAND & CLAIM", group="Pushbot")
-//@Disabled
-public class Ruckus_Crater_LANDandCLAIM extends LinearOpMode {
+@Autonomous(name="Crater CLAIM & GUESS", group="C")
+@Disabled
+public class Ruckus_Crater_CLAIM_GUESS extends LinearOpMode {
 
     /* Declare OpMode members. */
     Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
@@ -109,27 +110,16 @@ public class Ruckus_Crater_LANDandCLAIM extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //lower robot from hanging position
+        //lower robot from hanging position TEMP COMMENTED FOR MEET 2
         /*howard.lWinch.setPower(howard.WINCH_POWER);
         howard.rWinch.setPower(howard.WINCH_POWER);
         sleep(howard.TIME_TO_EXTEND);
         howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);*/
-        sleep(500);
+        howard.rWinch.setPower(0);
         //howard.latch.setPosition(howard.LATCH_OPEN);
-        //dead-reckoning strafing to unhook
-        howard.brDrive.setPower(0.3);
-        howard.flDrive.setPower(0.3);
-        howard.blDrive.setPower(-0.3);
-        howard.frDrive.setPower(-0.3);
-        sleep(1000);
-        howard.brDrive.setPower(0);
-        howard.flDrive.setPower(0);
-        howard.blDrive.setPower(0);
-        howard.frDrive.setPower(0);
+        //STRAFE TO UNLATCH THE HOOK
         sleep(100);
-        //retract arm
-        /*howard.lWinch.setPower(-howard.WINCH_POWER);
+        howard.lWinch.setPower(-howard.WINCH_POWER);
         howard.rWinch.setPower(-howard.WINCH_POWER);
         sleep(howard.TIME_TO_RETRACT);
         howard.lWinch.setPower(0);
@@ -144,7 +134,12 @@ public class Ruckus_Crater_LANDandCLAIM extends LinearOpMode {
             idle();
         }
 
-        //leave the landing zone and drive towards wall
+        //guess Middle mineral
+        gyroDrive(howard.DRIVE_SPEED, -30.0, 0.0);
+        sleep(100);
+        gyroDrive(howard.DRIVE_SPEED, 30.0, 0.0);
+
+        ////leave the landing zone and drive towards wall
         gyroTurn(howard.TURN_SPEED, 45.0);
         gyroHold(howard.TURN_SPEED, 45.0, 0.5);
         gyroDrive(howard.DRIVE_SPEED, -45.0, 45.0); //the first "-45.0" is inches not degrees
@@ -155,10 +150,8 @@ public class Ruckus_Crater_LANDandCLAIM extends LinearOpMode {
         gyroHold(howard.TURN_SPEED, 135.0, 0.5);
         gyroDrive(howard.DRIVE_SPEED, -54.0, 135.0);
 
-        //dump marker in depot
-        /*howard.dumper.setPosition(howard.DUMPED);
-        sleep(1000);
-        howard.dumper.setPosition(howard.UNDUMPED);*/
+        //dump marker in depot and back up
+        gyroDrive(howard.DRIVE_SPEED, 4.0, 135.0);
 
         //reverse to crater
         //gyroDrive(howard.DRIVE_SPEED, -70.0, 135.0);

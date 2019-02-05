@@ -74,9 +74,9 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Depot LAND & SAMPLE & CLAIM", group="Pushbot")
+@Autonomous(name="Crater LANDw/E & CLAIM", group="C")
 //@Disabled
-public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
+public class Ruckus_Crater_LANDwE_CLAIM extends LinearOpMode {
 
 
     /* Declare OpMode members. */
@@ -104,16 +104,6 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
-        howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        howard.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        howard.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        howard.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -126,47 +116,58 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //extend LAM until on wheels touch ground (dead reck)
-        howard.lamb.setPower(howard.LAMB_POWER);
-        sleep(4500);
-        howard.lamb.setPower(0);
+        //extend LAM until on wheels touch ground (encoder)
+        encoderLamb(howard.LAMB_POWER, 7.375, 10);
+
 
         //strafe to unhook latch (dead reck)
-        //we don't have a gyroStrafe method so we're just hardcoding it.
-        howard.frDrive.setPower(0.5);
-        howard.flDrive.setPower(-0.5);
-        howard.brDrive.setPower(-0.5);
-        howard.blDrive.setPower(0.5);
-        sleep(500); //guess to be tested
-        howard.frDrive.setPower(0);
-        howard.flDrive.setPower(0);
-        howard.brDrive.setPower(0);
-        howard.blDrive.setPower(0);
-
-        howard.frDrive.setPower(0.5);
-        howard.flDrive.setPower(0.5);
-        howard.brDrive.setPower(0.5);
-        howard.blDrive.setPower(0.5);
-        sleep(500); //guess to be tested
-        howard.frDrive.setPower(0);
-        howard.flDrive.setPower(0);
-        howard.brDrive.setPower(0);
-        howard.blDrive.setPower(0);
-
-        //retract LAM (dead reck)
-        howard.lamb.setPower(-howard.LAMB_POWER);
-        sleep(4500);
-        howard.lamb.setPower(0);
-
         howard.frDrive.setPower(-0.5);
         howard.flDrive.setPower(0.5);
         howard.brDrive.setPower(0.5);
         howard.blDrive.setPower(-0.5);
-        sleep(500); //guess to be tested
+        sleep(400);
         howard.frDrive.setPower(0);
         howard.flDrive.setPower(0);
         howard.brDrive.setPower(0);
         howard.blDrive.setPower(0);
+
+        sleep(500);
+
+        //drive to de-align
+        howard.frDrive.setPower(0.5);
+        howard.flDrive.setPower(0.5);
+        howard.brDrive.setPower(0.5);
+        howard.blDrive.setPower(0.5);
+        sleep(250);
+        howard.frDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.brDrive.setPower(0);
+        howard.blDrive.setPower(0);
+
+        sleep(500);
+
+        //strafe back to center
+        howard.frDrive.setPower(0.5);
+        howard.flDrive.setPower(-0.5);
+        howard.brDrive.setPower(-0.5);
+        howard.blDrive.setPower(0.5);
+        sleep(400);
+        howard.frDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.brDrive.setPower(0);
+        howard.blDrive.setPower(0);
+
+        sleep(250);
+
+
+        howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        howard.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         howard.gyroInit();
         while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
@@ -174,65 +175,66 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
             idle();
         }
 
-        gyroDrive(howard.DRIVE_SPEED, -1.0, 0);
+        /*
         gyroTurn(howard.TURN_SPEED, 180.0);
         gyroHold(howard.TURN_SPEED, 180.0, 0.25);
-        gyroDrive(howard.DRIVE_SPEED, -1.0, 180);
+        gyroDrive(howard.DRIVE_SPEED, 4.0, 180.0);
 
-
-
-        //RECENTER TO ORIGIN
-        //DO A 180, identify(), AND DO ANOTHER 180 (cam is on rear)
-
-        //init gyro
-
+        sleep(500);
 
         //activate TensorFlow
         if (howard.tfod != null) {
             howard.tfod.activate();
         }
 
-        int goldPos = identify(7);
-        //drive to gold mineral based on value of goldPos
+        sleep(1000);
+        runtime.reset();
+        int goldPos = identify(1);
+
+        //drive to gold mineral based on value of goldPos (facing backwards)
         if (goldPos == 0){
 
             gyroTurn(howard.TURN_SPEED, 180+26.5);
             gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, 180+26.5);
-            gyroTurn(howard.TURN_SPEED, 180-26.5);
-            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -14.0, 180-26.5); //-24 adj
+            gyroDrive(howard.DRIVE_SPEED, -30.0, 180+26.5);
+            gyroDrive(howard.DRIVE_SPEED, 30.0, 180+26.5);
 
         } else if (goldPos == 1){
 
-            gyroDrive(howard.DRIVE_SPEED, -44.0, 180.0); //-24 adj
+            gyroDrive(howard.DRIVE_SPEED, -30, 180.0); //guess
+            gyroDrive(howard.DRIVE_SPEED, 30, 180.0);
 
         } else {
 
             gyroTurn(howard.TURN_SPEED, 180-26.5);
             gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -38.0, 180-26.5);
-            gyroTurn(howard.TURN_SPEED, 180+26.5);
-            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -14.0, 180+26.5); //-24 adj
+            gyroDrive(howard.DRIVE_SPEED, -30.0, 180-26.5);
+            gyroDrive(howard.DRIVE_SPEED, 30.0, 180-26.5);
 
         }
+        */
 
         //turn front to face depot
-        gyroTurn(howard.TURN_SPEED, 0.0);
-        gyroHold(howard.TURN_SPEED, 0.0, 0.25);
+        gyroTurn(howard.TURN_SPEED, 80.0);
+        //gyroHold();
+        gyroDrive(howard.TURN_SPEED, 60, 80.0);
+        gyroTurn(howard.TURN_SPEED, 135.0);
+        //gyroHold();
+        gyroDrive(howard.DRIVE_SPEED, 12.0, 135.0);
 
         //dump marker in depot
         howard.lWrist.setPosition(howard.WRIST_OUT + 0.5);
         howard.rWrist.setPosition(-howard.WRIST_OUT + 0.5);
 
         //back up
-        gyroDrive(howard.DRIVE_SPEED, -12.0, 0.0);
+        gyroDrive(howard.DRIVE_SPEED, -6.0, 135.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
+
+    //METHODS
 
     public float senseColor(double timeoutS){
 
@@ -543,5 +545,50 @@ public class Ruckus_Depot_LANDandSAMPLEandCLAIM extends LinearOpMode {
             }
         }
         return g;
+    }
+    public void encoderLamb(double speed,
+                             double lambInches,
+                             double timeoutS) {
+        int newLambTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLambTarget = howard.lamb.getCurrentPosition() + (int)(lambInches * howard.LAMB_COUNTS_PER_INCH);
+            howard.lamb.setTargetPosition(newLambTarget);
+
+            // Turn On RUN_TO_POSITION
+            howard.lamb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            howard.lamb.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (howard.lamb.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d", newLambTarget);
+                telemetry.addData("Path2",  "Running at %7d",
+                        howard.lamb.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            howard.lamb.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            howard.lamb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
     }
 }

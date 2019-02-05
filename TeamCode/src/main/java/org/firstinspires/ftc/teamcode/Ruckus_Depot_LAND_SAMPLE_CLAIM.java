@@ -30,15 +30,23 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.List;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -67,9 +75,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Crater CLAIM & GUESS", group="Pushbot")
-//@Disabled
-public class Ruckus_Crater_CLAIMandGUESS extends LinearOpMode {
+@Autonomous(name="Depot LAND & SAMPLE & CLAIM", group="D")
+@Disabled
+public class Ruckus_Depot_LAND_SAMPLE_CLAIM extends LinearOpMode {
+
 
     /* Declare OpMode members. */
     Ruckus_HwMap howard   = new Ruckus_HwMap();   // Use a Pushbot's hardware
@@ -79,13 +88,21 @@ public class Ruckus_Crater_CLAIMandGUESS extends LinearOpMode {
     public void runOpMode() {
 
         /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
+         * Init stuff
          */
+
         howard.init(hardwareMap);
 
+        initVuforia();
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
         howard.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -98,6 +115,7 @@ public class Ruckus_Crater_CLAIMandGUESS extends LinearOpMode {
         howard.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         howard.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                           howard.flDrive.getCurrentPosition(),
@@ -109,51 +127,108 @@ public class Ruckus_Crater_CLAIMandGUESS extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //lower robot from hanging position TEMP COMMENTED FOR MEET 2
-        /*howard.lWinch.setPower(howard.WINCH_POWER);
-        howard.rWinch.setPower(howard.WINCH_POWER);
-        sleep(howard.TIME_TO_EXTEND);
-        howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);
-        //howard.latch.setPosition(howard.LATCH_OPEN);
-        //STRAFE TO UNLATCH THE HOOK
-        sleep(100);
-        howard.lWinch.setPower(-howard.WINCH_POWER);
-        howard.rWinch.setPower(-howard.WINCH_POWER);
-        sleep(howard.TIME_TO_RETRACT);
-        howard.lWinch.setPower(0);
-        howard.rWinch.setPower(0);*/
+        //extend LAM until on wheels touch ground (dead reck)
+        howard.lamb.setPower(howard.LAMB_POWER);
+        sleep(4500);
+        howard.lamb.setPower(0);
 
-        //VUFORIA ORIENTATION
+        //strafe to unhook latch (dead reck)
+        //we don't have a gyroStrafe method so we're just hardcoding it.
+        howard.frDrive.setPower(0.5);
+        howard.flDrive.setPower(-0.5);
+        howard.brDrive.setPower(-0.5);
+        howard.blDrive.setPower(0.5);
+        sleep(500); //guess to be tested
+        howard.frDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.brDrive.setPower(0);
+        howard.blDrive.setPower(0);
 
-        //init gyro
+        howard.frDrive.setPower(0.5);
+        howard.flDrive.setPower(0.5);
+        howard.brDrive.setPower(0.5);
+        howard.blDrive.setPower(0.5);
+        sleep(500); //guess to be tested
+        howard.frDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.brDrive.setPower(0);
+        howard.blDrive.setPower(0);
+
+        //retract LAM (dead reck)
+        howard.lamb.setPower(-howard.LAMB_POWER);
+        sleep(4500);
+        howard.lamb.setPower(0);
+
+        howard.frDrive.setPower(-0.5);
+        howard.flDrive.setPower(0.5);
+        howard.brDrive.setPower(0.5);
+        howard.blDrive.setPower(-0.5);
+        sleep(500); //guess to be tested
+        howard.frDrive.setPower(0);
+        howard.flDrive.setPower(0);
+        howard.brDrive.setPower(0);
+        howard.blDrive.setPower(0);
+
         howard.gyroInit();
         while (!isStopRequested() && !howard.gyro.isGyroCalibrated())  {
             sleep(50);
             idle();
         }
 
-        //guess Middle mineral
-        gyroDrive(howard.DRIVE_SPEED, -30.0, 0.0);
-        sleep(100);
-        gyroDrive(howard.DRIVE_SPEED, 30.0, 0.0);
+        gyroDrive(howard.DRIVE_SPEED, -1.0, 0);
+        gyroTurn(howard.TURN_SPEED, 180.0);
+        gyroHold(howard.TURN_SPEED, 180.0, 0.25);
+        gyroDrive(howard.DRIVE_SPEED, -1.0, 180);
 
-        ////leave the landing zone and drive towards wall
-        gyroTurn(howard.TURN_SPEED, 45.0);
-        gyroHold(howard.TURN_SPEED, 45.0, 0.5);
-        gyroDrive(howard.DRIVE_SPEED, -45.0, 45.0); //the first "-45.0" is inches not degrees
 
-        // >> Starting in Depot pos: turn right
-        //    Starting in Crater pos: turn left
-        gyroTurn(howard.TURN_SPEED, 135.0);
-        gyroHold(howard.TURN_SPEED, 135.0, 0.5);
-        gyroDrive(howard.DRIVE_SPEED, -54.0, 135.0);
 
-        //dump marker in depot and back up
-        gyroDrive(howard.DRIVE_SPEED, 4.0, 135.0);
+        //RECENTER TO ORIGIN
+        //DO A 180, identify(), AND DO ANOTHER 180 (cam is on rear)
 
-        //reverse to crater
-        //gyroDrive(howard.DRIVE_SPEED, -70.0, 135.0);
+        //init gyro
+
+
+        //activate TensorFlow
+        if (howard.tfod != null) {
+            howard.tfod.activate();
+        }
+
+        int goldPos = identify(7);
+        //drive to gold mineral based on value of goldPos
+        if (goldPos == 0){
+
+            gyroTurn(howard.TURN_SPEED, 180+26.5);
+            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, 180+26.5);
+            gyroTurn(howard.TURN_SPEED, 180-26.5);
+            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -14.0, 180-26.5); //-24 adj
+
+        } else if (goldPos == 1){
+
+            gyroDrive(howard.DRIVE_SPEED, -44.0, 180.0); //-24 adj
+
+        } else {
+
+            gyroTurn(howard.TURN_SPEED, 180-26.5);
+            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -38.0, 180-26.5);
+            gyroTurn(howard.TURN_SPEED, 180+26.5);
+            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
+            gyroDrive(howard.DRIVE_SPEED, -14.0, 180+26.5); //-24 adj
+
+        }
+
+        //turn front to face depot
+        gyroTurn(howard.TURN_SPEED, 0.0);
+        gyroHold(howard.TURN_SPEED, 0.0, 0.25);
+
+        //dump marker in depot
+        howard.lWrist.setPosition(howard.WRIST_OUT + 0.5);
+        howard.rWrist.setPosition(-howard.WRIST_OUT + 0.5);
+
+        //back up
+        gyroDrive(howard.DRIVE_SPEED, -12.0, 0.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -401,5 +476,73 @@ public class Ruckus_Crater_CLAIMandGUESS extends LinearOpMode {
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = howard.VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "cam");
+
+        //  Instantiate the Vuforia engine
+        howard.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+    }
+
+    /**
+     * Initialize the Tensor Flow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        howard.tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, howard.vuforia);
+        howard.tfod.loadModelFromAsset(howard.TFOD_MODEL_ASSET, howard.LABEL_GOLD_MINERAL, howard.LABEL_SILVER_MINERAL);
+    }
+
+    private int identify(int timeoutS){
+        int g = 1; //0 = Left; 1 = Center; 2 = Right
+        while (opModeIsActive() && runtime.seconds() < timeoutS) {
+            if (howard.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+
+                List<Recognition> updatedRecognitions = howard.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() == 3) {
+                        int goldMineralX = -1;
+                        int silverMineral1X = -1;
+                        int silverMineral2X = -1;
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(howard.LABEL_GOLD_MINERAL)) {
+                                goldMineralX = (int) recognition.getLeft();
+                            } else if (silverMineral1X == -1) {
+                                silverMineral1X = (int) recognition.getLeft();
+                            } else {
+                                silverMineral2X = (int) recognition.getLeft();
+                            }
+                        }
+                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                            if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                                telemetry.addData("Gold Mineral Position", "Left");
+                                g = 0;
+                            } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                telemetry.addData("Gold Mineral Position", "Right");
+                                g = 2;
+                            } else {
+                                telemetry.addData("Gold Mineral Position", "Center");
+                                g = 1;
+                            }
+                        }
+                    }
+                    telemetry.update();
+                }
+            }
+        }
+        return g;
     }
 }

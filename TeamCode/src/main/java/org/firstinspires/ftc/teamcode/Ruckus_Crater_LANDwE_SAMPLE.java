@@ -74,9 +74,9 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Depot LANDwENC & SAMPLE & CLAIM", group="Pushbot")
+@Autonomous(name="Crater LANDw/E & SAMPLE", group="C")
 //@Disabled
-public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
+public class Ruckus_Crater_LANDwE_SAMPLE extends LinearOpMode {
 
 
     /* Declare OpMode members. */
@@ -196,35 +196,37 @@ public class Ruckus_Depot_LANDwENCandSAMPLEandCLAIM extends LinearOpMode {
             gyroTurn(howard.TURN_SPEED, 180+26.5);
             gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
             gyroDrive(howard.DRIVE_SPEED, -30.0, 180+26.5);
-            gyroTurn(howard.TURN_SPEED, 180-26.5);
-            gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -14.0, 180-26.5); //-24 adj
+            gyroDrive(howard.DRIVE_SPEED, 30.0, 180+26.5);
 
         } else if (goldPos == 1){
 
-            gyroDrive(howard.DRIVE_SPEED, -44.0, 180.0); //-24 adj
+            gyroDrive(howard.DRIVE_SPEED, -30, 180.0); //guess
+            gyroDrive(howard.DRIVE_SPEED, 30, 180.0);
 
         } else {
 
             gyroTurn(howard.TURN_SPEED, 180-26.5);
             gyroHold(howard.TURN_SPEED, 180-26.5, 0.25);
             gyroDrive(howard.DRIVE_SPEED, -30.0, 180-26.5);
-            gyroTurn(howard.TURN_SPEED, 180+26.5);
-            gyroHold(howard.TURN_SPEED, 180+26.5, 0.25);
-            gyroDrive(howard.DRIVE_SPEED, -14.0, 180+26.5); //-24 adj
+            gyroDrive(howard.DRIVE_SPEED, 30.0, 180-26.5);
 
         }
-
-        //turn front to face depot
-        gyroTurn(howard.TURN_SPEED, 0.0);
-        gyroHold(howard.TURN_SPEED, 0.0, 0.25);
+        /*
+        //drive to depot
+        gyroTurn(howard.TURN_SPEED, 80.0);
+        //gyroHold();
+        gyroDrive(howard.TURN_SPEED, 60, 80.0);
+        gyroTurn(howard.TURN_SPEED, 135.0);
+        //gyroHold();
+        gyroDrive(howard.DRIVE_SPEED, 12.0, 135.0);
 
         //dump marker in depot
         howard.lWrist.setPosition(howard.WRIST_OUT + 0.5);
         howard.rWrist.setPosition(-howard.WRIST_OUT + 0.5);
 
         //back up
-        gyroDrive(howard.DRIVE_SPEED, -12.0, 0.0);
+        gyroDrive(howard.DRIVE_SPEED, -6.0, 135.0);
+        */
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
