@@ -136,7 +136,7 @@ public class Ruckus_HwMap
     public final static double SWING_MIN = -1120;  //are completely
     public final static double SWING_MAX = 224000; //arbitrary
     public final static double WRIST_OUT =  0.5;
-    public final static double WRIST_MID = -0.2;
+    public final static double WRIST_MID =  0.2;
     public final static double WRIST_IN  = -0.5;
 
     //local OpMode members
@@ -164,15 +164,17 @@ public class Ruckus_HwMap
         lamb = hwMap.get(DcMotor.class, "lamb");
         lWrist = hwMap.get(Servo.class, "lwrist");
         rWrist = hwMap.get(Servo.class, "rwrist");
+        octopus = hwMap.get(CRServo.class, "octo");
         gyro = hwMap.get(BNO055IMU.class, "imu_gyro");
         flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         blDrive.setDirection(DcMotor.Direction.REVERSE);
         brDrive.setDirection(DcMotor.Direction.FORWARD);
-        winch.setDirection(DcMotor.Direction.REVERSE);
+        winch.setDirection(DcMotor.Direction.FORWARD);
         //rWinch.setDirection(DcMotor.Direction.REVERSE);
         armSwing.setDirection(DcMotor.Direction.FORWARD);
         lamb.setDirection(DcMotor.Direction.FORWARD);
+        octopus.setDirection(CRServo.Direction.FORWARD);
 
         // Set all motors to zero power
         flDrive.setPower (0);

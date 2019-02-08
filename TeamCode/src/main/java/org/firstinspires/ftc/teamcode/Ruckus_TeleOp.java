@@ -76,6 +76,8 @@ public class Ruckus_TeleOp extends LinearOpMode {
         howard.armSwing.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //temporarily WITHOUT for testing purposes
 
         double wristPos = howard.WRIST_IN;
+        double octoPower = 0;
+
         //double dumpPos = howard.UNDUMPED;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -135,17 +137,27 @@ public class Ruckus_TeleOp extends LinearOpMode {
             }*/
 
             //collector wrist controls
-            if (gamepad2.right_bumper){
-                wristPos = howard.WRIST_MID;
-            } else if (gamepad2.left_bumper){
+            if (gamepad2.dpad_down){
                 wristPos = howard.WRIST_IN;
-            } else if (gamepad2.y){
+            } else if (gamepad2.dpad_right || gamepad2.dpad_left){
+                wristPos = howard.WRIST_MID;
+            } else if (gamepad2.dpad_up){
                 wristPos = howard.WRIST_OUT;
+            }
+
+            //collector octopus controls
+            if (gamepad2.x){
+                octoPower = 0;
+            } else if (gamepad2.right_trigger > 0.1){
+                octoPower = 1;
+            } else if (gamepad2.left_trigger > 0.1) {
+                octoPower = -1;
             }
 
             winchPower = -gamepad2.left_stick_y;
             swingPower = -gamepad2.right_stick_y;
             lambPower  = gamepad1.right_trigger - gamepad1.left_trigger;
+            //octoPower  = gamepad2.right_trigger - gamepad2.left_trigger;
 
             //Dumper controls
             /*if(gamepad1.x) {
@@ -166,6 +178,7 @@ public class Ruckus_TeleOp extends LinearOpMode {
             howard.lamb.setPower(lambPower);
             howard.lWrist.setPosition(wristPos + 0.5);
             howard.rWrist.setPosition((-wristPos) + 0.5);
+            howard.octopus.setPower(octoPower);
 
 
             // Show the elapsed game time and wheel power.
